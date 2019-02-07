@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Lato-Regular;
+}
+
+input {
+  font-family: Lato-Regular;
+}
+
+@font-face {
+  font-family: Lato-Bold;
+  src: url('./assets/fonts/Lato/Lato-Black.ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Lato-Regular;
+  src: url('./assets/fonts/Lato/Lato-Regular.ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Monsterrat-Regular;
+  src: url('./assets/fonts/Monsterrat/Montserrat-Regular.ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'montserratmedium';
+  src: url('./assets/fonts/Monsterrat/Montserrat-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
