@@ -12,15 +12,6 @@ import Button from '../UI/Button'
 import Parse from 'parse'
 
 class ShoppingBasket extends React.Component {
-    weekDays = [
-        `воскресенье`,
-        `понедельник`,
-        `вторник`,
-        `среда`,
-        `четверг`,
-        `пятница`,
-        `суббота`,
-    ]
     clearSelections = () => {
         for (let i in this.props.selected_slots) {
             this.props.selectSlot(this.props.selected_slots[i])
@@ -54,7 +45,7 @@ class ShoppingBasket extends React.Component {
                             <Slot key={index} >
                                 <Container width={5} alignItems={`flex-start; margin: 0.5vw;`} >
                                     <Container extraProps={` color: ${mvConsts.colors.text.support}; font-size: 0.8vw; `} >
-                                        {this.weekDays[moment(item.timestamp).day()]}
+                                        {mvConsts.weekDays.full[moment(item.timestamp).day()]}
                                     </Container>
                                     <Container extraProps={` font-size: 0.8vw; color: ${mvConsts.colors.text.primary}; `} >
                                         {moment(item.timestamp).format('DD.MM.YY')}

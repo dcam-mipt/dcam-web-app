@@ -15,7 +15,7 @@ export default styled.div`
     align-items: ${props => props.alignItems === undefined ? `center` : props.alignItems };
     text-align: ${props => props.textAlign === undefined ? `center` : props.textAlign };
     flex-direction: ${props => props.flexDirection === undefined ? `column` : props.flexDirection};
-    font-size: ${props => props.fontSize === undefined ? props.mobile ? 4 : 1 : (props.mobile ? 4 : 1) * props.fontSize}vw;
+    font-size: 0.8vw;
 
     -webkit-overflow-scrolling: touch;
     ::-webkit-scrollbar {

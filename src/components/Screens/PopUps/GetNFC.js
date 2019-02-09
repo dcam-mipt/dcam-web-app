@@ -27,7 +27,7 @@ class GetNFC extends React.Component {
                         <Button visible={visible} short={false} backgroundColor={mvConsts.colors.accept} onClick={() => { Parse.Cloud.run(`createNfcRecord`, { value: this.state.value.toUpperCase() }) }} disabled={(`` + this.state.value).length !== 8} >
                             Сохранить
                         </Button>
-                        <Button visible={visible} short={false} backgroundColor={mvConsts.colors.reject} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) }} >
+                        <Button visible={visible} short={false} backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) }} >
                             Закрыть
                         </Button>
                     </Container>

@@ -12,10 +12,29 @@ import Input from '../UI/Input'
 import Switch from '../UI/Switch'
 import Parse from 'parse'
 import Select from 'react-select'
+import validator from 'validator'
+import arrow from '../../../assets/images/arrow.svg'
 
 class ClubBook extends React.Component {
     state = {
-        repeatedSettings: false
+        repeatedSettings: false,
+        residents_number: 0,
+        using_music_equipment: false,
+        using_projector: false,
+        selected_days: [],
+        end_of_repeat: +moment().startOf(`day`),
+        calendar_month: +moment().startOf(`month`),
+    }
+    componentWillReceiveProps(nextProps) {
+        let { selected_slot } = nextProps
+        if (selected_slot) {
+            this.setState({
+                selected_days: this.state.selected_days.concat(moment().add(selected_slot.day - 1, `day`).day()),
+                end_of_repeat: +moment().startOf(`day`).add(selected_slot.day, `day`)
+            })
+        } else {
+            this.setState({ selected_days: [] })
+        }
     }
     render = () => {
         let visible = this.props.popUpWindow === mvConsts.popUps.CLUB_BOOK
@@ -33,60 +52,109 @@ class ClubBook extends React.Component {
             visibility: ${visible ? `visible` : `hidden`};
             transition: opacity 0.2s, top 0.2s, visibility 0.2s;
         `
-        let number_of_weeks = Math.ceil((moment().endOf(`month`).endOf(`isoWeek`) - moment().startOf(`month`).startOf(`isoWeek`)) / 86400000 / 7)
+        let number_of_weeks = Math.ceil((moment(this.state.calendar_month).endOf(`month`).endOf(`isoWeek`) - moment(this.state.calendar_month).startOf(`month`).startOf(`isoWeek`)) / 86400000 / 7)
         let { selected_slot } = this.props
+        let from = selected_slot ? moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`) : 0
+        let to = selected_slot ? moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`) : 0
         return (
             <Container className={mvConsts.popUps.CLUB_BOOK} extraProps={style} >
-                {
-                    selected_slot
-                        ? <Container extraProps={`color: ${mvConsts.colors.text.primary}`} >
-                            <Input short={false} placeholder={`Название мероприятия`} />
-                            <Container extraProps={`width: 15vw; height: 4vw; flex-direction: row; justify-content: space-between; `} >
-                                <Container>
-                                    <Container extraProps={`font-size: 0.8vw; color: ${mvConsts.colors.text.support}`} >
-                                        {moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`).format(`DD.MM.YY`)}
-                                    </Container>
-                                    <Container extraProps={`font-size: 1.5vw;`} >
-                                        {moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`).format(`HH:mm`)}
-                                    </Container>
-                                </Container>
-                                <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} >
-
-                                </Container>
-                                <Container extraProps={`color: ${mvConsts.colors.text.support}`} >
-                                    {(selected_slot.to - selected_slot.from + 1) * 0.5}ч
+                <Container extraProps={`color: ${mvConsts.colors.text.primary}`} >
+                    <Input short={false} placeholder={`Название мероприятия`} />
+                    <Container extraProps={`width: 15vw; height: 4vw; flex-direction: row; justify-content: space-between; `} >
+                        <Container>
+                            <Container extraProps={`font-size: 0.7vw; color: ${mvConsts.colors.text.support}`} >
+                                {mvConsts.weekDays.short[moment(from).day()]} {moment(from).format(`DD.MM.YY`)}
                             </Container>
-                                <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} >
-
-                                </Container>
-                                <Container>
-                                    <Container extraProps={`font-size: 0.8vw; color: ${mvConsts.colors.text.support}`} >
-                                        {moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`).format(`DD.MM.YY`)}
-                                    </Container>
-                                    <Container extraProps={`font-size: 1.5vw;`} >
-                                        {moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`).format(`HH:mm`)}
-                                    </Container>
-                                </Container>
-                            </Container>
-                            <Container extraProps={`width: 17vw; flex-direction: row; justify-content: space-between;`} >
-                                <Container>
-                                    Сделать регулярным
-                                </Container>
-                                <Switch checked={this.state.repeatedSettings} onChange={() => { this.setState({ repeatedSettings: !this.state.repeatedSettings }) }} />
+                            <Container extraProps={`font-size: 1.5vw;`} >
+                                {moment(from).format(`HH:mm`)}
                             </Container>
                         </Container>
-                        : null
-                }
+                        <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} >
+
+                        </Container>
+                        <Container extraProps={`color: ${mvConsts.colors.text.support}`} >
+                            {(to - from) / 3600000}ч
+                            </Container>
+                        <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} >
+
+                        </Container>
+                        <Container>
+                            <Container extraProps={`font-size: 0.7vw; color: ${mvConsts.colors.text.support}`} >
+                                {mvConsts.weekDays.short[moment(to).day()]} {moment(to).format(`DD.MM.YY`)}
+                            </Container>
+                            <Container extraProps={`font-size: 1.5vw;`} >
+                                {moment(to).format(`HH:mm`)}
+                            </Container>
+                        </Container>
+                    </Container>
+                    <Container extraProps={`width: 17vw; flex-direction: row; justify-content: space-between;`} >
+                        <Container extraProps={`text-align: left;`} >
+                            Количество людей
+                                </Container>
+                        <Input short={true} placeholder={`Число`} value={this.state.residents_number} onChange={(e) => { if (validator.isNumeric(e) || e.length === 0) { this.setState({ residents_number: e.length > 1 ? +e : 0 }) } }} />
+                    </Container>
+                    <Container extraProps={`width: 17vw; height: 3vw; flex-direction: row; justify-content: space-between; `} >
+                        <Container>
+                            Музыкальное оборудование
+                        </Container>
+                        <Switch checked={this.state.using_music_equipment} onChange={() => { this.setState({ using_music_equipment: !this.state.using_music_equipment }) }} />
+                    </Container>
+                    <Container extraProps={`width: 17vw; height: 3vw; flex-direction: row; justify-content: space-between; `} >
+                        <Container>
+                            Проектор
+                        </Container>
+                        <Switch checked={this.state.using_projector} onChange={() => { this.setState({ using_projector: !this.state.using_projector }) }} />
+                    </Container>
+                    <Container extraProps={`width: 17vw; height: 3vw; flex-direction: row; justify-content: space-between; `} >
+                        <Container>
+                            Сделать регулярным
+                        </Container>
+                        <Switch checked={this.state.repeatedSettings} onChange={() => { this.setState({ repeatedSettings: !this.state.repeatedSettings }) }} />
+                    </Container>
+                </Container>
                 <Button short={false} >
                     Подтвердить
                 </Button>
                 <Button short={false} backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { this.props.openBookPopUp(undefined) }} >
                     Отмена
                 </Button>
+                <RepeatedDaysChooser visible={this.state.repeatedSettings} >
+                    {
+                        mvConsts.weekDays.short.filter((i, index) => index > 0).concat(mvConsts.weekDays.short[0]).map((i, index) => {
+                            return (
+                                <WeekDay
+                                    index={index}
+                                    key={index}
+                                    onClick={() => { this.setState({ selected_days: this.state.selected_days.indexOf(index) > -1 ? this.state.selected_days.filter(i => i !== index) : this.state.selected_days.concat(index) }) }}
+                                    is_selected={this.state.selected_days.indexOf(index) > -1}
+                                >
+                                    {i}
+                                </WeekDay>
+                            )
+                        })
+                    }
+                </RepeatedDaysChooser>
                 <RepeatedSettings visible={this.state.repeatedSettings} >
                     <Container>
-                        <Container>
-                            Февраль
+                        <Container extraProps={`width: 20vw; flex-direction: row; justify-content: space-around;`}>
+                            <img
+                                src={arrow}
+                                style={{ width: `1vw`, transform: `rotate(180deg)`, cursor: `pointer`, visibility: this.state.calendar_month === +moment().startOf(`month`) ? `hidden` : `visible`, opacity: +(this.state.calendar_month !== +moment().startOf(`month`)), transition: `0.2s`, }}
+                                alt={``}
+                                onClick={() => { this.setState({ calendar_month: Math.max(+moment(this.state.calendar_month).add(-1, `month`), +moment().startOf(`month`)) }) }}
+                            />
+                            <MonthLable onClick={() => { this.setState({ calendar_month: +moment().startOf(`month`) }) }} >
+                                {mvConsts.month[+moment(this.state.calendar_month).format(`M`) - 1]}
+                                <Container extraProps={`color: ${mvConsts.colors.text.support}; font-size: 0.7vw;`} >
+                                    {moment(this.state.calendar_month).format(`YYYY`)}
+                                </Container>
+                            </MonthLable>
+                            <img
+                                src={arrow}
+                                style={{ width: `1vw`, cursor: `pointer`, }}
+                                alt={``}
+                                onClick={() => { this.setState({ calendar_month: moment(this.state.calendar_month).add(1, `month`) }) }}
+                            />
                         </Container>
                         {
                             Array.from({ length: number_of_weeks }, (v, i) => i).map((i, week_index) => {
@@ -94,10 +162,18 @@ class ClubBook extends React.Component {
                                     <Container extraProps={`flex-direction: row`} key={week_index} >
                                         {
                                             Array.from({ length: 7 }, (v, i) => i).map((i, day_index) => {
-                                                let today = moment().startOf(`month`).startOf(`isoWeek`).add(week_index, `week`).add(day_index, `day`)
+                                                let day = moment(this.state.calendar_month).startOf(`month`).startOf(`isoWeek`).add(week_index, `week`).add(day_index, `day`)
                                                 return (
-                                                    <CalendarDay today={today} key={day_index} >
-                                                        {moment(today).format(`DD`)}
+                                                    <CalendarDay
+                                                        is_today={+moment(day) === +moment().startOf(`day`)}
+                                                        is_selected={+moment(day) === +moment(this.state.end_of_repeat).startOf(`day`)}
+                                                        is_this_month={moment(day).format(`MM`) === moment(this.state.calendar_month).format(`MM`)}
+                                                        contains_event={this.state.selected_days.indexOf((moment(day).day() + 6) % 7) > -1 && day > +moment() && day < moment(this.state.end_of_repeat)}
+                                                        day={day}
+                                                        key={day_index}
+                                                        onClick={() => { this.setState({ end_of_repeat: day }) }}
+                                                    >
+                                                        {moment(day).format(`DD`)}
                                                     </CalendarDay>
                                                 )
                                             })
@@ -108,6 +184,9 @@ class ClubBook extends React.Component {
                         }
                     </Container>
                 </RepeatedSettings>
+                <Summering visible={this.state.repeatedSettings} >
+                    Предстоит {3} занятий до {moment(this.state.end_of_repeat).format(`D`)} {mvConsts.month[+moment(this.state.end_of_repeat).format(`M`)]} по {this.state.selected_days.map((i, index) => mvConsts.weekDays.short[i + 1] + (index < this.state.selected_days.length - 1 ? `, ` : ``))}.
+                </Summering>
             </Container>
         )
     }
@@ -142,10 +221,83 @@ padding: 1vw 1vw 1vw 1vw
 background-color: ${mvConsts.colors.background.primary};
 flex-direction: column
 position: absolute;
-top: 40vh;
-right: ${props => props.visible ? 0 : -30}vw;
+top: 4.5vw;
+right: ${props => props.visible ? 20 : 100}vw;
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
 z-index: 2;
+visibility: ${props => props.visible ? `visible` : `hidden`}
+opacity: ${props => +props.visible}
+transition: 0.2s
+`
+
+const RepeatedDaysChooser = styled.div`
+display: flex
+justify-content: center
+align-items: center
+border-radius: 1vw;
+padding: 1vw 1vw 1vw 1vw
+background-color: ${mvConsts.colors.background.primary};
+flex-direction: row
+position: absolute;
+top: ${props => props.visible ? 0 : -50}vh;
+right: 20vw;
+box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
+z-index: 2;
+visibility: ${props => props.visible ? `visible` : `hidden`}
+opacity: ${props => +props.visible}
+transition: 0.2s
+`
+
+const Summering = styled.div`
+display: flex
+justify-content: center
+align-items: flex-start
+width: 21vw;
+border-radius: 1vw;
+padding: 1vw 1vw 1vw 1vw
+background-color: ${mvConsts.colors.background.primary};
+flex-direction: column;
+position: absolute;
+top: ${props => props.visible ? 24 : 100}vw;
+right: 20vw;
+box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
+z-index: 2;
+visibility: ${props => props.visible ? `visible` : `hidden`}
+opacity: ${props => +props.visible}
+transition: 0.2s
+`
+
+const WeekDay = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+width: 2vw
+height: 2vw
+margin: 0 0.5vw 0 0.5vw
+border-radius: 0.2vw
+color: ${props => props => props.is_selected ? `white` : props.index > 4 ? mvConsts.colors.text.support : mvConsts.colors.text.primary}
+background-color: ${props => props.is_selected ? mvConsts.colors.purple : mvConsts.colors.background.primary}
+&:hover {
+    background-color: ${props => props.is_selected ? null : mvConsts.colors.background.secondary}
+}
+cursor: pointer;
+transition: 0.2s;
+`
+
+const MonthLable = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+width: 10vw;
+font-size: 1vw;
+cursor: pointer;
+padding: 0.1vw;
+border-radius: 0.5vw
+&:hover {
+    background-color: ${mvConsts.colors.background.secondary}
+}
 transition: 0.2s
 `
 
@@ -156,12 +308,12 @@ align-items: center
 flex-direction: column
 width: 2.5vw
 height: 2.5vw
-padding: 0.25vw
+margin: 0.25vw
 border-radius: 3vw
 font-size: 0.8vw
-background-color: ${props => +moment(props.today) === +moment().startOf(`day`) ? mvConsts.colors.purple : null};
-color: ${props => moment(props.today).format(`MM`) === moment().format(`MM`) ? +moment(props.today) === +moment().startOf(`day`) ? `white` : mvConsts.colors.text.primary : mvConsts.colors.text.support};
-cursor: ${props => moment(props.today).format(`MM`) === moment().format(`MM`) ? `pointer` : null};
+background-color: ${props => props.is_selected ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : props.contains_event ? mvConsts.colors.yellow : null};
+color: ${props => props.is_this_month ? props.is_today || props.is_selected || props.contains_event ? `white` : mvConsts.colors.text.primary : mvConsts.colors.text.support};
+cursor: ${props => props.is_this_month ? `pointer` : null};
 transition: 0.2s
 `
 

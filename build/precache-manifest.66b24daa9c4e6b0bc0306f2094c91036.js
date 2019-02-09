@@ -1,15 +1,15 @@
 self.__precacheManifest = [
   {
-    "revision": "055f919219bba0069947",
+    "revision": "c514eb341e07dc6c9db2",
     "url": "/static/css/main.e0fb5aab.chunk.css"
   },
   {
-    "revision": "055f919219bba0069947",
-    "url": "/static/js/main.055f9192.chunk.js"
+    "revision": "c514eb341e07dc6c9db2",
+    "url": "/static/js/main.c514eb34.chunk.js"
   },
   {
-    "revision": "9c9c22e2ae8382f29773",
-    "url": "/static/js/1.9c9c22e2.chunk.js"
+    "revision": "6e657e7d825e0337b450",
+    "url": "/static/js/1.6e657e7d.chunk.js"
   },
   {
     "revision": "229c360febb4351a89df",
@@ -56,12 +56,12 @@ self.__precacheManifest = [
     "url": "/static/media/Montserrat-Regular.9c460951.ttf"
   },
   {
-    "revision": "fa62c04b03d3f7d2333a33c311d9747d",
-    "url": "/static/media/Lato-Regular.fa62c04b.ttf"
-  },
-  {
     "revision": "e798200afab2e4eebb491f3e7674c8bf",
     "url": "/static/media/Lato-Black.e798200a.ttf"
+  },
+  {
+    "revision": "fa62c04b03d3f7d2333a33c311d9747d",
+    "url": "/static/media/Lato-Regular.fa62c04b.ttf"
   },
   {
     "revision": "15168650a79b593bf8843f4e55a643ff",
@@ -72,7 +72,7 @@ self.__precacheManifest = [
     "url": "/static/media/settings_selected.9cfd49f2.svg"
   },
   {
-    "revision": "3fc7a404d13970dd736677309ca0a941",
+    "revision": "bf367668ba60c67935e66637c237b0fe",
     "url": "/index.html"
   }
 ];

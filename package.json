@@ -17,7 +17,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.1.2",
-    "validator": "^10.9.0",
+    "validator": "^10.11.0",
     "yandex-money-sdk": "^0.1.7"
   },
   "scripts": {

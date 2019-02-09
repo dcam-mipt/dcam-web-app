@@ -1,9 +1,9 @@
 {
   "main.css": "/static/css/main.e0fb5aab.chunk.css",
-  "main.js": "/static/js/main.055f9192.chunk.js",
-  "main.js.map": "/static/js/main.055f9192.chunk.js.map",
-  "static/js/1.9c9c22e2.chunk.js": "/static/js/1.9c9c22e2.chunk.js",
-  "static/js/1.9c9c22e2.chunk.js.map": "/static/js/1.9c9c22e2.chunk.js.map",
+  "main.js": "/static/js/main.c514eb34.chunk.js",
+  "main.js.map": "/static/js/main.c514eb34.chunk.js.map",
+  "static/js/1.6e657e7d.chunk.js": "/static/js/1.6e657e7d.chunk.js",
+  "static/js/1.6e657e7d.chunk.js.map": "/static/js/1.6e657e7d.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.229c360f.js",
   "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
   "static/media/cros.svg": "/static/media/cros.b1585ec7.svg",
@@ -14,11 +14,11 @@
   "static/media/logout.png": "/static/media/logout.d1ad6d96.png",
   "static/media/cros_white.svg": "/static/media/cros_white.eb3c67d1.svg",
   "static/media/upload.svg": "/static/media/upload.e7bc3c08.svg",
-  "static/media/index.css": "/static/media/Lato-Black.e798200a.ttf",
+  "static/media/index.css": "/static/media/Lato-Regular.fa62c04b.ttf",
   "static/media/user_selected.png": "/static/media/user_selected.15168650.png",
   "static/media/settings_selected.svg": "/static/media/settings_selected.9cfd49f2.svg",
   "static/css/main.e0fb5aab.chunk.css.map": "/static/css/main.e0fb5aab.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.66dcf6e7ace2fa5149a375659f955048.js": "/precache-manifest.66dcf6e7ace2fa5149a375659f955048.js",
+  "precache-manifest.66b24daa9c4e6b0bc0306f2094c91036.js": "/precache-manifest.66b24daa9c4e6b0bc0306f2094c91036.js",
   "service-worker.js": "/service-worker.js"
 }

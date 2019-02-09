@@ -31,7 +31,7 @@ let updateMachines = (machines) => {
                     d.set(`isBroken`, machines[i].isBroken)
                     d.set(`isDisabled`, machines[i].isDisabled)
                     d.save()
-                    	// .then((d) => { console.log(d) })
+                        // .then((d) => { console.log(d) })
                         .catch((d) => { console.log(d) })
                 }
             })
@@ -73,15 +73,6 @@ class LaundrySettings extends React.Component {
             this.setState({ openedMachine: null })
         }
     }
-    weekDays = [
-        `воскресенье`,
-        `понедельник`,
-        `вторник`,
-        `среда`,
-        `четверг`,
-        `пятница`,
-        `суббота`,
-    ]
     render = () => {
         let visible = this.props.popUpWindow === mvConsts.popUps.LAUNDRY_SETTINGS
         let style = `
@@ -180,7 +171,7 @@ class LaundrySettings extends React.Component {
                         onClick={() => {
                             let q = new Parse.Query(`Machines`)
                             q.find()
-                            	.then((d) => { this.props.loadMachines(d) })
+                                .then((d) => { this.props.loadMachines(d) })
                                 .catch((d) => { console.log(d) })
                         }}
                     >

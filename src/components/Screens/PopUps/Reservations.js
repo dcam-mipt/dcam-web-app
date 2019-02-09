@@ -11,16 +11,6 @@ import moment from 'moment'
 import Button from '../UI/Button'
 import Parse from 'parse'
 
-let weekDays = [
-    `воскресенье`,
-    `понедельник`,
-    `вторник`,
-    `среда`,
-    `четверг`,
-    `пятница`,
-    `суббота`,
-]
-
 let unbookLaundry = (book) => {
     let q = new Parse.Query(`Laundry`)
     q.equalTo(`objectId`, book.laundryId)
@@ -61,7 +51,7 @@ class Reservations extends React.Component {
                             <Slot key={index} >
                                 <Container>
                                     <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.support}`} >
-                                        {weekDays[moment(item.timestamp).tz(`Europe/Moscow`).day()]}
+                                        {mvConsts.weekDays.full[moment(item.timestamp).tz(`Europe/Moscow`).day()]}
                                     </Container>
                                     <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.primary}`} >
                                         {moment(item.timestamp).tz(`Europe/Moscow`).format(`DD.MM.YY`)}

@@ -12,8 +12,7 @@ import clubActions from '../../../redux/actions/ClubActions'
 
 let
     daysToSelect = Array.from({ length: 21 }, (v, i) => i),
-    time_sets = Array.from({ length: 48 }, (v, i) => i),
-    weekDays = [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`]
+    time_sets = Array.from({ length: 48 }, (v, i) => i)
 
 class ClubScreen extends React.Component {
     state = {
@@ -43,7 +42,7 @@ class ClubScreen extends React.Component {
                             return (
                                 <Container extraProps={`flex-direction: row; position: relative;`} key={day_index}>
                                     <DayNode isWeekEnd={isWeekEnd}>
-                                        {moment(startOfDay).format(`DD.MM`)}, {weekDays[moment(startOfDay).day()]}
+                                        {moment(startOfDay).format(`DD.MM`)}, {mvConsts.weekDays.short[moment(startOfDay).day()]}
                                     </DayNode>
                                     {
                                         selected_slot ? selected_slot.day === day_index ?

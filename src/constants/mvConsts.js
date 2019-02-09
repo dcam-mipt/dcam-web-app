@@ -16,19 +16,9 @@ let sunset = +moment().startOf(`day`).add(17, `hour`)
 //     .catch((d) => { console.log(d) })
 
 let dayTheme = {
-    black: "#000",
-    white: "#FFF",
-    back: "#EEEEEE",
-    border: "#939393",
-    lightdark: "#d5d5d5",
-    dark: "#727272",
     yellow: "#FFCC00",
-    accept: "#66CC33",
-    reject: "#DF422B",
-    blue: "#2B8AFF",
-    purple: `#895aca`,
-    darkblue: "#2F61D5",
-    modernblue: "#1e07ca",
+    accept: "#2DC76D",
+    purple: `#7540EE`,
     lightblue: "#3FB6DC",
     vk: "#3A60A1",
     WARM_ORANGE: `#FF7052`,
@@ -45,19 +35,9 @@ let dayTheme = {
 }
 
 let darkTheme = {
-    black: "#000",
-    white: "#FFF",
-    back: "#EEEEEE",
-    border: "#939393",
-    lightdark: "#d5d5d5",
-    dark: "#727272",
     yellow: "#FFCC00",
-    accept: "#66CC33",
-    reject: "#DF422B",
-    blue: "#2B8AFF",
-    purple: `#895aca`,
-    darkblue: "#2F61D5",
-    modernblue: "#1e07ca",
+    accept: "#2DC76D",
+    purple: `#7540EE`,
     lightblue: "#3FB6DC",
     vk: "#3A60A1",
     WARM_ORANGE: `#FF7052`,
@@ -80,6 +60,13 @@ export default {
     colors: dayTheme,
     // colors: darkTheme,
     // colors: +moment() > sunset || +moment() < sunrise ? darkTheme : dayTheme,
+
+    weekDays: {
+        short: [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`],
+        full: [`воскресенье`, `понедельник`, `вторник`, `среда`, `четверг`, `пятница`, `суббота`]
+    },
+
+    month: [`Январь`, `Февраль`, `Март`, `Апрель`, `Май`, `Июнь`, `Июль`, `Август`, `Октябрь`, `Сентябрь`, `Ноябрь`, `Декабрь`,],
 
     colors_: {
         SPACE_NAVY: `#25265E`,

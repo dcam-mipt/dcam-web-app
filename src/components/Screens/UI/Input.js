@@ -77,11 +77,9 @@ const Input = styled.input`
     border: none;
     text-align: center;
     font-size: ${props => props.fontSize ? props.fontSize : 1}vw;
-    // color: ${props => props.light ? mvConsts.colors.background.primary : mvConsts.colors.black};
     ${props => props.color === undefined ? null : `color: ${props.color}`}
     text-align: ${props => props.textAlign ? props.textAlign : `left`};
     &::-webkit-input-placeholder {
-        // color: ${props => props.placeholderColor ? mvConsts.colors.background.primary : mvConsts.colors.text.support};
         ${props => props.placeholderColor === undefined ? null : `color: ${props.placeholderColor}`}
     }
     

@@ -13,8 +13,6 @@ import styled, { keyframes } from 'styled-components'
 import uiActions from '../../../redux/actions/UIActions'
 import { connect } from 'react-redux'
 
-let weekDays = [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`]
-
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
     var f = parseInt(color.slice(1), 16), t = percent < 0 ? 0 : 255, p = percent < 0 ? percent * -1 : percent, R = f >> 16, G = f >> 8 & 0x00FF, B = f & 0x0000FF;
@@ -37,7 +35,7 @@ let NodeContent = (props = { day: +moment(), laundry: [], machines: [], isSelect
                 </Container>
             </Container>
             <Container extraProps={`flex-direction: row`} >
-                <Container extraProps={`width: 3vw; height: 3vw; ${border(`right`)}; color: ${props.isBefore ? mvConsts.colors.text.support : free_lots / lots_number > 2 / 3 ? mvConsts.colors.accept : free_lots / lots_number > 1 / 3 ? mvConsts.colors.yellow : mvConsts.colors.reject}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+                <Container extraProps={`width: 3vw; height: 3vw; ${border(`right`)}; color: ${props.isBefore ? mvConsts.colors.text.support : free_lots / lots_number > 2 / 3 ? mvConsts.colors.accept : free_lots / lots_number > 1 / 3 ? mvConsts.colors.yellow : mvConsts.colors.WARM_ORANGE}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
                     {free_lots}
                 </Container>
                 <Container extraProps={`width: 3vw; height: 3vw; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
@@ -110,7 +108,7 @@ class LaundryScreen extends React.Component {
                                         |
                                 </Container>
                                     <Container extraProps={`font-size: 1.2vw; color: ${mvConsts.colors.text.primary}`} >
-                                        {weekDays[moment(this.state.selectedDay).tz(`Europe/Moscow`).day()]} {moment(this.state.selectedDay).tz(`Europe/Moscow`).format(`DD.MM.YY`)}
+                                        {mvConsts.weekDays.short[moment(this.state.selectedDay).tz(`Europe/Moscow`).day()]} {moment(this.state.selectedDay).tz(`Europe/Moscow`).format(`DD.MM.YY`)}
                                     </Container>
                                 </Container>
                             </Tab>
@@ -154,7 +152,7 @@ class LaundryScreen extends React.Component {
                                 return (
                                     <Container extraProps={`flex-direction: row;`} key={weekIndex} >
                                         {
-                                            weekDays.map((day, dayIndex) => {
+                                            mvConsts.weekDays.short.map((day, dayIndex) => {
                                                 let startOfDay = +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`isoWeek`).add(weekIndex, `week`).add(dayIndex, `day`)
                                                 let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`) > +moment(startOfDay).tz(`Europe/Moscow`)
                                                 return (
