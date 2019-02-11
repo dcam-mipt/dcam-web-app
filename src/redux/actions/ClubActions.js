@@ -11,5 +11,11 @@ export default {
             data: data
         }
     },
+    setClubBooks: (data) => {
+        return {
+            type: types.SET_CLUB_BOOKS,
+            data: data
+        }
+    },
 }
 /*eslint-enable no-unused-vars*/

@@ -14,13 +14,25 @@ let
     daysToSelect = Array.from({ length: 21 }, (v, i) => i),
     time_sets = Array.from({ length: 48 }, (v, i) => i)
 
+let convertToNode = (i) => {
+    return ({
+        day: +moment(i.start_timestamp).format(`D`) - +moment().format(`D`),
+        from: (+moment(i.start_timestamp) - +moment(i.start_timestamp).startOf(`day`)) / 3600000 * 2,
+        to: (+moment(i.end_timestamp) - +moment(i.end_timestamp).startOf(`day`)) / 3600000 * 2 - 1,
+        owner: i.userId,
+        is_allowed: i.is_allowed,
+        is_regular: i.is_regular,
+        data: i.data,
+    })
+}
+
 class ClubScreen extends React.Component {
     state = {
         select_mode: undefined,
     }
     render = () => {
         let { select_mode } = this.state
-        let { selected_slot } = this.props.club
+        let { selected_slot, books } = this.props
         return (
             <Wrapper>
                 <TimeSchedule>
@@ -50,6 +62,19 @@ class ClubScreen extends React.Component {
 
                                             </BookNode>
                                             : null : null
+                                    }
+                                    {
+                                        books.map((i, index) => convertToNode(i)).filter(i => i.day === day_index).map((i, index) => {
+                                            return (
+                                                <BookNode
+                                                    booked={true}
+                                                    key={index}
+                                                    selected_slot={i}
+                                                >
+                                                    {}
+                                                </BookNode>
+                                            )
+                                        })
                                     }
                                     <MainScheduleRow>
                                         {
@@ -95,7 +120,8 @@ class ClubScreen extends React.Component {
 let mapStateToProps = (state) => {
     return {
         server_time: state.constants.server_time,
-        club: state.club,
+        selected_slot: state.club.selected_slot,
+        books: state.club.books,
     }
 }
 
@@ -182,7 +208,7 @@ align-items: center
 flex-direction: column
 width: ${props => 88 / time_sets.length * (props.selected_slot.to - props.selected_slot.from + 1)}vw;
 height: 9.4vh;
-background-color: ${mvConsts.colors.yellow};
+background-color: ${props => props.booked ? mvConsts.colors.purple : mvConsts.colors.yellow};
 border-radius: 0.5vw;
 position: absolute;
 z-index: 2;

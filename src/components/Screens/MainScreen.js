@@ -10,6 +10,7 @@ import VK from '../../API/VKAPI'
 import mvConsts from '../../constants/mvConsts'
 import Container from '../Container'
 import uiActions from '../../redux/actions/UIActions'
+import clubActions from '../../redux/actions/ClubActions'
 import constantsActions from '../../redux/actions/ConstantsActions'
 import screens from './screens'
 
@@ -37,8 +38,12 @@ let menuItems = [
 
 let sub = (class_name, column_name, value, onRecive) => {
     let q = new Parse.Query(class_name)
-    q.equalTo(column_name, value)
-    q.first().then((d) => { onRecive(d) })
+    if (column_name) {
+        q.equalTo(column_name, value)
+        q.first().then((d) => { onRecive(d) })
+    } else {
+        q.find().then((d) => { onRecive(d) })
+    }
     let s = q.subscribe()
     s.on(`update`, (d) => { onRecive(d) })
     s.on(`create`, (d) => { onRecive(d) })
@@ -49,13 +54,16 @@ let sub = (class_name, column_name, value, onRecive) => {
 class MainScreen extends React.Component {
     balance_sub;
     nfc_sub;
+    club_sub;
     componentDidMount() {
         this.balance_sub = sub(`Balance`, `userId`, Parse.User.current().id, (d) => { this.props.setBalance(d.get(`money`)) })
         this.nfc_sub = sub(`NFC`, `userId`, Parse.User.current().id, (d) => { this.props.setNfcOwner(d ? true : false) })
+        this.club_sub = sub(`Club`, null, null, (d) => { Parse.Cloud.run(`getClubBooks`).then((d) => { this.props.setClubBooks(d) }) })
     }
     componentWillUnmount() {
         this.balance_sub.unsubscribe();
         this.nfc_sub.unsubscribe();
+        this.club_sub.unsubscribe();
     }
     render = () => {
         return (
@@ -144,6 +152,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         setBalance: (data) => {
             return dispatch(constantsActions.setBalance(data))
+        },
+        setClubBooks: (data) => {
+            return dispatch(clubActions.setClubBooks(data))
         },
     }
 }

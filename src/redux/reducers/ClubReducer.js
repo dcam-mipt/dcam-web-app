@@ -4,6 +4,7 @@ import types from '../ActionTypes.js'
 const initialState = {
     loading: false,
     selected_slot: undefined,
+    books: [],
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +14,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selected_slot: action.data,
+            };
+        case types.SET_CLUB_BOOKS:
+            return {
+                ...state,
+                books: action.data,
             };
 
         default:

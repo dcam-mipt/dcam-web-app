@@ -17,8 +17,8 @@ import arrow from '../../../assets/images/arrow.svg'
 
 class ClubBook extends React.Component {
     state = {
-        repeatedSettings: false,
-        residents_number: 0,
+        is_regular: false,
+        residents_number: 1,
         using_music_equipment: false,
         using_projector: false,
         selected_days: [],
@@ -69,15 +69,11 @@ class ClubBook extends React.Component {
                                 {moment(from).format(`HH:mm`)}
                             </Container>
                         </Container>
-                        <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} >
-
-                        </Container>
+                        <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} />
                         <Container extraProps={`color: ${mvConsts.colors.text.support}`} >
                             {(to - from) / 3600000}ч
-                            </Container>
-                        <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} >
-
                         </Container>
+                        <Container extraProps={`width: 2vw; height: 0.1vw; background-color: ${mvConsts.colors.background.support}`} />
                         <Container>
                             <Container extraProps={`font-size: 0.7vw; color: ${mvConsts.colors.text.support}`} >
                                 {mvConsts.weekDays.short[moment(to).day()]} {moment(to).format(`DD.MM.YY`)}
@@ -87,38 +83,48 @@ class ClubBook extends React.Component {
                             </Container>
                         </Container>
                     </Container>
-                    <Container extraProps={`width: 17vw; flex-direction: row; justify-content: space-between;`} >
-                        <Container extraProps={`text-align: left;`} >
-                            Количество людей
-                                </Container>
+                    <QuestionWrapper>
+                        Количество людей
                         <Input short={true} placeholder={`Число`} value={this.state.residents_number} onChange={(e) => { if (validator.isNumeric(e) || e.length === 0) { this.setState({ residents_number: e.length > 1 ? +e : 0 }) } }} />
-                    </Container>
-                    <Container extraProps={`width: 17vw; height: 3vw; flex-direction: row; justify-content: space-between; `} >
-                        <Container>
-                            Музыкальное оборудование
-                        </Container>
-                        <Switch checked={this.state.using_music_equipment} onChange={() => { this.setState({ using_music_equipment: !this.state.using_music_equipment }) }} />
-                    </Container>
-                    <Container extraProps={`width: 17vw; height: 3vw; flex-direction: row; justify-content: space-between; `} >
-                        <Container>
-                            Проектор
-                        </Container>
-                        <Switch checked={this.state.using_projector} onChange={() => { this.setState({ using_projector: !this.state.using_projector }) }} />
-                    </Container>
-                    <Container extraProps={`width: 17vw; height: 3vw; flex-direction: row; justify-content: space-between; `} >
-                        <Container>
-                            Сделать регулярным
-                        </Container>
-                        <Switch checked={this.state.repeatedSettings} onChange={() => { this.setState({ repeatedSettings: !this.state.repeatedSettings }) }} />
-                    </Container>
+                    </QuestionWrapper>
+                    <QuestionWrapper>
+                        Музыкальное оборудование
+                        <Switch
+                            checked={this.state.using_music_equipment}
+                            onChange={() => { this.setState({ using_music_equipment: !this.state.using_music_equipment }) }}
+                        />
+                    </QuestionWrapper>
+                    <QuestionWrapper>
+                        Проектор
+                        <Switch
+                            checked={this.state.using_projector}
+                            onChange={() => { this.setState({ using_projector: !this.state.using_projector }) }}
+                        />
+                    </QuestionWrapper>
+                    <QuestionWrapper>
+                        Сделать регулярным
+                        <Switch
+                            checked={this.state.is_regular}
+                            onChange={() => { this.setState({ is_regular: !this.state.is_regular }) }}
+                        />
+                    </QuestionWrapper>
                 </Container>
-                <Button short={false} >
+                <Button short={false} onClick={() => {
+                    Parse.Cloud.run(`createClubBook`, {
+                        location: `club`,
+                        start_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
+                        end_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`),
+                        is_regular: this.state.is_regular,
+                        data: {},
+                    })
+                    this.props.openBookPopUp(undefined)
+                }} >
                     Подтвердить
                 </Button>
                 <Button short={false} backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { this.props.openBookPopUp(undefined) }} >
                     Отмена
                 </Button>
-                <RepeatedDaysChooser visible={this.state.repeatedSettings} >
+                <RepeatedDaysChooser visible={this.state.is_regular} >
                     {
                         mvConsts.weekDays.short.filter((i, index) => index > 0).concat(mvConsts.weekDays.short[0]).map((i, index) => {
                             return (
@@ -134,7 +140,7 @@ class ClubBook extends React.Component {
                         })
                     }
                 </RepeatedDaysChooser>
-                <RepeatedSettings visible={this.state.repeatedSettings} >
+                <RepeatedSettings visible={this.state.is_regular} >
                     <Container>
                         <Container extraProps={`width: 20vw; flex-direction: row; justify-content: space-around;`}>
                             <img
@@ -184,7 +190,7 @@ class ClubBook extends React.Component {
                         }
                     </Container>
                 </RepeatedSettings>
-                <Summering visible={this.state.repeatedSettings} >
+                <Summering visible={this.state.is_regular} >
                     Предстоит {3} занятий до {moment(this.state.end_of_repeat).format(`D`)} {mvConsts.month[+moment(this.state.end_of_repeat).format(`M`)]} по {this.state.selected_days.map((i, index) => mvConsts.weekDays.short[i + 1] + (index < this.state.selected_days.length - 1 ? `, ` : ``))}.
                 </Summering>
             </Container>
@@ -315,6 +321,15 @@ background-color: ${props => props.is_selected ? mvConsts.colors.purple : props.
 color: ${props => props.is_this_month ? props.is_today || props.is_selected || props.contains_event ? `white` : mvConsts.colors.text.primary : mvConsts.colors.text.support};
 cursor: ${props => props.is_this_month ? `pointer` : null};
 transition: 0.2s
+`
+
+const QuestionWrapper = styled.div`
+display: flex
+flex-direction: row;
+align-items: center
+justify-content: space-between; 
+width: 17vw;
+height: 3vw;
 `
 
 /*eslint-enable no-unused-vars*/
