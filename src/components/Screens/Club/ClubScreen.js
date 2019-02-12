@@ -16,13 +16,10 @@ let
 
 let convertToNode = (i) => {
     return ({
+        ...i,
         day: +moment(i.start_timestamp).format(`D`) - +moment().format(`D`),
         from: (+moment(i.start_timestamp) - +moment(i.start_timestamp).startOf(`day`)) / 3600000 * 2,
         to: (+moment(i.end_timestamp) - +moment(i.end_timestamp).startOf(`day`)) / 3600000 * 2 - 1,
-        owner: i.userId,
-        is_allowed: i.is_allowed,
-        is_regular: i.is_regular,
-        data: i.data,
     })
 }
 
@@ -71,7 +68,7 @@ class ClubScreen extends React.Component {
                                                     key={index}
                                                     selected_slot={i}
                                                 >
-                                                    {}
+                                                    {i.owner.split(` `)[2]}
                                                 </BookNode>
                                             )
                                         })
@@ -214,6 +211,7 @@ position: absolute;
 z-index: 2;
 left: ${props => 6 + props.selected_slot.from * 88 / time_sets.length}vw;
 top: 0.3vh;
+color: white;
 cursor: pointer;
 transition: 0.2s
 `
