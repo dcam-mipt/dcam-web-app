@@ -47,7 +47,7 @@ class ClubBook extends React.Component {
             top: ${visible ? 12 : 14}vh;
             right: 2vw;
             box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
-            z-index: 2;
+            z-index: ${visible ? 4 : -1};
             opacity: ${visible ? 1 : 0};
             visibility: ${visible ? `visible` : `hidden`};
             transition: opacity 0.2s, top 0.2s, visibility 0.2s;

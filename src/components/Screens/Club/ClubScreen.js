@@ -64,11 +64,20 @@ class ClubScreen extends React.Component {
                                         books.map((i, index) => convertToNode(i)).filter(i => i.day === day_index).map((i, index) => {
                                             return (
                                                 <BookNode
+                                                    {...i}
                                                     booked={true}
                                                     key={index}
                                                     selected_slot={i}
                                                 >
-                                                    {i.owner.split(` `)[2]}
+                                                    <Container>
+                                                        {moment(i.start_timestamp).format(`HH:mm`)}
+                                                    </Container>
+                                                    <Container>
+                                                        {i.owner.split(` `)[2]}
+                                                    </Container>
+                                                    <Container>
+                                                        {moment(i.end_timestamp).format(`HH:mm`)}
+                                                    </Container>
                                                 </BookNode>
                                             )
                                         })
@@ -179,11 +188,12 @@ transition: 0.2s
 const Node = styled.div`
 display: flex
 justify-content: center
-align-items: center
+align-items: flex-start
 flex-direction: column
 width: ${props => 88 / time_sets.length}vw;
 height: 9.4vh;
 margin: 0.3vh 0 0.3vh 0
+z-index: 2;
 background-color: ${props => props.s ? props.s.day === props.day_index && props.index >= props.s.from && props.index <= props.s.to ? mvConsts.colors.background.primary : null : null};
 border-top-left-radius: ${props => props.s ? props.s.from === props.index ? 0.5 : 0 : 0}vw;
 border-bottom-left-radius: ${props => props.s ? props.s.from === props.index ? 0.5 : 0 : 0}vw;
@@ -201,14 +211,15 @@ border-bottom-right-radius: ${props => props.s ? props.s.to === props.index ? 0.
 const BookNode = styled.div`
 display: flex
 justify-content: center
-align-items: center
+align-items: flex-start
 flex-direction: column
-width: ${props => 88 / time_sets.length * (props.selected_slot.to - props.selected_slot.from + 1)}vw;
+padding: 0 0.2vw 0 0.2vw
+width: ${props => 88 / time_sets.length * (props.selected_slot.to - props.selected_slot.from + 1) - 0.4}vw;
 height: 9.4vh;
-background-color: ${props => props.booked ? mvConsts.colors.purple : mvConsts.colors.yellow};
+background-color: ${props => props.booked ? props.is_allowed ? mvConsts.colors.purple : mvConsts.colors.background.support : mvConsts.colors.yellow};
 border-radius: 0.5vw;
 position: absolute;
-z-index: 2;
+z-index: ${props => props.booked ? props.is_allowed ? 3 : 1 : 2};
 left: ${props => 6 + props.selected_slot.from * 88 / time_sets.length}vw;
 top: 0.3vh;
 color: white;

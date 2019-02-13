@@ -1,3 +1,4 @@
 src/constants/config.js
 deploy.sh
 node_modules
+build
