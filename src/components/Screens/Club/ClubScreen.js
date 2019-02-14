@@ -9,6 +9,7 @@ import Button from '../UI/Button'
 import moment from 'moment'
 import uiActions from '../../../redux/actions/UIActions'
 import clubActions from '../../../redux/actions/ClubActions'
+import pencil from '../../../assets/images/pencil.svg'
 
 let
     daysToSelect = Array.from({ length: 21 }, (v, i) => i),
@@ -30,6 +31,7 @@ class ClubScreen extends React.Component {
     render = () => {
         let { select_mode } = this.state
         let { selected_slot, books } = this.props
+        let books_map = books.map((i, index) => convertToNode(i))
         return (
             <Wrapper>
                 <TimeSchedule>
@@ -61,7 +63,7 @@ class ClubScreen extends React.Component {
                                             : null : null
                                     }
                                     {
-                                        books.map((i, index) => convertToNode(i)).filter(i => i.day === day_index).map((i, index) => {
+                                        books_map.filter(i => i.day === day_index).map((i, index) => {
                                             return (
                                                 <BookNode
                                                     {...i}
@@ -69,15 +71,9 @@ class ClubScreen extends React.Component {
                                                     key={index}
                                                     selected_slot={i}
                                                 >
-                                                    <Container>
-                                                        {moment(i.start_timestamp).format(`HH:mm`)}
-                                                    </Container>
-                                                    <Container>
-                                                        {i.owner.split(` `)[2]}
-                                                    </Container>
-                                                    <Container>
-                                                        {moment(i.end_timestamp).format(`HH:mm`)}
-                                                    </Container>
+                                                    <Container> {moment(i.start_timestamp).format(`HH:mm`)} </Container>
+                                                    <Container> {i.owner.split(` `)[2]} </Container>
+                                                    <Container> {moment(i.end_timestamp).format(`HH:mm`)} </Container>
                                                 </BookNode>
                                             )
                                         })
@@ -98,7 +94,9 @@ class ClubScreen extends React.Component {
                                                             if (selected_slot) {
                                                                 // this.props.openBookPopUp(undefined)
                                                             } else {
-                                                                this.props.openBookPopUp(select_mode)
+                                                                if (select_mode && !books_map.filter(i => i.day === day_index).filter(i => (i.from >= select_mode.from && i.to <= index) && i.is_allowed).length) {
+                                                                    this.props.openBookPopUp(select_mode)
+                                                                }
                                                                 if (select_mode) {
                                                                     this.setState({ select_mode: undefined, })
                                                                 } else {
@@ -118,6 +116,9 @@ class ClubScreen extends React.Component {
                         })
                     }
                 </ScrolledElement>
+                <Container extraProps={`flex-direction: row; position: absolute; bottom: 1vw; right: 1vw;`} >
+                    <LocalButtton onClick={() => {this.props.setPopUpWindow(mvConsts.popUps.CLUB_EDIT)}} > <img src={pencil} style={{ width: `1vw` }} alt={``} /> </LocalButtton>
+                </Container>
             </Wrapper>
         )
     }
@@ -216,10 +217,10 @@ flex-direction: column
 padding: 0 0.2vw 0 0.2vw
 width: ${props => 88 / time_sets.length * (props.selected_slot.to - props.selected_slot.from + 1) - 0.4}vw;
 height: 9.4vh;
-background-color: ${props => props.booked ? props.is_allowed ? mvConsts.colors.purple : mvConsts.colors.background.support : mvConsts.colors.yellow};
+background-color: ${props => props.booked ? props.is_allowed ? mvConsts.colors_.HAN_BLUE : `rgba(0, 0, 0, 0.05)` : mvConsts.colors.yellow};
 border-radius: 0.5vw;
 position: absolute;
-z-index: ${props => props.booked ? props.is_allowed ? 3 : 1 : 2};
+z-index: ${props => props.booked ? props.is_allowed ? 3 : 1 : 3};
 left: ${props => 6 + props.selected_slot.from * 88 / time_sets.length}vw;
 top: 0.3vh;
 color: white;
@@ -249,6 +250,24 @@ flex-direction: column
 width: ${88 / time_sets.length * 2}vw; 
 color: ${mvConsts.colors.text.primary}; 
 font-size: 0.8vw; 
+`
+
+const LocalButtton = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+width: 3vw
+height: 3vw
+margin: 0.2vw
+border-radius: 0.5vw
+background-color: ${mvConsts.colors.accept}
+z-index: 3;
+cursor: pointer;
+&:hover {
+    transform: rotate(5deg)
+}
+transition: 0.2s
 `
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClubScreen)

@@ -41,7 +41,7 @@ class Reservations extends React.Component {
             display: block;
             max-height: 70vh;
             overflow-y: scroll;
-            transition: opacity 0.2s, top 0.2s, visibility 0.2s;
+            transition: 0.2s;
         `
         return (
             <Container className={mvConsts.popUps.RESEVATIONS} extraProps={style} >

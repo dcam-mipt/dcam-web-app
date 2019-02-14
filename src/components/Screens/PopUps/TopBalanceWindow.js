@@ -27,7 +27,7 @@ class TopBalanceWindow extends React.Component {
             position: absolute;
             top: ${visible ? 10 : 12}vh;
             right: 17.5vw;
-            z-index: ${visible ? 2 : -1};
+            z-index: ${visible ? 3 : -1};
             opacity: ${visible ? 1 : 0};
             visibility: ${visible ? `visible` : `hidden`};
             // box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);

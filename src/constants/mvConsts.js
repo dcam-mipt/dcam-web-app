@@ -108,6 +108,7 @@ export default {
         GET_NFC: "GET_NFC",
         LAUNDRY_OPTIONS: "LAUNDRY_OPTIONS",
         CLUB_BOOK: "CLUB_BOOK",
+        CLUB_EDIT: "CLUB_EDIT",
     },
 
     status: {
