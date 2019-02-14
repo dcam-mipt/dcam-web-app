@@ -10,6 +10,7 @@ import moment from 'moment'
 import uiActions from '../../../redux/actions/UIActions'
 import clubActions from '../../../redux/actions/ClubActions'
 import pencil from '../../../assets/images/pencil.svg'
+import Parse from 'parse'
 
 let
     daysToSelect = Array.from({ length: 21 }, (v, i) => i),
@@ -27,7 +28,21 @@ let convertToNode = (i) => {
 class ClubScreen extends React.Component {
     state = {
         select_mode: undefined,
+        is_admin: false,
     }
+    componentDidMount() {
+        let q = new Parse.Query(Parse.Role)
+        q.equalTo(`name`, `Admin`)
+        q.find()
+            .then((d) => {
+                new Parse.Query(`Roles`)
+                    .equalTo('userId', Parse.User.current().id)
+                    .equalTo('role', `ADMIN`)
+                    .first()
+                    .then((d) => { this.setState({ is_admin: d ? true : false }) })
+            })
+    }
+
     render = () => {
         let { select_mode } = this.state
         let { selected_slot, books } = this.props
@@ -117,7 +132,11 @@ class ClubScreen extends React.Component {
                     }
                 </ScrolledElement>
                 <Container extraProps={`flex-direction: row; position: absolute; bottom: 1vw; right: 1vw;`} >
-                    <LocalButtton onClick={() => {this.props.setPopUpWindow(mvConsts.popUps.CLUB_EDIT)}} > <img src={pencil} style={{ width: `1vw` }} alt={``} /> </LocalButtton>
+                    {
+                        this.state.is_admin
+                            ? <LocalButtton onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.CLUB_EDIT) }} > <img src={pencil} style={{ width: `1vw` }} alt={``} /> </LocalButtton>
+                            : null
+                    }
                 </Container>
             </Wrapper>
         )
