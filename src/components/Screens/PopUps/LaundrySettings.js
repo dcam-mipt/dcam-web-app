@@ -19,9 +19,9 @@ import disabled from '../../../assets/images/no-stopping.svg'
 
 let updateMachines = (machines) => {
     for (let i in machines) {
-        let q = new Parse.Query(`Machines`)
-        q.equalTo(`objectId`, machines[i].machineId)
-        q.first()
+        new Parse.Query(`Machines`)
+            .equalTo(`objectId`, machines[i].machineId)
+            .first()
             .then((d) => {
                 if (machines[i].should_be_deleted) {
                     d.destroy()
@@ -169,8 +169,8 @@ class LaundrySettings extends React.Component {
                     <Container
                         extraProps={`width: 4vw; height: 4vw; border-radius: 0.5vw; margin: 0.1vw; font-size: 2vw; background-color: ${mvConsts.colors.background.support}; cursor: pointer; `}
                         onClick={() => {
-                            let q = new Parse.Query(`Machines`)
-                            q.find()
+                            new Parse.Query(`Machines`)
+                                .find()
                                 .then((d) => { this.props.loadMachines(d) })
                                 .catch((d) => { console.log(d) })
                         }}

@@ -6,7 +6,7 @@ import EntryScreen from './Screens/EntryScreen'
 import GoogleAPI from '../API/GoogleAPI';
 import VK from '../API/VKAPI'
 import MainScreen from './Screens/MainScreen'
-import Parse, { LiveQuerySubscription, Config } from 'parse'
+import Parse from 'parse'
 import ParseGoogleAuthAdapter from '../API/ParseGoogleAuthAdapter'
 import PopUpWrapper from './Screens/PopUps/PopUpWrapper'
 import React from 'react'

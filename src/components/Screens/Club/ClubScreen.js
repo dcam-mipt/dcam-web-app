@@ -10,6 +10,7 @@ import moment from 'moment'
 import uiActions from '../../../redux/actions/UIActions'
 import clubActions from '../../../redux/actions/ClubActions'
 import pencil from '../../../assets/images/pencil.svg'
+import cros from '../../../assets/images/cros_white.svg'
 import Parse from 'parse'
 
 let
@@ -133,8 +134,19 @@ class ClubScreen extends React.Component {
                 </ScrolledElement>
                 <Container extraProps={`flex-direction: row; position: absolute; bottom: 1vw; right: 1vw;`} >
                     {
+                        select_mode
+                            ? <LocalButtton
+                                backgroundColor={mvConsts.colors.WARM_ORANGE}
+                                onClick={() => { this.setState({ select_mode: undefined }) }}
+                            > <img src={cros} style={{ width: `1vw` }} alt={``} /> </LocalButtton>
+                            : null
+                    }
+                    {
                         this.state.is_admin
-                            ? <LocalButtton onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.CLUB_EDIT) }} > <img src={pencil} style={{ width: `1vw` }} alt={``} /> </LocalButtton>
+                            ? <LocalButtton
+                                backgroundColor={mvConsts.colors.accept}
+                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.CLUB_EDIT) }}
+                            > <img src={pencil} style={{ width: `1vw` }} alt={``} /> </LocalButtton>
                             : null
                     }
                 </Container>
@@ -280,7 +292,7 @@ width: 3vw
 height: 3vw
 margin: 0.2vw
 border-radius: 0.5vw
-background-color: ${mvConsts.colors.accept}
+background-color: ${props => props.backgroundColor ? props.backgroundColor : mvConsts.colors.accept}
 z-index: 3;
 cursor: pointer;
 &:hover {

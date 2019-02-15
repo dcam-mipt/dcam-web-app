@@ -67,9 +67,9 @@ class LaundryScreen extends React.Component {
             .catch((d) => { console.log(d) })
     }
     componentDidMount() {
-        let q = new Parse.Query(Parse.Role)
-        q.equalTo(`name`, `Admin`)
-        q.find()
+        new Parse.Query(Parse.Role)
+            .equalTo(`name`, `Admin`)
+            .find()
             .then((d) => {
                 new Parse.Query(`Roles`)
                     .equalTo('userId', Parse.User.current().id)
@@ -78,12 +78,8 @@ class LaundryScreen extends React.Component {
                     .then((d) => { this.setState({ is_admin: d ? true : false }) })
             })
         for (let i in this.subscriptionOptions) {
-            this.machinesSubscription.on(this.subscriptionOptions[i], () => {
-                this.loadMachines()
-            });
-            this.laundrySubscription.on(this.subscriptionOptions[i], () => {
-                this.loadLaundry()
-            });
+            this.machinesSubscription.on(this.subscriptionOptions[i], () => { this.loadMachines() });
+            this.laundrySubscription.on(this.subscriptionOptions[i], () => { this.loadLaundry() });
         }
     }
     componentWillUnmount() {

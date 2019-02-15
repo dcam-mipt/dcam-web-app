@@ -3,9 +3,9 @@ import Parse, { LiveQuerySubscription } from 'parse'
 import GoogleAPI from './GoogleAPI'
 let signInOrUpParse = async () => {
     let user = GoogleAPI.getCurrentUser().w3
-    let q = new Parse.Query(`User`)
-    q.equalTo(`email`, user.U3)
-    return q.first()
+    return new Parse.Query(`User`)
+        .equalTo(`email`, user.U3)
+        .first()
         .then((d) => {
             // check if user is signed up
             if (d) {
@@ -38,10 +38,10 @@ export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { })
                     // check for auth conflicts
                     if (GoogleAPI.isAuthorized()) {
                         if (Parse.User.current()) {
-                            let q = new Parse.Query(`User`)
-                            q.equalTo(`objectId`, Parse.User.current().id)
-                            q.first()
-                            	.then((d) => {
+                            new Parse.Query(`User`)
+                                .equalTo(`objectId`, Parse.User.current().id)
+                                .first()
+                                .then((d) => {
                                     // all right
                                 })
                                 .catch((d) => {

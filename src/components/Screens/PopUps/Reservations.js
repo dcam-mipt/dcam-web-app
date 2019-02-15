@@ -12,12 +12,12 @@ import Button from '../UI/Button'
 import Parse from 'parse'
 
 let unbookLaundry = (book) => {
-    let q = new Parse.Query(`Laundry`)
-    q.equalTo(`objectId`, book.laundryId)
-    q.first()
+    new Parse.Query(`Laundry`)
+        .equalTo(`objectId`, book.laundryId)
+        .first()
         .then((d) => {
             d.destroy()
-            	// .then((d) => { console.log(d) })
+                // .then((d) => { console.log(d) })
                 .catch((d) => { console.log(d) })
         })
         .catch((d) => { console.log(d) })
