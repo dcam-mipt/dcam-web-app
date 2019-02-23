@@ -13,6 +13,7 @@ import uiActions from '../../redux/actions/UIActions'
 import clubActions from '../../redux/actions/ClubActions'
 import constantsActions from '../../redux/actions/ConstantsActions'
 import screens from './screens'
+import axios from 'axios'
 
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
@@ -59,6 +60,9 @@ class MainScreen extends React.Component {
         this.balance_sub = sub(`Balance`, `userId`, Parse.User.current().id, (d) => { this.props.setBalance(d.get(`money`)) })
         this.nfc_sub = sub(`NFC`, `userId`, Parse.User.current().id, (d) => { this.props.setNfcOwner(d ? true : false) })
         this.club_sub = sub(`Club`, null, null, (d) => { Parse.Cloud.run(`getClubBooks`).then((d) => { this.props.setClubBooks(d) }) })
+
+        // console.log(Parse.User.current().get(`sessionToken`))
+
     }
     componentWillUnmount() {
         this.balance_sub.unsubscribe();

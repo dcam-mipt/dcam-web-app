@@ -115,7 +115,13 @@ class ClubBook extends React.Component {
                         start_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
                         end_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`),
                         is_regular: this.state.is_regular,
-                        data: {},
+                        data: {
+                            residents_number: this.state.residents_number,
+                            using_music_equipment: this.state.using_music_equipment,
+                            using_projector: this.state.using_projector,
+                            selected_days: this.state.selected_days,
+                            end_of_repeat: this.state.end_of_repeat,
+                        },
                     })
                     this.props.openBookPopUp(undefined)
                 }} >
