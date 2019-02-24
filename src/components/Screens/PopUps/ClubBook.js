@@ -14,6 +14,7 @@ import Parse from 'parse'
 import Select from 'react-select'
 import validator from 'validator'
 import arrow from '../../../assets/images/arrow.svg'
+import axios from 'axios';
 
 class ClubBook extends React.Component {
     state = {
@@ -110,7 +111,21 @@ class ClubBook extends React.Component {
                     </QuestionWrapper>
                 </Container>
                 <Button short={false} onClick={() => {
-                    Parse.Cloud.run(`createClubBook`, {
+                    // Parse.Cloud.run(`createClubBook`, {
+                    //     location: `club`,
+                    //     start_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
+                    //     end_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`),
+                    //     is_regular: this.state.is_regular,
+                    //     data: {
+                    //         residents_number: this.state.residents_number,
+                    //         using_music_equipment: this.state.using_music_equipment,
+                    //         using_projector: this.state.using_projector,
+                    //         selected_days: this.state.selected_days,
+                    //         end_of_repeat: this.state.end_of_repeat,
+                    //     },
+                    // })
+
+                    axios.post(`http://dcam.pro/api/club/`, {
                         location: `club`,
                         start_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
                         end_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`),
@@ -123,6 +138,10 @@ class ClubBook extends React.Component {
                             end_of_repeat: this.state.end_of_repeat,
                         },
                     })
+                    	.then((d) => { console.log(d) })
+                        .catch((d) => { console.log(d) })
+
+
                     this.props.openBookPopUp(undefined)
                 }} >
                     Подтвердить

@@ -60,14 +60,13 @@ class MainScreen extends React.Component {
         this.balance_sub = sub(`Balance`, `userId`, Parse.User.current().id, (d) => { this.props.setBalance(d.get(`money`)) })
         this.nfc_sub = sub(`NFC`, `userId`, Parse.User.current().id, (d) => { this.props.setNfcOwner(d ? true : false) })
         this.club_sub = sub(`Club`, null, null, (d) => { Parse.Cloud.run(`getClubBooks`).then((d) => { this.props.setClubBooks(d) }) })
-
-        // console.log(Parse.User.current().get(`sessionToken`))
-
+        axios.defaults.headers.common['sessionToken'] = Parse.User.current().getSessionToken();
     }
     componentWillUnmount() {
         this.balance_sub.unsubscribe();
         this.nfc_sub.unsubscribe();
         this.club_sub.unsubscribe();
+        axios.defaults.headers.common['sessionToken'] = undefined;
     }
     render = () => {
         return (
