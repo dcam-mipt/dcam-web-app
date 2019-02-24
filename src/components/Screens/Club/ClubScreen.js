@@ -21,8 +21,8 @@ let
 let convertToNode = (i) => {
     return ({
         ...i,
-        day: +moment(i.start_timestamp).format(`D`) - +moment().format(`D`),
-        from: (+moment(i.start_timestamp) - +moment(i.start_timestamp).startOf(`day`)) / 3600000 * 2,
+        day: Math.round((+moment(i.start_timestamp) - +moment()) / (3600000 * 24)),
+        from: +(+moment(i.start_timestamp) - +moment(i.start_timestamp).startOf(`day`)) / 3600000 * 2,
         to: (+moment(i.end_timestamp) - +moment(i.end_timestamp).startOf(`day`)) / 3600000 * 2 - 1,
     })
 }

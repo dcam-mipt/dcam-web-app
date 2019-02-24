@@ -23,7 +23,7 @@ class ClubBook extends React.Component {
         using_music_equipment: false,
         using_projector: false,
         selected_days: [],
-        end_of_repeat: +moment().startOf(`day`),
+        end_of_repeat: +moment().endOf(`day`),
         calendar_month: +moment().startOf(`month`),
     }
     componentWillReceiveProps(nextProps) {
@@ -111,21 +111,7 @@ class ClubBook extends React.Component {
                     </QuestionWrapper>
                 </Container>
                 <Button short={false} onClick={() => {
-                    // Parse.Cloud.run(`createClubBook`, {
-                    //     location: `club`,
-                    //     start_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
-                    //     end_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`),
-                    //     is_regular: this.state.is_regular,
-                    //     data: {
-                    //         residents_number: this.state.residents_number,
-                    //         using_music_equipment: this.state.using_music_equipment,
-                    //         using_projector: this.state.using_projector,
-                    //         selected_days: this.state.selected_days,
-                    //         end_of_repeat: this.state.end_of_repeat,
-                    //     },
-                    // })
-
-                    axios.post(`http://dcam.pro/api/club/`, {
+                    axios.post(`http://dcam.pro/api/club/create_book/`, {
                         location: `club`,
                         start_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
                         end_timestamp: +moment().startOf(`day`).add(selected_slot.day, `day`).add((selected_slot.to + 1) * 0.5, `hour`),
@@ -135,10 +121,10 @@ class ClubBook extends React.Component {
                             using_music_equipment: this.state.using_music_equipment,
                             using_projector: this.state.using_projector,
                             selected_days: this.state.selected_days,
-                            end_of_repeat: this.state.end_of_repeat,
+                            end_of_repeat: +this.state.end_of_repeat > +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`) ? +this.state.end_of_repeat : +moment().startOf(`day`).add(selected_slot.day, `day`).add(selected_slot.from * 0.5, `hour`),
                         },
                     })
-                    	.then((d) => { console.log(d) })
+                        .then((d) => { })
                         .catch((d) => { console.log(d) })
 
 
