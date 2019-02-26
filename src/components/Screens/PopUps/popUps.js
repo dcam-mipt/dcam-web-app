@@ -9,6 +9,7 @@ import GetNFC from './GetNFC'
 import LaundyOptions from './LaundyOptions'
 import ClubBook from './ClubBook'
 import ClubEdit from './ClubEdit'
+import LaundryBookDetails from './LaundryBookDetails'
 
 export default [
     <TopProfileMenu name={mvConsts.popUps.TOP_PROFILE_MENU} />,
@@ -20,4 +21,5 @@ export default [
     <LaundyOptions name={mvConsts.popUps.LAUNDRY_OPTIONS} />,
     <ClubBook name={mvConsts.popUps.CLUB_BOOK} />,
     <ClubEdit name={mvConsts.popUps.CLUB_EDIT} />,
+    <LaundryBookDetails name={mvConsts.popUps.LAUNDRY_BOOK_DETAILS} />,
 ]

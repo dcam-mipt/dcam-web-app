@@ -22,17 +22,6 @@ let shadeColor2 = (color, percent) => {
     return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
 }
 
-let context_buttons = [
-    {
-        image: cros,
-        aciton: () => { },
-    },
-    {
-        image: money,
-        aciton: () => { },
-    },
-]
-
 let NodeContent = (props = { day: +moment(), laundry: [], machines: [], isSelected: false, isBefore: false }) => {
     let border = position => `border-${position}: 0.05vw solid ${props.isSelected ? `transparent` : `rgba(0,0,0,0.1)`};`
     let free_lots = props.machines.filter(i => !i.isDisabled).length * 12 - props.laundry.filter(i => +moment(i.timestamp).tz(`Europe/Moscow`).startOf(`day`) === +props.day).length
@@ -100,11 +89,6 @@ class LaundryScreen extends React.Component {
         this.machinesSubscription.unsubscribe();
         this.laundrySubscription.unsubscribe();
     }
-    componentWillReceiveProps(nextProps) {
-        if (nextProps !== this.props) {
-            this.setState({ context: undefined })
-        }
-    }
     render = () => {
         return (
             <Container flexDirection={`row`} extraProps={`position: relative; @media (min-width: 320px) and (max-width: 480px) { flex-direction: column; height: 100%; }`} >
@@ -130,7 +114,7 @@ class LaundryScreen extends React.Component {
                             <Button
                                 backgroundColor={mvConsts.colors.purple}
                                 disabled={this.state.selectedDay === +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`)}
-                                onClick={() => { this.setState({ selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`), context: undefined }) }}
+                                onClick={() => { this.setState({ selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`) }) }}
                             >
                                 Сегодня
                             </Button>
@@ -178,7 +162,7 @@ class LaundryScreen extends React.Component {
                                                             isToday={+moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`) === +moment(startOfDay).tz(`Europe/Moscow`)}
                                                             isSelected={+moment(this.state.selectedDay).tz(`Europe/Moscow`).startOf(`day`) === +moment(startOfDay).tz(`Europe/Moscow`)}
                                                             isWeekEnd={moment(startOfDay).tz(`Europe/Moscow`).add(-1, `day`).day() > 4}
-                                                            onClick={() => { if (!isBefore) { this.setState({ selectedDay: startOfDay, context: undefined }) } }}
+                                                            onClick={() => { if (!isBefore) { this.setState({ selectedDay: startOfDay }) } }}
                                                         >
                                                             <NodeContent
                                                                 day={startOfDay}
@@ -215,20 +199,14 @@ class LaundryScreen extends React.Component {
                                             let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)
                                             let isMyBook = book ? book.userId === Parse.User.current().id : false
                                             return (
-                                                <Container key={machine_index} >
-                                                    <Machine
-                                                        onContextMenu={(e) => {
-                                                            if (!isBefore) {
-                                                                this.setState({
-                                                                    context: {
-                                                                        time_index: time_index,
-                                                                        machine_index: machine_index,
-                                                                    }
-                                                                })
-                                                                this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
-                                                            }
-                                                            e.preventDefault();
-                                                        }}
+                                                <Machine
+                                                        // onContextMenu={(e) => {
+                                                        //     if (!isBefore) {
+                                                        //         this.setState({ context: { time_index: time_index, machine_index: machine_index } })
+                                                        //     }
+                                                        //     e.preventDefault();
+                                                        // }}
+                                                        key={machine_index}
                                                         first={machine_index === 0}
                                                         last={machine_index === this.props.machines.length - 1}
                                                         width={21 / this.props.machines.length}
@@ -240,42 +218,17 @@ class LaundryScreen extends React.Component {
                                                         is_vk_owner={book ? book.vk ? true : false : false}
                                                         onClick={() => {
                                                             if (book) {
-                                                                if (book.vk) {
-                                                                    window.open(book.vk)
-                                                                }
+                                                                // if (book.vk) {
+                                                                //     window.open(book.vk)
+                                                                // }
+                                                                this.props.openLaundryBookDetails(book)
                                                             } else {
                                                                 this.props.selectSlot(slotObject)
                                                             }
                                                         }}
                                                     >
-
                                                         {book ? book.name.length > 36 / this.props.machines.length ? (book.name).substring(0, 36 / this.props.machines.length - 2) + `...` : book.name : `-`}
                                                     </Machine>
-                                                    {
-                                                        isMyBook || this.state.is_admin
-                                                            ? <Context
-                                                                time_index={time_index}
-                                                                machine_index={this.props.machines.length - machine_index}
-                                                                machines_number={this.props.machines.length}
-                                                                visible={this.state.context ? this.state.context.time_index === time_index && this.state.context.machine_index === machine_index : null}
-                                                            >
-                                                                {
-                                                                    context_buttons.map((i, index) => {
-                                                                        return (
-                                                                            <img
-                                                                                src={i.image}
-                                                                                key={index}
-                                                                                style={{ width: `2.5vw`, height: `1.25vw`, cursor: `pointer`, }}
-                                                                                alt={``}
-                                                                                onClick={() => { i.aciton() }}
-                                                                            />
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </Context>
-                                                            : null
-                                                    }
-                                                </Container>
                                             )
                                         })
                                     }
@@ -313,6 +266,9 @@ let mapDispatchToProps = (dispatch) => {
         loadLaundry: (data) => {
             return dispatch(laundryActions.loadLaundry(data))
         },
+        openLaundryBookDetails: (data) => {
+            return dispatch(laundryActions.openLaundryBookDetails(data))
+        },
     }
 }
 
@@ -337,23 +293,6 @@ const TimePointer = (props) => {
         </Container>
     )
 }
-
-const Context = styled.div`
-position: absolute
-top: ${props => props.time_index * 3.4 + 4 - +props.visible * 2}vw
-right: ${props => (props.machine_index - 0.5) * (21 / props.machines_number)}vw
-visibility: ${props => props.visible ? `visible` : `hidden`}
-opacity: ${props => +props.visible}
-display: flex
-z-index: 10
-justify-content: center
-align-items: center
-flex-direction: row
-padding: 0.5vw
-border-radius: 0.5vw
-background-color: white
-transition: 0.2s
-`
 
 const DayWrapper = styled.div`
 display: flex;

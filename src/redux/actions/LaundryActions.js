@@ -36,6 +36,14 @@ export default {
                 })
             }
         }
+    },
+    openLaundryBookDetails: (data) => {
+        return (dispatch) => {
+            dispatch({
+                type: types.OPEN_LAUNDRY_BOOK_DETAIL,
+                data: data
+            })
+        }
     }
 }
 /*eslint-enable no-unused-vars*/

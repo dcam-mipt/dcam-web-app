@@ -35,6 +35,16 @@ export default (state = initialState, action) => {
                     // convert strings to object in revert
                     .map(i => JSON.parse(i)),
             };
+        case types.OPEN_LAUNDRY_BOOK_DETAIL:
+            return {
+                ...state,
+                book_details: action.data
+            }
+        case types.SET_POP_UP_WINDOW:
+            return {
+                ...state,
+                book_details: undefined
+            }
 
         default:
             return state;

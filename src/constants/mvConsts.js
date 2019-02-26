@@ -109,6 +109,7 @@ export default {
         LAUNDRY_OPTIONS: "LAUNDRY_OPTIONS",
         CLUB_BOOK: "CLUB_BOOK",
         CLUB_EDIT: "CLUB_EDIT",
+        LAUNDRY_BOOK_DETAILS: "LAUNDRY_BOOK_DETAILS",
     },
 
     status: {

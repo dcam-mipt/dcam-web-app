@@ -24,12 +24,17 @@ export default (state = initialState, action) => {
         case types.OPEN_BOOK_POP_UP:
             return {
                 ...state,
-                popUpWindow: action.data ? mvConsts.popUps.CLUB_BOOK: `EMPTY`,
+                popUpWindow: action.data ? mvConsts.popUps.CLUB_BOOK: mvConsts.popUps.EMPTY,
             };
         case types.SET_NFC_OWNER:
             return {
                 ...state,
-                popUpWindow: action.data ? `EMPTY` : state.popUpWindow,
+                popUpWindow: action.data ? mvConsts.popUps.EMPTY : state.popUpWindow,
+            };
+        case types.OPEN_LAUNDRY_BOOK_DETAIL:
+            return {
+                ...state,
+                popUpWindow: mvConsts.popUps.LAUNDRY_BOOK_DETAILS,
             };
 
         default:
