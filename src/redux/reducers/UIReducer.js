@@ -4,7 +4,7 @@ import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
     loading: false,
-    mainAppScreen: mvConsts.screens.club,
+    mainAppScreen: mvConsts.screens.laundry,
     popUpWindow: mvConsts.popUps.EMPTY,
 };
 

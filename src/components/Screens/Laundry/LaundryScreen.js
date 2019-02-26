@@ -12,6 +12,8 @@ import mvConsts from '../../../constants/mvConsts'
 import styled, { keyframes } from 'styled-components'
 import uiActions from '../../../redux/actions/UIActions'
 import { connect } from 'react-redux'
+import cros from '../../../assets/images/cros.svg'
+import money from '../../../assets/images/money.svg'
 
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
@@ -20,25 +22,36 @@ let shadeColor2 = (color, percent) => {
     return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
 }
 
+let context_buttons = [
+    {
+        image: cros,
+        aciton: () => { },
+    },
+    {
+        image: money,
+        aciton: () => { },
+    },
+]
+
 let NodeContent = (props = { day: +moment(), laundry: [], machines: [], isSelected: false, isBefore: false }) => {
     let border = position => `border-${position}: 0.05vw solid ${props.isSelected ? `transparent` : `rgba(0,0,0,0.1)`};`
     let free_lots = props.machines.filter(i => !i.isDisabled).length * 12 - props.laundry.filter(i => +moment(i.timestamp).tz(`Europe/Moscow`).startOf(`day`) === +props.day).length
     let lots_number = props.machines.filter(i => !i.isDisabled).length * 12
     return (
         <Container extraProps={`width: 6vw; height: 6vw; @media (min-width: 320px) and (max-width: 480px) { height: 10vw; }`} >
-            <Container extraProps={`flex-direction: row; ${border(`bottom`)};`} >
-                <Container extraProps={`width: 3vw; height: 3vw; ${border(`right`)}; font-size: ${props.isSelected ? 1.5 : 1}vw; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: ${props.isSelected ? 6 : 4}vw; width: 8vw; height: 100%; } `} >
+            <Container extraProps={`flex-direction: row; ${border(`bottom`)}; font-size: 1vw; `} >
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  ${props.isSelected ? `font-size: 1.5vw` : null}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: ${props.isSelected ? 6 : 4}vw; width: 8vw; height: 100%; } `} >
                     {moment(props.day).tz(`Europe/Moscow`).format('DD')}
-                </Container>
-                <Container extraProps={`width: 3vw; height: 3vw; color: ${mvConsts.colors.background.support}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+                </Container>.
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  color: ${mvConsts.colors.background.support}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
                     {moment(props.day).tz(`Europe/Moscow`).format('MM')}
                 </Container>
             </Container>
             <Container extraProps={`flex-direction: row`} >
-                <Container extraProps={`width: 3vw; height: 3vw; ${border(`right`)}; color: ${props.isBefore ? mvConsts.colors.text.support : free_lots / lots_number > 2 / 3 ? mvConsts.colors.accept : free_lots / lots_number > 1 / 3 ? mvConsts.colors.yellow : mvConsts.colors.WARM_ORANGE}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  color: ${props.isBefore ? mvConsts.colors.text.support : free_lots / lots_number > 2 / 3 ? mvConsts.colors.accept : free_lots / lots_number > 1 / 3 ? mvConsts.colors.yellow : mvConsts.colors.WARM_ORANGE}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
                     {free_lots}
-                </Container>
-                <Container extraProps={`width: 3vw; height: 3vw; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+                </Container>/
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
                     {lots_number}
                 </Container>
             </Container>
@@ -50,6 +63,7 @@ class LaundryScreen extends React.Component {
     state = {
         selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`),
         is_admin: false,
+        context: undefined,
     }
     subscriptionOptions = [`update`, `create`, `delete`, `open`]
     machinesQuery = new Parse.Query('Machines');
@@ -86,6 +100,11 @@ class LaundryScreen extends React.Component {
         this.machinesSubscription.unsubscribe();
         this.laundrySubscription.unsubscribe();
     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps !== this.props) {
+            this.setState({ context: undefined })
+        }
+    }
     render = () => {
         return (
             <Container flexDirection={`row`} extraProps={`position: relative; @media (min-width: 320px) and (max-width: 480px) { flex-direction: column; height: 100%; }`} >
@@ -111,7 +130,7 @@ class LaundryScreen extends React.Component {
                             <Button
                                 backgroundColor={mvConsts.colors.purple}
                                 disabled={this.state.selectedDay === +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`)}
-                                onClick={() => { this.setState({ selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`) }) }}
+                                onClick={() => { this.setState({ selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`), context: undefined }) }}
                             >
                                 Сегодня
                             </Button>
@@ -159,7 +178,7 @@ class LaundryScreen extends React.Component {
                                                             isToday={+moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`) === +moment(startOfDay).tz(`Europe/Moscow`)}
                                                             isSelected={+moment(this.state.selectedDay).tz(`Europe/Moscow`).startOf(`day`) === +moment(startOfDay).tz(`Europe/Moscow`)}
                                                             isWeekEnd={moment(startOfDay).tz(`Europe/Moscow`).add(-1, `day`).day() > 4}
-                                                            onClick={() => { if (!isBefore) { this.setState({ selectedDay: startOfDay }) } }}
+                                                            onClick={() => { if (!isBefore) { this.setState({ selectedDay: startOfDay, context: undefined }) } }}
                                                         >
                                                             <NodeContent
                                                                 day={startOfDay}
@@ -193,17 +212,31 @@ class LaundryScreen extends React.Component {
                                         this.props.machines.map((machine, machine_index) => {
                                             let slotObject = { timestamp: timestamp, machineId: machine.machineId }
                                             let book = this.props.laundry.filter(i => i.machineId === slotObject.machineId && i.timestamp === slotObject.timestamp)[0]
+                                            let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)
+                                            let isMyBook = book ? book.userId === Parse.User.current().id : false
                                             return (
                                                 <Container key={machine_index} >
                                                     <Machine
+                                                        onContextMenu={(e) => {
+                                                            if (!isBefore) {
+                                                                this.setState({
+                                                                    context: {
+                                                                        time_index: time_index,
+                                                                        machine_index: machine_index,
+                                                                    }
+                                                                })
+                                                                this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
+                                                            }
+                                                            e.preventDefault();
+                                                        }}
                                                         first={machine_index === 0}
                                                         last={machine_index === this.props.machines.length - 1}
                                                         width={21 / this.props.machines.length}
-                                                        isBefore={+moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)}
+                                                        isBefore={isBefore}
                                                         isSelected={this.props.selected_slots.filter(i => JSON.stringify(i) === JSON.stringify(slotObject)).length}
                                                         isDisabled={machine.isDisabled}
                                                         isBook={book ? true : false}
-                                                        isMyBook={book ? book.userId === Parse.User.current().id : false}
+                                                        isMyBook={isMyBook}
                                                         is_vk_owner={book ? book.vk ? true : false : false}
                                                         onClick={() => {
                                                             if (book) {
@@ -215,8 +248,33 @@ class LaundryScreen extends React.Component {
                                                             }
                                                         }}
                                                     >
+
                                                         {book ? book.name.length > 36 / this.props.machines.length ? (book.name).substring(0, 36 / this.props.machines.length - 2) + `...` : book.name : `-`}
                                                     </Machine>
+                                                    {
+                                                        isMyBook || this.state.is_admin
+                                                            ? <Context
+                                                                time_index={time_index}
+                                                                machine_index={this.props.machines.length - machine_index}
+                                                                machines_number={this.props.machines.length}
+                                                                visible={this.state.context ? this.state.context.time_index === time_index && this.state.context.machine_index === machine_index : null}
+                                                            >
+                                                                {
+                                                                    context_buttons.map((i, index) => {
+                                                                        return (
+                                                                            <img
+                                                                                src={i.image}
+                                                                                key={index}
+                                                                                style={{ width: `2.5vw`, height: `1.25vw`, cursor: `pointer`, }}
+                                                                                alt={``}
+                                                                                onClick={() => { i.aciton() }}
+                                                                            />
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </Context>
+                                                            : null
+                                                    }
                                                 </Container>
                                             )
                                         })
@@ -237,6 +295,7 @@ let mapStateToProps = (state) => {
         selected_slots: state.laundry.selected_slots,
         machines: state.machines.machines,
         laundry: state.laundry.laundry,
+        popUpWindow: state.ui.popUpWindow,
     }
 }
 
@@ -279,13 +338,31 @@ const TimePointer = (props) => {
     )
 }
 
-const DayWrapper = styled.div`
+const Context = styled.div`
+position: absolute
+top: ${props => props.time_index * 3.4 + 4 - +props.visible * 2}vw
+right: ${props => (props.machine_index - 0.5) * (21 / props.machines_number)}vw
+visibility: ${props => props.visible ? `visible` : `hidden`}
+opacity: ${props => +props.visible}
 display: flex
+z-index: 10
 justify-content: center
 align-items: center
-flex-direction: column
-width: 30vw
-height: 90vh
+flex-direction: row
+padding: 0.5vw
+border-radius: 0.5vw
+background-color: white
+transition: 0.2s
+`
+
+const DayWrapper = styled.div`
+display: flex;
+positoin: relative;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+width: 30vw;
+height: 90vh;
 justify-content: flex-start;
 transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
@@ -296,9 +373,8 @@ transition: 0.2s
 
 const Machine = styled.div`
 display: flex
-justify-content: center
-align-items: center
-flex-direction: column
+justify-content: center;
+align-items: center;
 width: ${props => props.width}vw
 height: 3vw
 background: ${props => props.isBefore || props.isDisabled ? mvConsts.colors.background.support : props.isSelected ? mvConsts.colors.lightblue : `rgba(0, 0, 0, 0.03)`};
@@ -307,7 +383,8 @@ border-top-left-radius: ${props => props.first ? 0.5 : 0}vw;
 border-bottom-left-radius: ${props => props.first ? 0.5 : 0}vw;
 border-top-right-radius: ${props => props.last ? 0.5 : 0}vw;
 border-bottom-right-radius: ${props => props.last ? 0.5 : 0}vw;
-color: white
+color: white;
+overflow: visible;
 ${props => !props.isBefore && !props.isDisabled ? props.isBook ? props.is_vk_owner ? `cursor: pointer;` : null : `cursor: pointer;` : null}
 display: -webkit-box;
    -webkit-line-clamp: 3;
@@ -319,6 +396,7 @@ transition: 0.2s
     width: ${props => props.width * 4}vw
     height: 10vh
 }
+flex-direction: row;
 `
 
 const Node = styled.div`
@@ -346,9 +424,7 @@ ${props => props.isBefore ? `color: ${mvConsts.colors.text.support};` : null}
 cursor: ${props => props.isBefore ? `default` : `pointer;`}
 transition: 0.2s;
 &:hover{
-    ${props => props.inner ? `background-color: ${mvConsts.colors.background.secondary}
-    ${props => props.isWeekEnd ? `background-color: ${mvConsts.colors.background.support}` : null}
-    ${props => props.isBefore ? `background-color: transparent` : null}` : null}
+    ${props => props.isSelected ? null : `background-color: ${shadeColor2(`#000000`, 0.9)}`}
 }
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.inner ? 30 : 30.5}vw
