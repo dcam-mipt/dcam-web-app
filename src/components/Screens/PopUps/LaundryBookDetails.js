@@ -15,10 +15,15 @@ import VK from '../../../API/VKAPI'
 import axios from 'axios';
 
 class LaundryBookDetails extends React.Component {
+    state = {
+        user: undefined,
+    }
     componentWillReceiveProps(nextProps) {
         if (nextProps.book_details) {
-            console.log(nextProps.book_details)
-            // axios.get(`http://dcam.pro/api/club/create_book/`, {user_id: nextProps.book_details.user_id})
+            // console.log(nextProps.book_details)
+            axios.get(`http://dcam.pro/api/users/get_user/${nextProps.book_details.userId}`)
+                .then((d) => { this.setState({ user: d.data }) })
+                .catch((d) => { console.log(d) })
         }
     }
     render = () => {
@@ -46,15 +51,31 @@ class LaundryBookDetails extends React.Component {
                     this.props.book_details
                         ? <Container>
                             <Container extraProps={`flex-direction: row`} >
-                                <Container extraProps={`width: 4vw; height: 4vw; background-color: ${mvConsts.colors.background.support}; border-radius: 3vw;`} >
-                                    {
-
-                                    }
+                                <Container extraProps={`width: 3vw; height: 3vw; background-color: ${mvConsts.colors.background.support}; border-radius: 3vw;`} >
+                                    {this.state.user
+                                        ? <img
+                                            src={this.state.user.avatar}
+                                            style={{ width: `3vw`, borderRadius: `2vw` }}
+                                            alt={``}
+                                        />
+                                        : null}
                                 </Container>
-                                <Container extraProps={`width: 9.5vw; align-items: flex-start; margin-left: 1vw; font-size: 1vw; `} >
-                                    {this.props.book_details.name}
+                                <Container>
+                                    <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; font-size: 1vw; color: ${mvConsts.colors.text.primary}; `} >
+                                        {this.state.user ? this.state.user.name.split(` `)[2] : null}
+                                    </Container>
+                                    <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; color: rgba(0, 0, 0, 0.4); `} >
+                                        {this.state.user ? this.state.user.name.split(` `)[0] : null}
+                                    </Container>
                                 </Container>
-                                <Container extraProps={`width: 2.5vw; height: 2.5vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.vk}; cursor: pointer;`} >
+                                <Container
+                                    extraProps={`width: 2.5vw; height: 2.5vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.vk}; cursor: pointer; visibility: ${(this.state.user ? this.state.user.vk : false) ? `visible` : `hidden`} `}
+                                    onClick={() => {
+                                        if (this.state.user) {
+                                            window.open(this.state.user.vk)
+                                        }
+                                    }}
+                                >
                                     <img
                                         src={vk_logo}
                                         style={{ width: `1vw` }}
