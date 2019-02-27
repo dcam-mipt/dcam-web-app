@@ -131,10 +131,10 @@ class LaundryScreen extends React.Component {
                                 Настройки
                             </Button>
                             <Button
-                                disabled={!this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).startOf(`hour`)).length}
+                                disabled={!this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length}
                                 onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.RESEVATIONS) }}
                             >
-                                Стирки | {this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).startOf(`hour`)).length}
+                                Стирки | {this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length}
                             </Button>
                             <Button
                                 disabled={!this.props.selected_slots.length}
@@ -221,7 +221,9 @@ class LaundryScreen extends React.Component {
                                                                 // if (book.vk) {
                                                                 //     window.open(book.vk)
                                                                 // }
-                                                                this.props.openLaundryBookDetails(book)
+                                                                if (!isBefore && book) {
+                                                                    this.props.openLaundryBookDetails(book)
+                                                                }
                                                             } else {
                                                                 this.props.selectSlot(slotObject)
                                                             }

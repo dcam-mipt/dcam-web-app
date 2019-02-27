@@ -7,19 +7,24 @@ import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import Container from '../../Container'
 import cros from '../../../assets/images/cros.svg'
+import money from '../../../assets/images/money.svg'
 import moment from 'moment'
 import Button from '../UI/Button'
 import Parse from 'parse'
+import axios from 'axios'
 
 let unbookLaundry = (book) => {
-    new Parse.Query(`Laundry`)
-        .equalTo(`objectId`, book.laundryId)
-        .first()
-        .then((d) => {
-            d.destroy()
-                // .then((d) => { console.log(d) })
-                .catch((d) => { console.log(d) })
-        })
+    // new Parse.Query(`Laundry`)
+    //     .equalTo(`objectId`, )
+    //     .first()
+    //     .then((d) => {
+    //         d.destroy()
+    //             // .then((d) => { console.log(d) })
+    //             .catch((d) => { console.log(d) })
+    //     })
+    //     .catch((d) => { console.log(d) })
+    axios.get(`http://dcam.pro/api/laundry/unbook/${book.laundryId}`)
+        .then((d) => { console.log(d) })
         .catch((d) => { console.log(d) })
 }
 
@@ -63,8 +68,8 @@ class Reservations extends React.Component {
                                 <Container extraProps={`width: 2vw; height: 2vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
                                     {this.props.machines.map(i => i.machineId).indexOf(item.machineId) + 1}
                                 </Container>
-                                <Container extraProps={` border-left: 1px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; width: 1.5vw; height: 2vw; cursor: pointer; `} >
-                                    <img src={cros} alt={``} style={{ width: (1.2) + `vw`, marginLeft: `0.5vw` }} onClick={() => { unbookLaundry(item) }} />
+                                <Container extraProps={` border-left: 1px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; height: 2vw; cursor: pointer; `} >
+                                    <img src={money} alt={``} style={{ width: `2vw`, marginLeft: `0.5vw` }} onClick={() => { unbookLaundry(item) }} />
                                 </Container>
                             </Slot>
                         )
@@ -78,7 +83,7 @@ class Reservations extends React.Component {
 let mapStateToProps = (state) => {
     return {
         popUpWindow: state.ui.popUpWindow,
-        laundry: state.laundry.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(state.constants.server_time).startOf(`hour`)).sort((a, b) => a.timestamp - b.timestamp),
+        laundry: state.laundry.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(state.constants.server_time).add(-2, `hour`).startOf(`hour`)).sort((a, b) => a.timestamp - b.timestamp),
         machines: state.machines.machines,
     }
 };

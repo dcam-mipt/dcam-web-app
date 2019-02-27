@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import Container from '../../Container'
 import cros from '../../../assets/images/cros.svg'
+import money from '../../../assets/images/money.svg'
 import vk_logo from '../../../assets/images/vk_logo.svg'
 import moment from 'moment'
 import Button from '../UI/Button'
@@ -17,6 +18,7 @@ import axios from 'axios';
 class LaundryBookDetails extends React.Component {
     state = {
         user: undefined,
+        is_admin: false,
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.book_details) {
@@ -25,6 +27,14 @@ class LaundryBookDetails extends React.Component {
                 .then((d) => { this.setState({ user: d.data }) })
                 .catch((d) => { console.log(d) })
         }
+    }
+    componentDidMount() {
+        new Parse.Query(`Roles`)
+            .equalTo(`userId`, Parse.User.current().id)
+            .equalTo(`role`, `ADMIN`)
+            .first()
+            .then((d) => { this.setState({ is_admin: d ? true : false }) })
+            .catch((d) => { console.log(d) })
     }
     render = () => {
         let visible = this.props.popUpWindow === mvConsts.popUps.LAUNDRY_BOOK_DETAILS
@@ -45,10 +55,13 @@ class LaundryBookDetails extends React.Component {
             overflow-y: scroll;
             transition: 0.2s;
         `
+        let { book_details } = this.props
+        let is_my_book = book_details ? book_details.userId === Parse.User.current().id : null
+        let little_time_to = book_details ? book_details.timestamp - +moment() < 7200000 : null
         return (
             <Container className={mvConsts.popUps.LAUNDRY_BOOK_DETAILS} extraProps={style} >
                 {
-                    this.props.book_details
+                    book_details
                         ? <Container>
                             <Container extraProps={`flex-direction: row`} >
                                 <Container extraProps={`width: 3vw; height: 3vw; background-color: ${mvConsts.colors.background.support}; border-radius: 3vw;`} >
@@ -81,6 +94,39 @@ class LaundryBookDetails extends React.Component {
                                         style={{ width: `1vw` }}
                                         alt={``}
                                     />
+                                </Container>
+                            </Container>
+                            <Container extraProps={`flex-direction: row; padding: 0.5vw 0 0.5vw 0`} >
+                                <Container>
+                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.support}`} >
+                                        {mvConsts.weekDays.full[moment(book_details.timestamp).tz(`Europe/Moscow`).day()]}
+                                    </Container>
+                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.primary}`} >
+                                        {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`DD.MM.YY`)}
+                                    </Container>
+                                </Container>
+                                <Container extraProps={`font-size: 1.5vw; width: 5.5vw; color: ${mvConsts.colors.text.primary} `} >
+                                    {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`HH:mm`)}
+                                </Container>
+                                <Container extraProps={`width: 2vw; height: 2vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
+                                    {this.props.machines.map(i => i.machineId).indexOf(book_details.machineId) + 1}
+                                </Container>
+                                <Container extraProps={` border-left: ${+(is_my_book)}px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; height: 2vw; width: 2.5vw; `} >
+                                    {
+                                        is_my_book || this.state.is_admin
+                                            ? <img
+                                                src={little_time_to ? cros : money}
+                                                alt={``}
+                                                title={`Вернуть`}
+                                                style={{ width: `2vw`, marginLeft: `0.5vw`, cursor: `pointer` }}
+                                                onClick={() => {
+                                                    axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.laundryId}`)
+                                                        // .then((d) => { console.log(d) })
+                                                        .catch((d) => { console.log(d) })
+                                                }}
+                                            />
+                                            : null
+                                    }
                                 </Container>
                             </Container>
                             <Button short={false} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) }} >
