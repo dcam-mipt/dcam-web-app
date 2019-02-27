@@ -60,7 +60,7 @@ class MainScreen extends React.Component {
         this.balance_sub = sub(`Balance`, `userId`, Parse.User.current().id, (d) => { this.props.setBalance(d.get(`money`)) })
         this.nfc_sub = sub(`NFC`, `userId`, Parse.User.current().id, (d) => { this.props.setNfcOwner(d ? true : false) })
         this.club_sub = sub(`Club`, null, null, (d) => { Parse.Cloud.run(`getClubBooks`).then((d) => { this.props.setClubBooks(d) }) })
-        axios.defaults.headers.common['sessionToken'] = Parse.User.current().getSessionToken();
+        axios.defaults.headers.common['sessiontoken'] = Parse.User.current().getSessionToken();
     }
     componentWillUnmount() {
         this.balance_sub.unsubscribe();
@@ -119,7 +119,8 @@ class MainScreen extends React.Component {
                                 <img src={Parse.User.current().get(`avatar`)} alt={``} style={{ width: `3vw`, borderRadius: `3vw`, }} />
                             </Container>
                             <Container alignItems={`flex-start`} extraProps={` width: 9vw; height: 1vw; margin: 0.5vw; color: ${mvConsts.colors.text.primary}; `} >
-                                {Parse.User.current().get(`name`).split(` `)[0]}
+                                {/* {Parse.User.current().get(`name`).split(` `)[0]} */}
+                                {Parse.User.current().get(`username`).split(`@`)[0]}
                             </Container>
                             {/*<img src={require('../../assets/images/arrow_down.svg')} alt={``} style={{ width: `1vw`, }} />*/}
                             🍕

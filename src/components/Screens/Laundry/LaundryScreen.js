@@ -14,6 +14,7 @@ import uiActions from '../../../redux/actions/UIActions'
 import { connect } from 'react-redux'
 import cros from '../../../assets/images/cros.svg'
 import money from '../../../assets/images/money.svg'
+import axios from 'axios';
 
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
@@ -65,8 +66,11 @@ class LaundryScreen extends React.Component {
             .catch((d) => { console.log(d) })
     }
     loadLaundry = () => {
-        Parse.Cloud.run(`getLaundry`)
-            .then((d) => { this.props.loadLaundry(d) })
+        // Parse.Cloud.run(`getLaundry`)
+        //     .then((d) => { this.props.loadLaundry(d) })
+        //     .catch((d) => { console.log(d) })
+        axios.get(`http://dcam.pro/api/laundry/get`)
+            .then((d) => { this.props.loadLaundry(d.data) })
             .catch((d) => { console.log(d) })
     }
     componentDidMount() {
@@ -198,39 +202,41 @@ class LaundryScreen extends React.Component {
                                             let book = this.props.laundry.filter(i => i.machineId === slotObject.machineId && i.timestamp === slotObject.timestamp)[0]
                                             let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)
                                             let isMyBook = book ? book.userId === Parse.User.current().id : false
+                                            // console.log(book)
                                             return (
                                                 <Machine
-                                                        // onContextMenu={(e) => {
-                                                        //     if (!isBefore) {
-                                                        //         this.setState({ context: { time_index: time_index, machine_index: machine_index } })
-                                                        //     }
-                                                        //     e.preventDefault();
-                                                        // }}
-                                                        key={machine_index}
-                                                        first={machine_index === 0}
-                                                        last={machine_index === this.props.machines.length - 1}
-                                                        width={21 / this.props.machines.length}
-                                                        isBefore={isBefore}
-                                                        isSelected={this.props.selected_slots.filter(i => JSON.stringify(i) === JSON.stringify(slotObject)).length}
-                                                        isDisabled={machine.isDisabled}
-                                                        isBook={book ? true : false}
-                                                        isMyBook={isMyBook}
-                                                        is_vk_owner={book ? book.vk ? true : false : false}
-                                                        onClick={() => {
-                                                            if (book) {
-                                                                // if (book.vk) {
-                                                                //     window.open(book.vk)
-                                                                // }
-                                                                if (!isBefore && book) {
-                                                                    this.props.openLaundryBookDetails(book)
-                                                                }
-                                                            } else {
-                                                                this.props.selectSlot(slotObject)
+                                                    // onContextMenu={(e) => {
+                                                    //     if (!isBefore) {
+                                                    //         this.setState({ context: { time_index: time_index, machine_index: machine_index } })
+                                                    //     }
+                                                    //     e.preventDefault();
+                                                    // }}
+                                                    key={machine_index}
+                                                    first={machine_index === 0}
+                                                    last={machine_index === this.props.machines.length - 1}
+                                                    width={21 / this.props.machines.length}
+                                                    isBefore={isBefore}
+                                                    isSelected={this.props.selected_slots.filter(i => JSON.stringify(i) === JSON.stringify(slotObject)).length}
+                                                    isDisabled={machine.isDisabled}
+                                                    isBook={book ? true : false}
+                                                    isMyBook={isMyBook}
+                                                    is_vk_owner={book ? book.vk ? true : false : false}
+                                                    onClick={() => {
+                                                        if (book) {
+                                                            // if (book.vk) {
+                                                            //     window.open(book.vk)
+                                                            // }
+                                                            if (!isBefore && book) {
+                                                                this.props.openLaundryBookDetails(book)
                                                             }
-                                                        }}
-                                                    >
-                                                        {book ? book.name.length > 36 / this.props.machines.length ? (book.name).substring(0, 36 / this.props.machines.length - 2) + `...` : book.name : `-`}
-                                                    </Machine>
+                                                        } else {
+                                                            this.props.selectSlot(slotObject)
+                                                        }
+                                                    }}
+                                                >
+                                                    {/* {book ? book.name.length > 36 / this.props.machines.length ? (book.name).substring(0, 36 / this.props.machines.length - 2) + `...` : book.name : `-`} */}
+                                                    {book ? book.email.split(`@`)[0] : null}
+                                                </Machine>
                                             )
                                         })
                                     }

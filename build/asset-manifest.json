@@ -1,9 +1,9 @@
 {
   "main.css": "/static/css/main.0dcf8df4.chunk.css",
-  "main.js": "/static/js/main.0c033474.chunk.js",
-  "main.js.map": "/static/js/main.0c033474.chunk.js.map",
-  "static/js/1.93ebfa3c.chunk.js": "/static/js/1.93ebfa3c.chunk.js",
-  "static/js/1.93ebfa3c.chunk.js.map": "/static/js/1.93ebfa3c.chunk.js.map",
+  "main.js": "/static/js/main.6464f4d1.chunk.js",
+  "main.js.map": "/static/js/main.6464f4d1.chunk.js.map",
+  "static/js/1.ef986184.chunk.js": "/static/js/1.ef986184.chunk.js",
+  "static/js/1.ef986184.chunk.js.map": "/static/js/1.ef986184.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.229c360f.js",
   "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
   "static/media/cros.svg": "/static/media/cros.b1585ec7.svg",
@@ -18,11 +18,11 @@
   "static/media/logout.png": "/static/media/logout.d1ad6d96.png",
   "static/media/upload.svg": "/static/media/upload.e7bc3c08.svg",
   "static/media/vk_logo.svg": "/static/media/vk_logo.484cb534.svg",
-  "static/media/index.css": "/static/media/Lato-Black.e798200a.ttf",
+  "static/media/index.css": "/static/media/Lato-Regular.fa62c04b.ttf",
   "static/media/user_selected.png": "/static/media/user_selected.15168650.png",
   "static/media/settings_selected.svg": "/static/media/settings_selected.9cfd49f2.svg",
   "static/css/main.0dcf8df4.chunk.css.map": "/static/css/main.0dcf8df4.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.dd932b9f6dca31eb7bcabc5d28b31635.js": "/precache-manifest.dd932b9f6dca31eb7bcabc5d28b31635.js",
+  "precache-manifest.0ae1e807e867eb1042c0864324a72c6f.js": "/precache-manifest.0ae1e807e867eb1042c0864324a72c6f.js",
   "service-worker.js": "/service-worker.js"
 }

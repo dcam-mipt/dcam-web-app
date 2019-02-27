@@ -75,10 +75,11 @@ class LaundryBookDetails extends React.Component {
                                 </Container>
                                 <Container>
                                     <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; font-size: 1vw; color: ${mvConsts.colors.text.primary}; `} >
-                                        {this.state.user ? this.state.user.name.split(` `)[2] : null}
+                                        {this.state.user ? this.state.user.username.split(`@`)[0] : null}
                                     </Container>
                                     <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; color: rgba(0, 0, 0, 0.4); `} >
-                                        {this.state.user ? this.state.user.name.split(` `)[0] : null}
+                                        {/* {this.state.user ? this.state.user.name.split(` `)[0] : null} */}
+                                        {`...`}
                                     </Container>
                                 </Container>
                                 <Container
@@ -120,7 +121,7 @@ class LaundryBookDetails extends React.Component {
                                                 title={`Вернуть`}
                                                 style={{ width: `2vw`, marginLeft: `0.5vw`, cursor: `pointer` }}
                                                 onClick={() => {
-                                                    axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.laundryId}`)
+                                                    axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
                                                         // .then((d) => { console.log(d) })
                                                         .catch((d) => { console.log(d) })
                                                 }}
