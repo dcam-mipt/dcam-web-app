@@ -6,6 +6,7 @@ const initialState = {
     loading: false,
     selected_slots: [],
     laundry: [],
+    book_details: undefined,
 };
 
 export default (state = initialState, action) => {

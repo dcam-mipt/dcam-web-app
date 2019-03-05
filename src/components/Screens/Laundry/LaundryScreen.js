@@ -73,6 +73,11 @@ class LaundryScreen extends React.Component {
             .then((d) => { this.props.loadLaundry(d.data) })
             .catch((d) => { console.log(d) })
     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.book_details !== undefined) {
+            this.setState({ selectedDay: +moment(nextProps.book_details.timestamp).startOf(`day`) })
+        }
+    }
     componentDidMount() {
         new Parse.Query(Parse.Role)
             .equalTo(`name`, `Admin`)
@@ -202,25 +207,29 @@ class LaundryScreen extends React.Component {
                                             let book = this.props.laundry.filter(i => i.machineId === slotObject.machineId && i.timestamp === slotObject.timestamp)[0]
                                             let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)
                                             let isMyBook = book ? book.userId === Parse.User.current().id : false
+                                            let context = this.state.is_admin && this.state.context ? this.state.context.machine_id === machine.machineId && this.state.context.timestamp === timestamp : false
+                                            let isDisabled = machine.isDisabled && +moment(machine.chill_untill) >= +moment(timestamp)
                                             // console.log(book)
                                             return (
                                                 <Machine
-                                                    // onContextMenu={(e) => {
-                                                    //     if (!isBefore) {
-                                                    //         this.setState({ context: { time_index: time_index, machine_index: machine_index } })
-                                                    //     }
-                                                    //     e.preventDefault();
-                                                    // }}
+                                                    onContextMenu={(e) => {
+                                                        if (this.state.is_admin) {
+                                                            let context_object = { machine_id: machine.machineId, timestamp: timestamp }
+                                                            this.setState({ context: JSON.stringify(this.state.context) === JSON.stringify(context_object) ? undefined : context_object })
+                                                        }
+                                                        e.preventDefault();
+                                                    }}
                                                     key={machine_index}
                                                     first={machine_index === 0}
                                                     last={machine_index === this.props.machines.length - 1}
                                                     width={21 / this.props.machines.length}
                                                     isBefore={isBefore}
                                                     isSelected={this.props.selected_slots.filter(i => JSON.stringify(i) === JSON.stringify(slotObject)).length}
-                                                    isDisabled={machine.isDisabled}
+                                                    isDisabled={isDisabled}
                                                     isBook={book ? true : false}
                                                     isMyBook={isMyBook}
                                                     is_vk_owner={book ? book.vk ? true : false : false}
+                                                    context={context}
                                                     onClick={() => {
                                                         if (book) {
                                                             // if (book.vk) {
@@ -230,12 +239,27 @@ class LaundryScreen extends React.Component {
                                                                 this.props.openLaundryBookDetails(book)
                                                             }
                                                         } else {
-                                                            this.props.selectSlot(slotObject)
+                                                            if (!context) {
+                                                                this.props.selectSlot(slotObject)
+                                                            }
                                                         }
                                                     }}
                                                 >
                                                     {/* {book ? book.name.length > 36 / this.props.machines.length ? (book.name).substring(0, 36 / this.props.machines.length - 2) + `...` : book.name : `-`} */}
-                                                    {book ? book.email.split(`@`)[0] : null}
+                                                    {
+                                                        context
+                                                            ? <img
+                                                                style={{ width: `1.5vw` }}
+                                                                src={require('../../../assets/images/no-stopping.svg')}
+                                                                alt={``}
+                                                                onClick={() => {
+                                                                    axios.get(`http://dcam.pro/api/laundry/destroy_machine/${this.state.context.machine_id}/${this.state.context.timestamp}`)
+                                                                        .then((d) => { console.log(d); this.setState({ context: undefined }) })
+                                                                        .catch((d) => { console.log(d) })
+                                                                }}
+                                                            />
+                                                            : book ? book.email.split(`@`)[0] : `-`
+                                                    }
                                                 </Machine>
                                             )
                                         })
@@ -257,6 +281,7 @@ let mapStateToProps = (state) => {
         machines: state.machines.machines,
         laundry: state.laundry.laundry,
         popUpWindow: state.ui.popUpWindow,
+        book_details: state.laundry.book_details,
     }
 }
 
@@ -326,6 +351,7 @@ width: ${props => props.width}vw
 height: 3vw
 background: ${props => props.isBefore || props.isDisabled ? mvConsts.colors.background.support : props.isSelected ? mvConsts.colors.lightblue : `rgba(0, 0, 0, 0.03)`};
 background: ${props => props.isBefore ? null : props.isMyBook ? mvConsts.colors.accept : props.isBook ? mvConsts.colors.WARM_ORANGE : null};
+background: ${props => props.context ? mvConsts.colors.purple : null};
 border-top-left-radius: ${props => props.first ? 0.5 : 0}vw;
 border-bottom-left-radius: ${props => props.first ? 0.5 : 0}vw;
 border-top-right-radius: ${props => props.last ? 0.5 : 0}vw;

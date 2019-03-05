@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import Container from '../../Container'
 import cros from '../../../assets/images/cros.svg'
-import money from '../../../assets/images/money.svg'
+import arrow from '../../../assets/images/arrow.svg'
 import moment from 'moment'
 import Button from '../UI/Button'
 import Parse from 'parse'
@@ -68,8 +68,8 @@ class Reservations extends React.Component {
                                 <Container extraProps={`width: 2vw; height: 2vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
                                     {this.props.machines.map(i => i.machineId).indexOf(item.machineId) + 1}
                                 </Container>
-                                <Container extraProps={` border-left: 1px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; height: 2vw; cursor: pointer; `} >
-                                    <img src={money} alt={``} style={{ width: `2vw`, marginLeft: `0.5vw` }} onClick={() => { unbookLaundry(item) }} />
+                                <Container extraProps={` margin-left: 0.5vw; height: 2vw; cursor: pointer; `} >
+                                    <img src={arrow} alt={``} style={{ width: `1.2vw`, marginLeft: `0.5vw` }} onClick={() => { this.props.openLaundryBookDetails(item) }} />
                                 </Container>
                             </Slot>
                         )
@@ -93,8 +93,8 @@ let mapDispatchToProps = (dispatch) => {
         setPopUpWindow: (data) => {
             return dispatch(uiActions.setPopUpWindow(data))
         },
-        selectSlot: (data) => {
-            return dispatch(laundryActions.selectSlot(data))
+        openLaundryBookDetails: (data) => {
+            return dispatch(laundryActions.openLaundryBookDetails(data))
         },
     }
 }

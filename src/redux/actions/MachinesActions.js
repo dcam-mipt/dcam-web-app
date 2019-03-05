@@ -7,6 +7,7 @@ let transformMachines = (d) => {
             machineId: i.id,
             isBroken: i.get(`isBroken`),
             isDisabled: i.get(`isDisabled`),
+            chill_untill: i.get(`chill_untill`),
             comment: i.get(`comment`),
         })
     })

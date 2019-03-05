@@ -9,7 +9,7 @@ export default {
         return (dispatch, getState) => {
             if (
                 +moment(getState().constants.server_time).tz(`Europe/Moscow`) < +moment(data.timestamp).tz(`Europe/Moscow`).add(2, `hour`) &&
-                !getState().machines.machines.filter(i => i.machineId === data.machineId)[0].isDisabled &&
+                !(getState().machines.machines.filter(i => i.machineId === data.machineId)[0].isDisabled && +moment(getState().machines.machines.filter(i => i.machineId === data.machineId)[0].chill_untill) >= +moment(data.timestamp)) &&
                 !getState().laundry.laundry.filter(i => i.timestamp === data.timestamp && i.machineId === data.machineId).length
             ) {
                 dispatch({

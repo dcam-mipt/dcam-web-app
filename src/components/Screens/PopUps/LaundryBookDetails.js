@@ -106,33 +106,38 @@ class LaundryBookDetails extends React.Component {
                                         {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`DD.MM.YY`)}
                                     </Container>
                                 </Container>
-                                <Container extraProps={`font-size: 1.5vw; width: 5.5vw; color: ${mvConsts.colors.text.primary} `} >
+                                <Container extraProps={`font-size: 1.5vw; width: 8.5vw; color: ${mvConsts.colors.text.primary} `} >
                                     {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`HH:mm`)}
                                 </Container>
-                                <Container extraProps={`width: 2vw; height: 2vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
+                                <Container extraProps={`width: 2vw; height: 2vw; margin: 0 0.25vw 0 0.25vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
                                     {this.props.machines.map(i => i.machineId).indexOf(book_details.machineId) + 1}
                                 </Container>
-                                <Container extraProps={` border-left: ${+(is_my_book)}px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; height: 2vw; width: 2.5vw; `} >
-                                    {
-                                        is_my_book || this.state.is_admin
-                                            ? <img
-                                                src={little_time_to ? cros : money}
-                                                alt={``}
-                                                title={`Вернуть`}
-                                                style={{ width: `2vw`, marginLeft: `0.5vw`, cursor: `pointer` }}
-                                                onClick={() => {
-                                                    axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
-                                                        // .then((d) => { console.log(d) })
-                                                        .catch((d) => { console.log(d) })
-                                                }}
-                                            />
-                                            : null
-                                    }
-                                </Container>
                             </Container>
-                            <Button short={false} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) }} >
+                            <Container extraProps={`width: 17vw; flex-direction: row; justify-content: flex-start; `} >
+                                {/* <MiniButton>
+                                    <img
+                                        src={require('../../../assets/images/trash.svg')}
+                                        style={{ width: `1.5vw` }}
+                                        alt={``}
+                                    />
+                                </MiniButton> */}
+                                <MiniButton
+                                    onClick={() => {
+                                        axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
+                                        	.then((d) => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) })
+                                            .catch((d) => { console.log(d) })
+                                    }}
+                                >
+                                    <img
+                                        src={require('../../../assets/images/money.svg')}
+                                        style={{ width: `2vw` }}
+                                        alt={``}
+                                    />
+                                </MiniButton>
+                            </Container>
+                            {/* <Button short={false} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) }} >
                                 Закрыть
-                            </Button>
+                            </Button> */}
                         </Container>
                         : null
                 }
@@ -162,5 +167,19 @@ let mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaundryBookDetails)
+
+const MiniButton = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+width: 3vw;
+height: 3vw;
+margin: 0.25vw;
+background-color: ${mvConsts.colors.background.secondary};
+border-radius: 0.5vw;
+cursor: pointer;
+transition: 0.2s;
+`
 
 /*eslint-enable no-unused-vars*/

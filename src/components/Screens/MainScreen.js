@@ -29,12 +29,12 @@ let menuItems = [
         color: mvConsts.colors.yellow,
         name: mvConsts.screens.laundry,
     },
-    {
-        title: `Клуб и КДС`,
-        image: require('../../assets/images/laundry_selected.svg'),
-        color: mvConsts.colors.accept,
-        name: mvConsts.screens.club,
-    },
+    // {
+    //     title: `Клуб и КДС`,
+    //     image: require('../../assets/images/laundry_selected.svg'),
+    //     color: mvConsts.colors.accept,
+    //     name: mvConsts.screens.club,
+    // },
 ]
 
 let sub = (class_name, column_name, value, onRecive) => {
