@@ -56,8 +56,8 @@ class LaundryBookDetails extends React.Component {
             transition: 0.2s;
         `
         let { book_details } = this.props
-        let is_my_book = book_details ? book_details.userId === Parse.User.current().id : null
-        let little_time_to = book_details ? book_details.timestamp - +moment() < 7200000 : null
+        let is_my_book = book_details ? book_details.userId === Parse.User.current().id : false
+        let little_time_to = book_details ? book_details.timestamp - +moment() < 7200000 : false
         return (
             <Container className={mvConsts.popUps.LAUNDRY_BOOK_DETAILS} extraProps={style} >
                 {
@@ -114,26 +114,35 @@ class LaundryBookDetails extends React.Component {
                                 </Container>
                             </Container>
                             <Container extraProps={`width: 17vw; flex-direction: row; justify-content: flex-start; `} >
-                                {/* <MiniButton>
-                                    <img
-                                        src={require('../../../assets/images/trash.svg')}
-                                        style={{ width: `1.5vw` }}
-                                        alt={``}
-                                    />
-                                </MiniButton> */}
-                                <MiniButton
-                                    onClick={() => {
-                                        axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
-                                        	.then((d) => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) })
-                                            .catch((d) => { console.log(d) })
-                                    }}
-                                >
-                                    <img
-                                        src={require('../../../assets/images/money.svg')}
-                                        style={{ width: `2vw` }}
-                                        alt={``}
-                                    />
-                                </MiniButton>
+                                {/* {
+                                    this.state.is_admin
+                                        ? <MiniButton>
+                                            <img
+                                                src={require('../../../assets/images/trash.svg')}
+                                                style={{ width: `1.5vw` }}
+                                                alt={``}
+                                            />
+                                        </MiniButton>
+                                        : null
+                                } */}
+                                {
+                                    (this.state.is_admin || is_my_book)
+                                    //  && !little_time_to
+                                        ? <MiniButton
+                                            onClick={() => {
+                                                axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
+                                                    .then((d) => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) })
+                                                    .catch((d) => { console.log(d) })
+                                            }}
+                                        >
+                                            <img
+                                                src={require('../../../assets/images/money.svg')}
+                                                style={{ width: `2vw` }}
+                                                alt={``}
+                                            />
+                                        </MiniButton>
+                                        : null
+                                }
                             </Container>
                             {/* <Button short={false} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) }} >
                                 Закрыть

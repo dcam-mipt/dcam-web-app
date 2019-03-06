@@ -253,7 +253,7 @@ class LaundryScreen extends React.Component {
                                                                 src={require('../../../assets/images/no-stopping.svg')}
                                                                 alt={``}
                                                                 onClick={() => {
-                                                                    axios.get(`http://dcam.pro/api/laundry/destroy_machine/${this.state.context.machine_id}/${this.state.context.timestamp}`)
+                                                                    axios.get(`http://dcam.pro/api/laundry/broke_machine/${this.state.context.machine_id}/${this.state.context.timestamp}`)
                                                                         .then((d) => { console.log(d); this.setState({ context: undefined }) })
                                                                         .catch((d) => { console.log(d) })
                                                                 }}
