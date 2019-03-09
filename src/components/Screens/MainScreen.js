@@ -11,6 +11,7 @@ import mvConsts from '../../constants/mvConsts'
 import Container from '../Container'
 import uiActions from '../../redux/actions/UIActions'
 import clubActions from '../../redux/actions/ClubActions'
+import usersActions from '../../redux/actions/UsersActions'
 import constantsActions from '../../redux/actions/ConstantsActions'
 import screens from './screens'
 import axios from 'axios'
@@ -28,13 +29,22 @@ let menuItems = [
         image: require('../../assets/images/laundry_selected.svg'),
         color: mvConsts.colors.yellow,
         name: mvConsts.screens.laundry,
+        admin: false,
     },
     // {
     //     title: `Клуб и КДС`,
     //     image: require('../../assets/images/laundry_selected.svg'),
     //     color: mvConsts.colors.accept,
     //     name: mvConsts.screens.club,
+    //     admin: false,
     // },
+    {
+        title: `Пользователи`,
+        image: require('../../assets/images/laundry_selected.svg'),
+        color: mvConsts.colors.purple,
+        name: mvConsts.screens.users,
+        admin: true,
+    },
 ]
 
 let sub = (class_name, column_name, value, onRecive) => {
@@ -53,19 +63,30 @@ let sub = (class_name, column_name, value, onRecive) => {
 }
 
 class MainScreen extends React.Component {
+    state = { is_admin: false }
     balance_sub;
     nfc_sub;
     club_sub;
+    users_sub;
     componentDidMount() {
+        axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
+            .then((d) => { this.setState({ is_admin: d.data.indexOf(`ADMIN`) > -1 }) })
+            .catch((d) => { console.log(d) })
         this.balance_sub = sub(`Balance`, `userId`, Parse.User.current().id, (d) => { this.props.setBalance(d.get(`money`)) })
         this.nfc_sub = sub(`NFC`, `userId`, Parse.User.current().id, (d) => { this.props.setNfcOwner(d ? true : false) })
         this.club_sub = sub(`Club`, null, null, (d) => { Parse.Cloud.run(`getClubBooks`).then((d) => { this.props.setClubBooks(d) }) })
+        this.users_sub = sub(`User`, null, null, (d) => {
+            axios.get(`http://dcam.pro/api/users/get_users_list`)
+                .then((d) => { this.props.setUsersList(d.data) })
+                .catch((d) => { console.log(d) })
+        })
         axios.defaults.headers.common['sessiontoken'] = Parse.User.current().getSessionToken();
     }
     componentWillUnmount() {
         this.balance_sub.unsubscribe();
         this.nfc_sub.unsubscribe();
         this.club_sub.unsubscribe();
+        this.users_sub.unsubscribe();
         axios.defaults.headers.common['sessionToken'] = undefined;
     }
     render = () => {
@@ -77,7 +98,7 @@ class MainScreen extends React.Component {
                     </Logo>
                     <Container width={6} height={90} >
                         {
-                            menuItems.map((item, index) => {
+                            menuItems.filter(i => !i.admin || this.state.is_admin).map((item, index) => {
                                 return (
                                     <MenuItem
                                         key={index}
@@ -159,6 +180,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         setClubBooks: (data) => {
             return dispatch(clubActions.setClubBooks(data))
+        },
+        setUsersList: (data) => {
+            return dispatch(usersActions.setUsersList(data))
         },
     }
 }

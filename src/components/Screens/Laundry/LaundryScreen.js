@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import cros from '../../../assets/images/cros.svg'
 import money from '../../../assets/images/money.svg'
 import axios from 'axios';
+import { throws } from 'assert';
 
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
@@ -76,6 +77,9 @@ class LaundryScreen extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.book_details !== undefined) {
             this.setState({ selectedDay: +moment(nextProps.book_details.timestamp).startOf(`day`) })
+        }
+        if (nextProps.machines !== this.props.machines) {
+            this.setState({ context: undefined })
         }
     }
     componentDidMount() {
@@ -232,9 +236,6 @@ class LaundryScreen extends React.Component {
                                                     context={context}
                                                     onClick={() => {
                                                         if (book) {
-                                                            // if (book.vk) {
-                                                            //     window.open(book.vk)
-                                                            // }
                                                             if (!isBefore && book) {
                                                                 this.props.openLaundryBookDetails(book)
                                                             }
@@ -245,7 +246,6 @@ class LaundryScreen extends React.Component {
                                                         }
                                                     }}
                                                 >
-                                                    {/* {book ? book.name.length > 36 / this.props.machines.length ? (book.name).substring(0, 36 / this.props.machines.length - 2) + `...` : book.name : `-`} */}
                                                     {
                                                         context
                                                             ? <img

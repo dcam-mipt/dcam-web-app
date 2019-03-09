@@ -8,6 +8,7 @@ import ConstantsReducer from './ConstantsReducer';
 import MachinesReducer from './MachinesReducer';
 import LaundryReducer from './LaundryReducer';
 import ClubReducer from './ClubReducer';
+import UsersReducer from './UsersReducer';
 
 export const reducer = combineReducers({
     ui: UIReducer,
@@ -15,4 +16,5 @@ export const reducer = combineReducers({
     machines: MachinesReducer,
     laundry: LaundryReducer,
     club: ClubReducer,
+    users: UsersReducer,
 });
