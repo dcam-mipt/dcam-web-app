@@ -113,7 +113,7 @@ class MainScreen extends React.Component {
                                             alt={item.title}
                                             style={{ width: `2.5vw` }}
                                         />
-                                        {item.title}
+                                        {/* {item.title} */}
                                     </MenuItem>
                                 )
                             })

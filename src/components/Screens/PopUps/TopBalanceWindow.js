@@ -55,9 +55,10 @@ class TopBalanceWindow extends React.Component {
                     <input type="hidden" name="paymentType" value="AC" />
                     <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
                     <Button visible={visible} disabled={this.state.value < 2} backgroundColor={mvConsts.colors.accept} onClick={() => {
-                        Parse.Cloud.run(`saveTransaction`, { value: +this.state.value })
+                        // Parse.Cloud.run(`saveTransaction`, { value: +this.state.value })
+                        axios.get(`http://dcam.pro/api/transactions/start_yandex/${+this.state.value}`)
                             .then((d) => {
-                                this.setState({ order_id: d })
+                                this.setState({ order_id: d.data })
                                 document.getElementById(`yandex_money_button`).click()
                             })
                     }}>
