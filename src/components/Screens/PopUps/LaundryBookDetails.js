@@ -127,11 +127,11 @@ class LaundryBookDetails extends React.Component {
                                 } */}
                                 {
                                     (this.state.is_admin || is_my_book)
-                                    //  && !little_time_to
+                                        //  && !little_time_to
                                         ? <MiniButton
                                             onClick={() => {
                                                 axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
-                                                    .then((d) => { this.props.setPopUpWindow(mvConsts.popUps.EMPTY) })
+                                                    .then((d) => { this.props.openLaundryBookDetails(undefined) })
                                                     .catch((d) => { console.log(d) })
                                             }}
                                         >
@@ -171,6 +171,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         selectSlot: (data) => {
             return dispatch(laundryActions.selectSlot(data))
+        },
+        openLaundryBookDetails: (data) => {
+            return dispatch(laundryActions.openLaundryBookDetails(data))
         },
     }
 }

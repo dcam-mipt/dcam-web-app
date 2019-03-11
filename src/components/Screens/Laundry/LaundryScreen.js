@@ -234,6 +234,7 @@ class LaundryScreen extends React.Component {
                                                     isMyBook={isMyBook}
                                                     is_vk_owner={book ? book.vk ? true : false : false}
                                                     context={context}
+                                                    className={`ignore`}
                                                     onClick={() => {
                                                         if (book) {
                                                             if (!isBefore && book) {
@@ -285,7 +286,7 @@ let mapStateToProps = (state) => {
     }
 }
 
-let mapDispatchToProps = (dispatch) => {
+let mapDispatchToProps = (dispatch, a, b) => {
     return {
         selectSlot: (data) => {
             return dispatch(laundryActions.selectSlot(data))

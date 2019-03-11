@@ -11,7 +11,8 @@ class PopUpWrapper extends React.Component {
     hideElement = (className, popUpWindow) => {
         let hideOnClickOutside = (element) => {
             const outsideClickListener = event => {
-                if (event.target.closest(`.` + className) === null) {
+                let exeption = event.path.map(i => i.classList).filter(i => i !== undefined).map(i => Object.values(i)).filter(i => i.indexOf(`ignore`) > -1).length > 0
+                if (event.target.closest(`.` + className) === null && !exeption) {
                     if (isVisible(element)) {
                         if (this.props.popUpWindow === className) {
                             this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
