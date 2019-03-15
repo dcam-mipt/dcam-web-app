@@ -16,6 +16,7 @@ import moment from 'moment-timezone'
 import mvConsts from '../constants/mvConsts'
 import popUps from './Screens/PopUps/popUps'
 import styled, { keyframes } from 'styled-components'
+import rotate from '../assets/images/rotate.svg'
 import { connect } from 'react-redux'
 
 Parse.initialize(config.PARSE_APP_ID, config.PARSE_JS_KEY);
@@ -57,6 +58,17 @@ class App extends React.Component {
         if (this.state.init) {
             return (
                 <Wrapper>
+                    <Stub>
+                        <img
+                            src={rotate}
+                            style={{ width: `20vw` }}
+                            alt={``}
+                        />
+                        Переверните телефон
+                        <div style={{ fontSize: `3vw` }} >
+                            Мобильная версия сайта еще в разработке
+                        </div>
+                    </Stub>
                     {this.state.auth ? <MainScreen /> : <EntryScreen />}
                     {this.state.auth ? popUpsRender : null}
                 </Wrapper>
@@ -66,6 +78,23 @@ class App extends React.Component {
         }
     }
 }
+
+const Stub = styled.div`
+position: absolute;
+z-index: 1000;
+display: none;
+justify-content: center
+align-items: center
+flex-direction: column
+width: 100vw
+height: 100vh
+background-color: ${mvConsts.colors.purple}
+color: white;
+transition: 0.2s;
+@media only screen and (max-width: 767px) and (orientation: portrait) {
+    display: flex;
+}
+`
 
 let mapStateToProps = (state) => {
     return {
