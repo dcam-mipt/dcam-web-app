@@ -122,7 +122,7 @@ class MainScreen extends React.Component {
                 </Menu>
                 <RightPart>
                     <Header>
-                        <MoneyBalance
+                        {/* <MoneyBalance
                             width={4}
                             selected={this.props.popUpWindow === mvConsts.popUps.TOP_BALANCE_WINDOW}
                             onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_BALANCE_WINDOW) }}
@@ -130,7 +130,7 @@ class MainScreen extends React.Component {
                             <Container extraProps={` width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${this.props.money > 0 ? mvConsts.colors.accept : mvConsts.colors.background.support}; color: white; font-size: 0.8vw; transition: background-color 0.2s; `} >
                                 {this.props.money} ₽
                             </Container>
-                        </MoneyBalance>
+                        </MoneyBalance> */}
                         <MoneyBalance
                             width={16}
                             selected={this.props.popUpWindow === mvConsts.popUps.TOP_PROFILE_MENU}
