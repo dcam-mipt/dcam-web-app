@@ -73,7 +73,7 @@ class LaundryScreen extends React.Component {
         //     .catch((d) => { mvConsts.error(d) })
         axios.get(`http://dcam.pro/api/laundry/get`)
             .then((d) => { this.props.loadLaundry(d.data) })
-            .catch((d) => { console.log(d) })
+            .catch((d) => { mvConsts.error(d) })
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.book_details !== undefined) {
