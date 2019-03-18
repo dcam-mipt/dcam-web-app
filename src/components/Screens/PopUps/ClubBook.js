@@ -125,7 +125,7 @@ class ClubBook extends React.Component {
                         },
                     })
                         .then((d) => { })
-                        .catch((d) => { console.log(d) })
+                        .catch((d) => { mvConsts.error(d) })
 
 
                     this.props.openBookPopUp(undefined)

@@ -25,7 +25,7 @@ class LaundryBookDetails extends React.Component {
             // console.log(nextProps.book_details)
             axios.get(`http://dcam.pro/api/users/get_user/${nextProps.book_details.userId}`)
                 .then((d) => { this.setState({ user: d.data }) })
-                .catch((d) => { console.log(d) })
+                .catch((d) => { mvConsts.error(d) })
         }
     }
     componentDidMount() {
@@ -34,7 +34,7 @@ class LaundryBookDetails extends React.Component {
             .equalTo(`role`, `ADMIN`)
             .first()
             .then((d) => { this.setState({ is_admin: d ? true : false }) })
-            .catch((d) => { console.log(d) })
+            .catch((d) => { mvConsts.error(d) })
     }
     render = () => {
         let visible = this.props.popUpWindow === mvConsts.popUps.LAUNDRY_BOOK_DETAILS
@@ -132,7 +132,7 @@ class LaundryBookDetails extends React.Component {
                                             onClick={() => {
                                                 axios.get(`http://dcam.pro/api/laundry/unbook/${book_details.objectId}`)
                                                     .then((d) => { this.props.openLaundryBookDetails(undefined) })
-                                                    .catch((d) => { console.log(d) })
+                                                    .catch((d) => { mvConsts.error(d) })
                                             }}
                                         >
                                             <img

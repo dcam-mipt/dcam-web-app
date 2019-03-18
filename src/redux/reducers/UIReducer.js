@@ -6,6 +6,7 @@ const initialState = {
     loading: false,
     mainAppScreen: mvConsts.screens.laundry,
     popUpWindow: mvConsts.popUps.EMPTY,
+    is_admin: false,
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +36,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 popUpWindow: action.data ? mvConsts.popUps.LAUNDRY_BOOK_DETAILS : mvConsts.popUps.EMPTY,
+            };
+        case types.SET_ADMIN:
+            return {
+                ...state,
+                is_admin: action.data,
             };
 
         default:

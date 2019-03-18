@@ -4,6 +4,7 @@
 /*eslint-disable no-unused-vars*/
 import moment from 'moment'
 import axios from 'axios'
+import * as Sentry from '@sentry/browser';
 
 let sunrise = +moment().startOf(`day`).add(8, `hour`)
 let sunset = +moment().startOf(`day`).add(17, `hour`)
@@ -13,7 +14,7 @@ let sunset = +moment().startOf(`day`).add(17, `hour`)
 //         sunrise = d.data.sys.sunrise * 1000
 //         sunset = d.data.sys.sunset * 1000
 //     })
-//     .catch((d) => { console.log(d) })
+//     .catch((d) => { mvConsts.error(d) })
 
 let dayTheme = {
     yellow: "#FFCC00",
@@ -55,7 +56,9 @@ let darkTheme = {
 
 export default {
 
-    test: `test`,
+    mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d} }`,
+
+    error: (d) => { Sentry.captureException(d); console.log(d) },
 
     colors: dayTheme,
     // colors: darkTheme,

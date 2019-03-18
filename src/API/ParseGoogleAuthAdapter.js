@@ -1,6 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import Parse, { LiveQuerySubscription } from 'parse'
 import GoogleAPI from './GoogleAPI'
+import mvConsts from '../constants/mvConsts'
 let signInOrUpParse = async () => {
     let user = GoogleAPI.getCurrentUser().w3
     return new Parse.Query(`User`)
@@ -12,7 +13,7 @@ let signInOrUpParse = async () => {
                 // sign in
                 return Parse.User.logIn(user.U3, user.Eea)
                     .then((d) => { return Parse.User.current(); })
-                    .catch((d) => { console.log(d) })
+                    .catch((d) => { mvConsts.error(d) })
             } else {
                 // sign up
                 var parse_user = new Parse.User();
@@ -26,7 +27,7 @@ let signInOrUpParse = async () => {
                     .catch((d) => { console.log(d); GoogleAPI.signOut() })
             }
         })
-        .catch((d) => { console.log(d) })
+        .catch((d) => { mvConsts.error(d) })
 }
 
 export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { }) => {
@@ -81,7 +82,7 @@ export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { })
                             // sign out parse
                             Parse.User.logOut()
                                 .then((d) => { onSignOut() })
-                                .catch((d) => { console.log(d) })
+                                .catch((d) => { mvConsts.error(d) })
                         }
                     })
                 })

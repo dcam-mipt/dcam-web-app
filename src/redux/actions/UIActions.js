@@ -28,5 +28,12 @@ export default {
             data: data
         }
     },
+
+    setAdmin: (data) => {
+        return {
+            type: types.SET_ADMIN,
+            data: data
+        }
+    },
 }
 /*eslint-enable no-unused-vars*/

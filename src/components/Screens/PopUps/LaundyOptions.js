@@ -61,9 +61,9 @@ let vk_settings = (component, visible) => {
                         user.set(`vk`, null)
                         user.save()
                             .then((d) => { component.setState({ vk: undefined }) })
-                            .catch((d) => { console.log(d) })
+                            .catch((d) => { mvConsts.error(d) })
                     })
-                    .catch((d) => { console.log(d) })
+                    .catch((d) => { mvConsts.error(d) })
             }} >
                 Отвязать ВК
             </Button>
@@ -75,7 +75,7 @@ let get_vk = (component, visible) => {
     return (
         <Container>
             <Container extraProps={`color: ${mvConsts.colors.text.primary}; width: 13vw; font-size: 0.8vw; text-align: left; margin: 1vw;`} >
-                Привжите Ваш профиль ВКонтакте, и Вам станут доступны настройки уведомлений. Вы в любой момент можете удалить эту привязку.
+                Привяжите Ваш профиль ВКонтакте, и Вам станут доступны настройки уведомлений. Вы в любой момент можете удалить эту привязку.
             </Container>
             <Button visible={visible} backgroundColor={mvConsts.colors.vk} onClick={() => {
                 VK.login((d) => {
@@ -84,9 +84,9 @@ let get_vk = (component, visible) => {
                             user.set(`vk`, d.session.user.href)
                             user.save()
                                 .then((d) => { VK.getUser(d.get(`vk`).split(`/`).pop(), (d) => { component.setState({ vk: d[0] }) }) })
-                                .catch((d) => { console.log(d) })
+                                .catch((d) => { mvConsts.error(d) })
                         })
-                        .catch((d) => { console.log(d) })
+                        .catch((d) => { mvConsts.error(d) })
                 })
             }} >
                 ВКонтакте

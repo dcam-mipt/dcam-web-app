@@ -54,7 +54,7 @@ class ClubEdit extends React.Component {
                                     <Switch checked={i.is_allowed} onChange={() => {
                                         Parse.Cloud.run(`chengeClubEventResolution`, { event_id: i.event_id })
                                             .then((d) => { console.log(d) })
-                                            .catch((d) => { console.log(d) })
+                                            .catch((d) => { mvConsts.error(d) })
                                     }} />
                                 </Container>
                             </Book>

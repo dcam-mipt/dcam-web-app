@@ -29,7 +29,6 @@ let sub = (class_name, column_name, value, onRecive) => {
 
 class UsersScreen extends React.Component {
     state = {
-        is_admin: false,
         filter: ``,
         selected_user: undefined,
         promotion: 0,
@@ -38,9 +37,6 @@ class UsersScreen extends React.Component {
     users_sub;
     componentDidMount() {
         this.users_sub = sub(`Balance`, null, null, (d) => { this.getUsersList() })
-        axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
-            .then((d) => { this.setState({ is_admin: d.data.indexOf(`ADMIN`) > -1 }) })
-            .catch((d) => { console.log(d) })
     }
     componentWillUnmount() {
         this.users_sub.unsubscribe();
@@ -53,10 +49,10 @@ class UsersScreen extends React.Component {
     getUsersList = () => {
         axios.get(`http://dcam.pro/api/users/get_users_list`)
             .then((d) => { this.props.setUsersList(d.data) })
-            .catch((d) => { console.log(d) })
+            .catch((d) => { mvConsts.error(d) })
     }
     render = () => {
-        if (this.state.is_admin) {
+        if (this.props.is_admin) {
             return (
                 <Wrapper>
                     <Container extraProps={`display: block; width: 20vw; max-height: 90vh; overflow: scroll;`} >
@@ -120,7 +116,7 @@ class UsersScreen extends React.Component {
                                                 if (!isNaN(this.state.promotion)) {
                                                     axios.get(`http://dcam.pro/api/balance/edit/${this.state.selected_user.objectId}/${this.state.promotion}`)
                                                         .then((d) => { console.log(d) })
-                                                        .catch((d) => { console.log(d) })
+                                                        .catch((d) => { mvConsts.error(d) })
                                                 }
                                             }} >
                                                 Поощрить
@@ -132,7 +128,7 @@ class UsersScreen extends React.Component {
                                                 if (!isNaN(this.state.penalty)) {
                                                     axios.get(`http://dcam.pro/api/balance/edit/${this.state.selected_user.objectId}/${-this.state.penalty}`)
                                                         .then((d) => { console.log(d) })
-                                                        .catch((d) => { console.log(d) })
+                                                        .catch((d) => { mvConsts.error(d) })
                                                 }
                                             }} >
                                                 Штраф
@@ -154,6 +150,7 @@ class UsersScreen extends React.Component {
 let mapStateToProps = (state) => {
     return {
         users_list: state.users.users_list,
+        is_admin: state.ui.is_admin,
     }
 }
 

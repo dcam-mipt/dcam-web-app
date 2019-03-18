@@ -63,24 +63,23 @@ let sub = (class_name, column_name, value, onRecive) => {
 }
 
 class MainScreen extends React.Component {
-    state = { is_admin: false }
     balance_sub;
     nfc_sub;
     club_sub;
     users_sub;
     componentDidMount() {
+        axios.defaults.headers.common['sessiontoken'] = Parse.User.current().getSessionToken();
         axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
-            .then((d) => { this.setState({ is_admin: d.data.indexOf(`ADMIN`) > -1 }) })
-            .catch((d) => { console.log(d) })
+            .then((d) => { this.props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
+            .catch((d) => { mvConsts.error(d) })
         this.balance_sub = sub(`Balance`, `userId`, Parse.User.current().id, (d) => { this.props.setBalance(d.get(`money`)) })
         this.nfc_sub = sub(`NFC`, `userId`, Parse.User.current().id, (d) => { this.props.setNfcOwner(d ? true : false) })
         this.club_sub = sub(`Club`, null, null, (d) => { Parse.Cloud.run(`getClubBooks`).then((d) => { this.props.setClubBooks(d) }) })
         this.users_sub = sub(`User`, null, null, (d) => {
             axios.get(`http://dcam.pro/api/users/get_users_list`)
                 .then((d) => { this.props.setUsersList(d.data) })
-                .catch((d) => { console.log(d) })
+                .catch((d) => { mvConsts.error(d) })
         })
-        axios.defaults.headers.common['sessiontoken'] = Parse.User.current().getSessionToken();
     }
     componentWillUnmount() {
         this.balance_sub.unsubscribe();
@@ -98,7 +97,7 @@ class MainScreen extends React.Component {
                     </Logo>
                     <Container width={6} height={90} >
                         {
-                            menuItems.filter(i => !i.admin || this.state.is_admin).map((item, index) => {
+                            menuItems.filter(i => !i.admin || this.props.is_admin).map((item, index) => {
                                 return (
                                     <MenuItem
                                         key={index}
@@ -125,7 +124,7 @@ class MainScreen extends React.Component {
                         <MoneyBalance
                             width={4}
                             selected={this.props.popUpWindow === mvConsts.popUps.TOP_BALANCE_WINDOW}
-                            // onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_BALANCE_WINDOW) }}
+                        // onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_BALANCE_WINDOW) }}
                         >
                             <Container extraProps={` width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${this.props.money > 0 ? mvConsts.colors.accept : mvConsts.colors.background.support}; color: white; font-size: 0.8vw; transition: background-color 0.2s; `} >
                                 {this.props.money} ₽
@@ -161,6 +160,7 @@ let mapStateToProps = (state) => {
         mainAppScreen: state.ui.mainAppScreen,
         popUpWindow: state.ui.popUpWindow,
         money: state.constants.money,
+        is_admin: state.ui.is_admin,
     }
 }
 
@@ -183,6 +183,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         setUsersList: (data) => {
             return dispatch(usersActions.setUsersList(data))
+        },
+        setAdmin: (data) => {
+            return dispatch(uiActions.setAdmin(data))
         },
     }
 }

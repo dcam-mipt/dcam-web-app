@@ -15,7 +15,9 @@ import { connect } from 'react-redux'
 import cros from '../../../assets/images/cros.svg'
 import money from '../../../assets/images/money.svg'
 import axios from 'axios';
-import { throws } from 'assert';
+
+// mobile media query
+let m = mvConsts.mobile_media_query
 
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
@@ -29,20 +31,20 @@ let NodeContent = (props = { day: +moment(), laundry: [], machines: [], isSelect
     let free_lots = props.machines.filter(i => !i.isDisabled).length * 12 - props.laundry.filter(i => +moment(i.timestamp).tz(`Europe/Moscow`).startOf(`day`) === +props.day).length
     let lots_number = props.machines.filter(i => !i.isDisabled).length * 12
     return (
-        <Container extraProps={`width: 6vw; height: 6vw; @media (min-width: 320px) and (max-width: 480px) { height: 10vw; }`} >
+        <Container extraProps={`width: 6vw; height: 6vw `} >
             <Container extraProps={`flex-direction: row; ${border(`bottom`)}; font-size: 1vw; `} >
-                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  ${props.isSelected ? `font-size: 1.5vw` : null}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: ${props.isSelected ? 6 : 4}vw; width: 8vw; height: 100%; } `} >
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  ${props.isSelected ? `font-size: 1.5vw` : null}; transition: 0.2s; `} >
                     {moment(props.day).tz(`Europe/Moscow`).format('DD')}
                 </Container>.
-                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  color: ${mvConsts.colors.background.support}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  ${props.isSelected ? `font-size: 1.5vw` : null}; transition: 0.2s; `} >
                     {moment(props.day).tz(`Europe/Moscow`).format('MM')}
                 </Container>
             </Container>
-            <Container extraProps={`flex-direction: row`} >
-                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  color: ${props.isBefore ? mvConsts.colors.text.support : free_lots / lots_number > 2 / 3 ? mvConsts.colors.accept : free_lots / lots_number > 1 / 3 ? mvConsts.colors.yellow : mvConsts.colors.WARM_ORANGE}; transition: 0.2s; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+            <Container extraProps={`flex-direction: row;`} >
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  color: ${props.isBefore ? mvConsts.colors.text.support : free_lots / lots_number > 2 / 3 ? mvConsts.colors.accept : free_lots / lots_number > 1 / 3 ? mvConsts.colors.yellow : mvConsts.colors.WARM_ORANGE}; transition: 0.2s; `} >
                     {free_lots}
                 </Container>/
-                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw;  @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; width: 8vw; height: 100%; } `} >
+                <Container extraProps={`width: 2.5vw; height: 2.5vw; font-size: 1vw; `} >
                     {lots_number}
                 </Container>
             </Container>
@@ -53,7 +55,6 @@ let NodeContent = (props = { day: +moment(), laundry: [], machines: [], isSelect
 class LaundryScreen extends React.Component {
     state = {
         selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`),
-        is_admin: false,
         context: undefined,
     }
     subscriptionOptions = [`update`, `create`, `delete`, `open`]
@@ -64,12 +65,12 @@ class LaundryScreen extends React.Component {
     loadMachines = () => {
         this.machinesQuery.find()
             .then((d) => { this.props.loadMachines(d) })
-            .catch((d) => { console.log(d) })
+            .catch((d) => { mvConsts.error(d) })
     }
     loadLaundry = () => {
         // Parse.Cloud.run(`getLaundry`)
         //     .then((d) => { this.props.loadLaundry(d) })
-        //     .catch((d) => { console.log(d) })
+        //     .catch((d) => { mvConsts.error(d) })
         axios.get(`http://dcam.pro/api/laundry/get`)
             .then((d) => { this.props.loadLaundry(d.data) })
             .catch((d) => { console.log(d) })
@@ -83,16 +84,6 @@ class LaundryScreen extends React.Component {
         }
     }
     componentDidMount() {
-        new Parse.Query(Parse.Role)
-            .equalTo(`name`, `Admin`)
-            .find()
-            .then((d) => {
-                new Parse.Query(`Roles`)
-                    .equalTo('userId', Parse.User.current().id)
-                    .equalTo('role', `ADMIN`)
-                    .first()
-                    .then((d) => { this.setState({ is_admin: d ? true : false }) })
-            })
         for (let i in this.subscriptionOptions) {
             this.machinesSubscription.on(this.subscriptionOptions[i], () => { this.loadMachines() });
             this.laundrySubscription.on(this.subscriptionOptions[i], () => { this.loadLaundry() });
@@ -104,13 +95,13 @@ class LaundryScreen extends React.Component {
     }
     render = () => {
         return (
-            <Container flexDirection={`row`} extraProps={`position: relative; @media (min-width: 320px) and (max-width: 480px) { flex-direction: column; height: 100%; }`} >
+            <Container flexDirection={`row`} extraProps={`position: relative; ${m(`flex-direction: column; height: 100%;`)}`} >
                 <TimePointer visible={this.state.selectedDay === +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`)} >
                     {this.props.server_time}
                 </TimePointer>
                 <Container>
-                    <Header >
-                        <Container extraProps={`flex-direction: row; @media (min-width: 320px) and (max-width: 480px) { flex-direction: column; } `} >
+                    <Header>
+                        <Container extraProps={`flex-direction: row; `} >
                             <Tab>
                                 <Container extraProps={`flex-direction: row;  `} >
                                     <Container extraProps={`color: ${mvConsts.colors.text.support}; font-size: 1.2vw;`} >
@@ -132,9 +123,9 @@ class LaundryScreen extends React.Component {
                                 Сегодня
                             </Button>
                         </Container>
-                        <Container extraProps={`flex-direction: row; @media (min-width: 320px) and (max-width: 480px) { flex-direction: column; }`} >
+                        <Container extraProps={`flex-direction: row;`} >
                             <Button
-                                visible={this.state.is_admin}
+                                visible={this.props.is_admin}
                                 backgroundColor={mvConsts.colors.accept}
                                 onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_SETTINGS) }}
                             >
@@ -158,7 +149,7 @@ class LaundryScreen extends React.Component {
                             </Button>
                         </Container>
                     </Header>
-                    <Container extraProps={`width: 64vw; height: 80vh; justify-content: flex-start; @media (min-width: 320px) and (max-width: 480px) { width: 100vw; flex-direction: row; max-width: 100vw; overflow: scroll; height: 100%; } `} >
+                    <Container extraProps={`width: 64vw; height: 80vh; justify-content: flex-start; ${m(`display: none;`)} `} >
                         {
                             [0, 1, 2, 3].map((week, weekIndex) => {
                                 return (
@@ -201,8 +192,8 @@ class LaundryScreen extends React.Component {
                         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((time, time_index) => {
                             let timestamp = +moment(this.state.selectedDay).tz(`Europe/Moscow`).add(time_index * 2, `hour`)
                             return (
-                                <Container extraProps={`height: 3.4vw; flex-direction: row; @media (min-width: 320px) and (max-width: 480px) { height: 11vh } `} key={time_index} >
-                                    <Container width={4} extraProps={`color: ${mvConsts.colors.text.support}; height: 4.5vw; justify-content: flex-start; `} >
+                                <Container extraProps={`height: 3.4vw; flex-direction: row; ${m(`height: 10vw;`)}`} key={time_index} >
+                                    <Container extraProps={`color: ${mvConsts.colors.text.support}; width: 4vw; height: 4.5vw; justify-content: flex-start; ${m(`height: 12vw; width: 16vw; font-size: 4vw;`)}`} >
                                         {moment(timestamp).tz(`Europe/Moscow`).format(`HH:mm`)}
                                     </Container>
                                     {
@@ -211,13 +202,13 @@ class LaundryScreen extends React.Component {
                                             let book = this.props.laundry.filter(i => i.machineId === slotObject.machineId && i.timestamp === slotObject.timestamp)[0]
                                             let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)
                                             let isMyBook = book ? book.userId === Parse.User.current().id : false
-                                            let context = this.state.is_admin && this.state.context ? this.state.context.machine_id === machine.machineId && this.state.context.timestamp === timestamp : false
+                                            let context = this.props.is_admin && this.state.context ? this.state.context.machine_id === machine.machineId && this.state.context.timestamp === timestamp : false
                                             let isDisabled = machine.isDisabled && +moment(machine.chill_untill) >= +moment(timestamp)
                                             // console.log(book)
                                             return (
                                                 <Machine
                                                     onContextMenu={(e) => {
-                                                        if (this.state.is_admin) {
+                                                        if (this.props.is_admin) {
                                                             let context_object = { machine_id: machine.machineId, timestamp: timestamp }
                                                             this.setState({ context: JSON.stringify(this.state.context) === JSON.stringify(context_object) ? undefined : context_object })
                                                         }
@@ -226,7 +217,7 @@ class LaundryScreen extends React.Component {
                                                     key={machine_index}
                                                     first={machine_index === 0}
                                                     last={machine_index === this.props.machines.length - 1}
-                                                    width={21 / this.props.machines.length}
+                                                    width={this.props.machines.length}
                                                     isBefore={isBefore}
                                                     isSelected={this.props.selected_slots.filter(i => JSON.stringify(i) === JSON.stringify(slotObject)).length}
                                                     isDisabled={isDisabled}
@@ -256,7 +247,7 @@ class LaundryScreen extends React.Component {
                                                                 onClick={() => {
                                                                     axios.get(`http://dcam.pro/api/laundry/broke_machine/${this.state.context.machine_id}/${this.state.context.timestamp}`)
                                                                         .then((d) => { console.log(d); this.setState({ context: undefined }) })
-                                                                        .catch((d) => { console.log(d) })
+                                                                        .catch((d) => { mvConsts.error(d) })
                                                                 }}
                                                             />
                                                             : book ? book.email.split(`@`)[0] : `-`
@@ -283,6 +274,7 @@ let mapStateToProps = (state) => {
         laundry: state.laundry.laundry,
         popUpWindow: state.ui.popUpWindow,
         book_details: state.laundry.book_details,
+        is_admin: state.ui.is_admin,
     }
 }
 
@@ -338,17 +330,14 @@ width: 30vw;
 height: 90vh;
 justify-content: flex-start;
 transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 100%
-    height: 100%
-}
+${m(`width: 100vw;`)}
 `
 
 const Machine = styled.div`
 display: flex
 justify-content: center;
 align-items: center;
-width: ${props => props.width}vw
+width: ${props => 21 / props.width}vw
 height: 3vw
 background: ${props => props.isBefore || props.isDisabled ? mvConsts.colors.background.support : props.isSelected ? mvConsts.colors.lightblue : `rgba(0, 0, 0, 0.03)`};
 background: ${props => props.isBefore ? null : props.isMyBook ? mvConsts.colors.accept : props.isBook ? mvConsts.colors.WARM_ORANGE : null};
@@ -366,11 +355,15 @@ display: -webkit-box;
    overflow: hidden;
    text-overflow: ellipsis;
 transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    width: ${props => props.width * 4}vw
-    height: 10vh
-}
 flex-direction: row;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => 80 / props.width}vw;
+    height: 9vw;
+    border-top-left-radius: ${props => props.first ? 2 : 0}vw;
+    border-bottom-left-radius: ${props => props.first ? 2 : 0}vw;
+    border-top-right-radius: ${props => props.last ? 2 : 0}vw;
+    border-bottom-right-radius: ${props => props.last ? 2 : 0}vw;
+}
 `
 
 const Node = styled.div`
@@ -400,10 +393,6 @@ transition: 0.2s;
 &:hover{
     ${props => props.isSelected ? null : `background-color: ${shadeColor2(`#000000`, 0.9)}`}
 }
-@media (min-width: 320px) and (max-width: 480px) {
-    width: ${props => props.inner ? 30 : 30.5}vw
-    height: ${props => props.inner ? 30 : 30.5}vw
-}
 `
 
 const Tab = styled.div`
@@ -418,9 +407,6 @@ margin: 0.5vw;
 background-color: ${mvConsts.colors.background.primary};
 padding: 0 1vw 0 1vw;
 transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    height: 10vw
-}
 `
 
 const Header = styled.div`
@@ -431,10 +417,7 @@ flex-direction: row
 width: 63vw
 height: 10vh
 transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    height: 100%
-    flex-direction: column
-}
+${m(`display: none;`)}
 `
 
 /*eslint-enable no-unused-vars*/

@@ -20,12 +20,12 @@ let unbookLaundry = (book) => {
     //     .then((d) => {
     //         d.destroy()
     //             // .then((d) => { console.log(d) })
-    //             .catch((d) => { console.log(d) })
+    //             .catch((d) => { mvConsts.error(d) })
     //     })
-    //     .catch((d) => { console.log(d) })
+    //     .catch((d) => { mvConsts.error(d) })
     axios.get(`http://dcam.pro/api/laundry/unbook/${book.laundryId}`)
         .then((d) => { console.log(d) })
-        .catch((d) => { console.log(d) })
+        .catch((d) => { mvConsts.error(d) })
 }
 
 class Reservations extends React.Component {

@@ -58,7 +58,7 @@ class App extends React.Component {
         if (this.state.init) {
             return (
                 <Wrapper>
-                    <Stub>
+                    {/* <Stub>
                         <img
                             src={rotate}
                             style={{ width: `20vw` }}
@@ -68,7 +68,7 @@ class App extends React.Component {
                         <div style={{ fontSize: `3vw` }} >
                             Мобильная версия сайта еще в разработке
                         </div>
-                    </Stub>
+                    </Stub> */}
                     {this.state.auth ? <MainScreen /> : <EntryScreen />}
                     {this.state.auth ? popUpsRender : null}
                 </Wrapper>

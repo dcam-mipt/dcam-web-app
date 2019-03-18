@@ -97,7 +97,7 @@ class ShoppingBasket extends React.Component {
                                             book()
                                         }
                                     })
-                                // .catch((d) => { console.log(d) })
+                                // .catch((d) => { mvConsts.error(d) })
                             }
                             if (this.props.selected_slots.length * this.props.laundry_cost <= this.props.money) {
                                 book()

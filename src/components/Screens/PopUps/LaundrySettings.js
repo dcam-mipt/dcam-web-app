@@ -26,16 +26,16 @@ let updateMachines = (machines) => {
                 if (machines[i].should_be_deleted) {
                     d.destroy()
                         // .then((d) => { console.log(d) })
-                        .catch((d) => { console.log(d) })
+                        .catch((d) => { mvConsts.error(d) })
                 } else {
                     d.set(`isBroken`, machines[i].isBroken)
                     d.set(`isDisabled`, machines[i].isDisabled)
                     d.save()
                         // .then((d) => { console.log(d) })
-                        .catch((d) => { console.log(d) })
+                        .catch((d) => { mvConsts.error(d) })
                 }
             })
-            .catch((d) => { console.log(d) })
+            .catch((d) => { mvConsts.error(d) })
     }
 }
 
@@ -155,7 +155,7 @@ class LaundrySettings extends React.Component {
                             machine.set(`comment`, ``);
                             machine.save()
                                 // .then((d) => { console.log(d) })
-                                .catch((d) => { console.log(d) })
+                                .catch((d) => { mvConsts.error(d) })
                         }}
                     >
                         +
@@ -172,7 +172,7 @@ class LaundrySettings extends React.Component {
                             new Parse.Query(`Machines`)
                                 .find()
                                 .then((d) => { this.props.loadMachines(d) })
-                                .catch((d) => { console.log(d) })
+                                .catch((d) => { mvConsts.error(d) })
                         }}
                     >
                         <img src={undo} alt={``} style={{ width: `1.5vw` }} />
