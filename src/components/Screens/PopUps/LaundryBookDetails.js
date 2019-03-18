@@ -110,7 +110,7 @@ class LaundryBookDetails extends React.Component {
                                     {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`HH:mm`)}
                                 </Container>
                                 <Container extraProps={`width: 2vw; height: 2vw; margin: 0 0.25vw 0 0.25vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
-                                    {this.props.machines.map(i => i.machineId).indexOf(book_details.machineId) + 1}
+                                    {this.props.machines.map(i => i.objectId).indexOf(book_details.machineId) + 1}
                                 </Container>
                             </Container>
                             <Container extraProps={`width: 17vw; flex-direction: row; justify-content: flex-start; `} >

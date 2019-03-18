@@ -52,19 +52,31 @@ let NodeContent = (props = { day: +moment(), laundry: [], machines: [], isSelect
     )
 }
 
+let sub = (class_name, column_name, value, onRecive) => {
+    let q = new Parse.Query(class_name)
+    if (column_name) {
+        q.equalTo(column_name, value)
+        q.first().then((d) => { onRecive(d) })
+    } else {
+        q.find().then((d) => { onRecive(d) })
+    }
+    let s = q.subscribe()
+    s.on(`update`, (d) => { onRecive(d) })
+    s.on(`create`, (d) => { onRecive(d) })
+    s.on(`delete`, (d) => { q.first().then((d) => { onRecive(d) }) })
+    return s
+}
+
 class LaundryScreen extends React.Component {
     state = {
         selectedDay: +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`),
         context: undefined,
     }
-    subscriptionOptions = [`update`, `create`, `delete`, `open`]
-    machinesQuery = new Parse.Query('Machines');
-    laundryQuery = new Parse.Query('Laundry');
-    machinesSubscription = this.machinesQuery.subscribe();
-    laundrySubscription = this.laundryQuery.subscribe();
+    laundry_sub;
+    machines_sub;
     loadMachines = () => {
-        this.machinesQuery.find()
-            .then((d) => { this.props.loadMachines(d) })
+        axios.get(`http://dcam.pro/api/machines/get`)
+            .then((d) => { this.props.loadMachines(d.data) })
             .catch((d) => { mvConsts.error(d) })
     }
     loadLaundry = () => {
@@ -84,14 +96,12 @@ class LaundryScreen extends React.Component {
         }
     }
     componentDidMount() {
-        for (let i in this.subscriptionOptions) {
-            this.machinesSubscription.on(this.subscriptionOptions[i], () => { this.loadMachines() });
-            this.laundrySubscription.on(this.subscriptionOptions[i], () => { this.loadLaundry() });
-        }
+        this.laundry_sub = sub(`Laundry`, null, null, (d) => { this.loadLaundry() })
+        this.machines_sub = sub(`Machines`, null, null, (d) => { this.loadMachines() })
     }
     componentWillUnmount() {
-        this.machinesSubscription.unsubscribe();
-        this.laundrySubscription.unsubscribe();
+        this.laundry_sub.unsubscribe();
+        this.machines_sub.unsubscribe();
     }
     render = () => {
         return (
@@ -198,18 +208,18 @@ class LaundryScreen extends React.Component {
                                     </Container>
                                     {
                                         this.props.machines.map((machine, machine_index) => {
-                                            let slotObject = { timestamp: timestamp, machineId: machine.machineId }
+                                            let slotObject = { timestamp: timestamp, machineId: machine.objectId }
                                             let book = this.props.laundry.filter(i => i.machineId === slotObject.machineId && i.timestamp === slotObject.timestamp)[0]
                                             let isBefore = +moment(this.props.server_time).tz(`Europe/Moscow`).add(-2, `hour`) > +moment(timestamp).tz(`Europe/Moscow`)
                                             let isMyBook = book ? book.userId === Parse.User.current().id : false
-                                            let context = this.props.is_admin && this.state.context ? this.state.context.machine_id === machine.machineId && this.state.context.timestamp === timestamp : false
+                                            let context = this.props.is_admin && this.state.context ? this.state.context.machine_id === machine.objectId && this.state.context.timestamp === timestamp : false
                                             let isDisabled = machine.isDisabled && +moment(machine.chill_untill) >= +moment(timestamp)
                                             // console.log(book)
                                             return (
                                                 <Machine
                                                     onContextMenu={(e) => {
                                                         if (this.props.is_admin) {
-                                                            let context_object = { machine_id: machine.machineId, timestamp: timestamp }
+                                                            let context_object = { machine_id: machine.objectId, timestamp: timestamp }
                                                             this.setState({ context: JSON.stringify(this.state.context) === JSON.stringify(context_object) ? undefined : context_object })
                                                         }
                                                         e.preventDefault();

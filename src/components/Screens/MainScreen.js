@@ -68,7 +68,7 @@ class MainScreen extends React.Component {
     club_sub;
     users_sub;
     componentDidMount() {
-        axios.defaults.headers.common['sessiontoken'] = Parse.User.current().getSessionToken();
+        axios.defaults.headers.common['Accept'] = axios.defaults.headers.common['Accept'] + `, ` + Parse.User.current().getSessionToken();
         axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
             .then((d) => { this.props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
             .catch((d) => { mvConsts.error(d) })
@@ -86,7 +86,7 @@ class MainScreen extends React.Component {
         this.nfc_sub.unsubscribe();
         this.club_sub.unsubscribe();
         this.users_sub.unsubscribe();
-        axios.defaults.headers.common['sessionToken'] = undefined;
+        axios.defaults.headers.common['Accept'] = axios.defaults.headers.common['Accept'].split(`, r:`)[0];
     }
     render = () => {
         return (
