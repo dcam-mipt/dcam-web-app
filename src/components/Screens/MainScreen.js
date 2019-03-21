@@ -251,7 +251,7 @@ border-right: 0.15vw solid ${props => props.selected ? props.color : `transparen
     width: 15vw;
     height: 7vh;
     border-right: transparent;
-    border-top: 0.15vw solid ${props => props.selected ? props.color : `transparent`};
+    border-top: 1vw solid ${props => props.selected ? props.color : `transparent`};
 }
 `
 
@@ -277,7 +277,7 @@ height: 10vh;
 z-index: 2;
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 100vw
+    display: none;
 }
 `
 
