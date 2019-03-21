@@ -105,7 +105,7 @@ class LaundryScreen extends React.Component {
     }
     render = () => {
         return (
-            <Container flexDirection={`row`} extraProps={`position: relative; ${m(`flex-direction: column; height: 100%;`)}`} >
+            <Container flexDirection={`row`} extraProps={`position: relative; ${m(`flex-direction: column; height: 100vh;`)}`} >
                 <TimePointer visible={this.state.selectedDay === +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`)} >
                     {this.props.server_time}
                 </TimePointer>
@@ -313,8 +313,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(LaundryScreen)
 const TimePointer = (props) => {
     let percent = (props.children - +moment(props.children).tz(`Europe/Moscow`).startOf(`day`)) / (1000 * 3600 * 24)
     let top = -1 + 40 * percent
+    const Wrapper = styled.div`
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-direction: column
+    background-color: 
+    transition: 0.2s
+    visibility: ${props.visible ? `visible` : `hidden`};
+    transition: 0.2s; opacity: ${+props.visible};
+    position: absolute;
+    right: 23.5vw;
+    top: ${top + +!props.visible}vw;
+    z-index: 1;
+    color: ${mvConsts.colors.purple};
+    @media (min-width: 320px) and (max-width: 480px) {
+        display: none;
+    }
+    `
     return (
-        <Container extraProps={`visibility: ${props.visible ? `visible` : `hidden`}; transition: 0.2s; opacity: ${+props.visible}; position: absolute; right: 23.5vw; top: ${top + +!props.visible}vw; z-index: 1; color: ${mvConsts.colors.purple};`} >
+        <Wrapper extraProps={``} >
             <Container extraProps={`padding: 0 3vw 0 0; `} >
                 {moment(props.children).tz(`Europe/Moscow`).format(`HH:mm`)}
             </Container>
@@ -326,7 +344,7 @@ const TimePointer = (props) => {
 
                 </Container>
             </Container>
-        </Container>
+        </Wrapper>
     )
 }
 
