@@ -103,10 +103,8 @@ class MainScreen extends React.Component {
                                         key={index}
                                         selected={this.props.mainAppScreen === item.name}
                                         color={item.color}
-                                        onClick={() => {
-                                            console.log(`log content`)
-                                            this.props.setMainAppScreen(item.name)
-                                        }}
+                                        onClick={() => { this.props.setMainAppScreen(item.name) }}
+                                        width={100 / menuItems.filter(i => !i.admin || this.props.is_admin).length}
                                     >
                                         <MenuIcon
                                             src={item.image}
@@ -248,7 +246,7 @@ border-right: 0.15vw solid ${props => props.selected ? props.color : `transparen
 }
 // transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 15vw;
+    width: ${props => props.width}vw;
     height: 7vh;
     border-right: transparent;
     border-top: 1vw solid ${props => props.selected ? props.color : `transparent`};
@@ -304,9 +302,9 @@ height: 100vh;
 background-color: ${mvConsts.colors.background.primary};
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
-    position: absolute;
+    position: fixed;
     z-index: 10;
-    bottom: 0;
+    top: 93vh;
     width: 100vw;
     height: 7vh;
 }

@@ -391,6 +391,7 @@ flex-direction: row;
     border-bottom-left-radius: ${props => props.first ? 2 : 0}vw;
     border-top-right-radius: ${props => props.last ? 2 : 0}vw;
     border-bottom-right-radius: ${props => props.last ? 2 : 0}vw;
+    font-size: 3vw;
 }
 `
 
