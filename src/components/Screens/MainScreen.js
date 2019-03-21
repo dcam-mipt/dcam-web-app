@@ -95,7 +95,7 @@ class MainScreen extends React.Component {
                     <Logo>
                         <span role="img" aria-label="dcam">🌿</span>
                     </Logo>
-                    <Container width={6} height={90} >
+                    <MenuItemsRow>
                         {
                             menuItems.filter(i => !i.admin || this.props.is_admin).map((item, index) => {
                                 return (
@@ -104,20 +104,20 @@ class MainScreen extends React.Component {
                                         selected={this.props.mainAppScreen === item.name}
                                         color={item.color}
                                         onClick={() => {
+                                            console.log(`log content`)
                                             this.props.setMainAppScreen(item.name)
                                         }}
                                     >
-                                        <img
+                                        <MenuIcon
                                             src={item.image}
                                             alt={item.title}
-                                            style={{ width: `2.5vw` }}
                                         />
                                         {/* {item.title} */}
                                     </MenuItem>
                                 )
                             })
                         }
-                    </Container>
+                    </MenuItemsRow>
                 </Menu>
                 <RightPart>
                     <Header>
@@ -192,6 +192,28 @@ let mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
 
+const MenuIcon = styled.img`
+width: 2.5vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 10vw;
+}
+`;
+
+const MenuItemsRow = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+width: 6vw
+height: 90vh
+transition: 0.2s
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 100vw;
+    height: 7vh;
+    flex-direction: row;
+}
+`
+
 const MoneyBalance = styled.div`
 display: flex
 justify-content: center
@@ -225,6 +247,12 @@ border-right: 0.15vw solid ${props => props.selected ? props.color : `transparen
     background-color: ${props => !props.selected ? mvConsts.colors.background.secondary : shadeColor2(props.color, 0.3)};
 }
 // transition: 0.2s;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 15vw;
+    height: 7vh;
+    border-right: transparent;
+    border-top: 0.15vw solid ${props => props.selected ? props.color : `transparent`};
+}
 `
 
 const Logo = styled.div`
@@ -235,6 +263,9 @@ width: 6vw;
 height: 10vh;
 transition: 0.2s;
 border-bottom: 0.1vh solid ${mvConsts.colors.background.secondary};
+@media (min-width: 320px) and (max-width: 480px) {
+    display: none;
+}
 `
 
 const Header = styled.div`
@@ -275,7 +306,10 @@ height: 100vh;
 background-color: ${mvConsts.colors.background.primary};
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: none
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 7vh;
 }
 `
 
