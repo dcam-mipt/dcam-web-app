@@ -105,7 +105,7 @@ class LaundryScreen extends React.Component {
     }
     render = () => {
         return (
-            <Container flexDirection={`row`} extraProps={`position: relative; ${m(`flex-direction: column; height: 100vh;`)}`} >
+            <Container flexDirection={`row`} extraProps={`position: relative; ${m(`flex-direction: column; height: 100%;`)}`} >
                 <TimePointer visible={this.state.selectedDay === +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`)} >
                     {this.props.server_time}
                 </TimePointer>

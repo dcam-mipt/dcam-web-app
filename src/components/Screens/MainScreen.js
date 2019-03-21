@@ -290,7 +290,7 @@ height: 92vh;
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw
-    height: 100vh;
+    height: 100%;
 }
 `
 
