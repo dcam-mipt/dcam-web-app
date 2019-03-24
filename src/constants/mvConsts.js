@@ -43,8 +43,8 @@ let darkTheme = {
     vk: "#3A60A1",
     WARM_ORANGE: `#FF7052`,
     background: {
-        primary: `#000000`,
-        secondary: `#151516`,
+        primary: `#45464D`,
+        secondary: `#2A2B31`,
         support: `#767676`,
     },
     text: {
