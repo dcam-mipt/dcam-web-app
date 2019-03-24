@@ -16,6 +16,7 @@ import constantsActions from '../../redux/actions/ConstantsActions'
 import screens from './screens'
 import axios from 'axios'
 import menu from '../../assets/images/menu.svg'
+import menu_gray from '../../assets/images/menu_gray.svg'
 import dcam_logo from '../../assets/images/dcam_logo.svg'
 
 let shadeColor2 = (color, percent) => {
@@ -101,7 +102,7 @@ class MainScreen extends React.Component {
                         </Container>
                         <Container extraProps={`width: 15vw;`} >
                         <img
-                            src={menu}
+                            src={menu_gray}
                             style={{ width: `8vw` }}
                             alt={``}
                             onClick={() => {}}

@@ -14,6 +14,7 @@ import uiActions from '../../../redux/actions/UIActions'
 import { connect } from 'react-redux'
 import cros from '../../../assets/images/cros.svg'
 import money from '../../../assets/images/money.svg'
+import calendar from '../../../assets/images/calendar.svg'
 import bag from '../../../assets/images/bag.svg'
 import pencil from '../../../assets/images/pencil.svg'
 import settings from '../../../assets/images/settings_selected.svg'
@@ -291,6 +292,33 @@ class LaundryScreen extends React.Component {
                             )
                         })
                     }
+                    <BottomCalendar>
+                        <Container
+                            extraProps={`width: 24vw; height: 10vw; border-radius: 2vw; background-color: ${mvConsts.colors.background.primary}; font-size: 3vw; color: ${mvConsts.colors.text.support}`}
+                            onClick={() => { if (+moment(this.props.server_time).startOf(`day`) <=  +moment(this.state.selectedDay).add(-1, `day`)) {this.setState({ selectedDay: +moment(this.state.selectedDay).add(-1, `day`) })} }}
+                        >
+                            {moment(this.state.selectedDay).add(-1, `day`).format(`DD.MM`)}
+                        </Container>
+                        <Container
+                            extraProps={`width: 50vw; height: 10vw; background-color: ${mvConsts.colors.background.primary}; margin: 1vw; border-radius: 2vw; flex-direction: row; `}
+                            onClick={() => { this.setState({ selectedDay: +moment(this.props.server_time).startOf(`day`) }) }}
+                        >
+                            <Image
+                                width={1}
+                                src={calendar}
+                                alt={``}
+                            />
+                            <Container extraProps={`width: 40vw; font-size: 5vw; color: ${mvConsts.colors.text.primary}`} >
+                                {moment(this.state.selectedDay).format(`DD.MM.YY`)}
+                            </Container>
+                        </Container>
+                        <Container
+                            extraProps={`width: 24vw; height: 10vw; border-radius: 2vw; background-color: ${mvConsts.colors.background.primary}; font-size: 3vw; color: ${mvConsts.colors.text.support}`}
+                            onClick={() => { if (+moment(this.props.server_time).startOf(`week`).add(3, `week`) >=  +moment(this.state.selectedDay).add(1, `day`)) {this.setState({ selectedDay: +moment(this.state.selectedDay).add(1, `day`) })} }}
+                        >
+                            {moment(this.state.selectedDay).add(1, `day`).format(`DD.MM`)}
+                        </Container>
+                    </BottomCalendar>
                     <BottomButtons>
                         {
                             buttons.filter((i, index) => i.visible !== false).map((i, index) => {
@@ -299,9 +327,9 @@ class LaundryScreen extends React.Component {
                                         key={index}
                                         {...i}
                                     >
-                                        <img
+                                        <Image
+                                            width={1}
                                             src={i.image}
-                                            style={{ width: `6vw`, }}
                                             alt={``}
                                         />
                                     </Button>
@@ -387,6 +415,23 @@ const TimePointer = (props) => {
     )
 }
 
+const Image = styled.img`
+width: ${props => props.width}vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => props.width * 5}vw;
+}`
+
+const BottomCalendar = styled.div`
+display: none;
+@media (min-width: 320px) and (max-width: 480px) {
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-direction: row
+    transition: 0.2s
+    width: 96vw;
+}`
+
 const BottomButtons = styled.div`
 display: none;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -458,8 +503,8 @@ border-bottom-left-radius: ${props => props.week === 3 && props.day === 0 ? 1 : 
 border-top-right-radius: ${props => props.week === 0 && props.day === 6 ? 1 : 0}vw;
 border-bottom-right-radius: ${props => props.week === 3 && props.day === 6 ? 1 : 0}vw;
 ${props => props.inner ? `background-color: transparent` : null}
-${props => props.isToday ? `border: 0.2vw solid ${mvConsts.colors.accept}` : null}
-${props => props.isSelected ? `border-radius: 0.5vw; border: 0.2vw solid ${mvConsts.colors.purple}` : null}
+${props => props.isToday ? `border: 0.2vw solid ${mvConsts.colors.purple}` : null}
+${props => props.isSelected ? `border-radius: 0.5vw; border: 0.2vw solid ${mvConsts.colors.accept}` : null}
 ${props => !props.isBefore ? `background-color: transparent` : null}
 ${props => props.isSelected ? `background-color: ${mvConsts.colors.background.primary}` : null}
 ${props => props.isWeekEnd ? `background-color: ${mvConsts.colors.background.support}` : null}

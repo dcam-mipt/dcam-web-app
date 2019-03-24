@@ -6,8 +6,8 @@ import moment from 'moment'
 import axios from 'axios'
 import * as Sentry from '@sentry/browser';
 
-let sunrise = +moment().startOf(`day`).add(8, `hour`)
-let sunset = +moment().startOf(`day`).add(17, `hour`)
+let sunrise = +moment().startOf(`day`).add(7, `hour`)
+let sunset = +moment().startOf(`day`).add(19, `hour`)
 
 // axios.get(`http://api.openweathermap.org/data/2.5/weather?q=Moscow,RU&APPID=0579fe15f41ee155e5acbf5059f29b0c`)
 //     .then((d) => {
@@ -60,9 +60,9 @@ export default {
 
     error: (d) => { Sentry.captureException(d); console.log(d) },
 
-    colors: dayTheme,
+    // colors: dayTheme,
     // colors: darkTheme,
-    // colors: +moment() > sunset || +moment() < sunrise ? darkTheme : dayTheme,
+    colors: +moment() > sunset || +moment() < sunrise ? darkTheme : dayTheme,
 
     weekDays: {
         short: [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`],

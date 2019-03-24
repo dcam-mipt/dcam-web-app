@@ -15,6 +15,8 @@ import Parse from 'parse'
 import VK from '../../../API/VKAPI'
 import axios from 'axios';
 
+let m = mvConsts.mobile_media_query
+
 class LaundryBookDetails extends React.Component {
     state = {
         user: undefined,
@@ -54,6 +56,13 @@ class LaundryBookDetails extends React.Component {
             max-height: 70vh;
             overflow-y: scroll;
             transition: 0.2s;
+            @media (min-width: 320px) and (max-width: 480px) {
+                border-radius: 4vw;
+                top: ${visible ? 10 : 14}vh;
+                right: 2vw;
+                width: 96vw;
+                padding: 2vw 2vw 2vw 2vw;
+            }
         `
         let { book_details } = this.props
         let is_my_book = book_details ? book_details.userId === Parse.User.current().id : false
@@ -64,56 +73,55 @@ class LaundryBookDetails extends React.Component {
                     book_details
                         ? <Container>
                             <Container extraProps={`flex-direction: row`} >
-                                <Container extraProps={`width: 3vw; height: 3vw; background-color: ${mvConsts.colors.background.support}; border-radius: 3vw;`} >
+                                <Container extraProps={`width: 3vw; height: 3vw; background-color: ${mvConsts.colors.background.support}; border-radius: 3vw; ${m(`width: 15vw; height: 15vw; border-radius: 15vw;`)}`} >
                                     {this.state.user
-                                        ? <img
+                                        ? <Avatar
                                             src={this.state.user.avatar}
-                                            style={{ width: `3vw`, borderRadius: `2vw` }}
                                             alt={``}
                                         />
                                         : null}
                                 </Container>
                                 <Container>
-                                    <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; font-size: 1vw; color: ${mvConsts.colors.text.primary}; `} >
+                                    <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; font-size: 1vw; color: ${mvConsts.colors.text.primary}; ${m(`width: 52.5vw; font-size: 4vw; margin-left: 5vw;`)} `} >
                                         {this.state.user ? this.state.user.username.split(`@`)[0] : null}
                                     </Container>
-                                    <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; color: rgba(0, 0, 0, 0.4); `} >
+                                    <Container extraProps={`width: 10.5vw; align-items: flex-start; margin-left: 1vw; color: rgba(0, 0, 0, 0.4); ${m(`width: 52.5vw; font-size: 4vw; margin-left: 5vw;`)} `} >
                                         {/* {this.state.user ? this.state.user.name.split(` `)[0] : null} */}
                                         {`...`}
                                     </Container>
                                 </Container>
                                 <Container
-                                    extraProps={`width: 2.5vw; height: 2.5vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.vk}; cursor: pointer; visibility: ${(this.state.user ? this.state.user.vk : false) ? `visible` : `hidden`} `}
+                                    extraProps={`width: 2.5vw; height: 2.5vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.vk}; cursor: pointer; visibility: ${(this.state.user ? this.state.user.vk : false) ? `visible` : `hidden`}; ${m(`width: 12.5vw; height: 12.5vw; border-radius: 2.5vw;`)} `}
                                     onClick={() => {
                                         if (this.state.user) {
                                             window.open(this.state.user.vk)
                                         }
                                     }}
                                 >
-                                    <img
+                                    <Image
+                                        width={1}
                                         src={vk_logo}
-                                        style={{ width: `1vw` }}
                                         alt={``}
                                     />
                                 </Container>
                             </Container>
-                            <Container extraProps={`flex-direction: row; padding: 0.5vw 0 0.5vw 0`} >
+                            <Container extraProps={`flex-direction: row; padding: 0.5vw 0 0.5vw 0; ${m(`padding: 2.5vw 0 2.5vw 0;`)}`} >
                                 <Container>
-                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.support}`} >
+                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.support}; ${m(`width: 25vw; font-size: 4vw;`)}`} >
                                         {mvConsts.weekDays.full[moment(book_details.timestamp).tz(`Europe/Moscow`).day()]}
                                     </Container>
-                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.primary}`} >
+                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.primary}; ${m(`width: 25vw; font-size: 4vw;`)}`} >
                                         {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`DD.MM.YY`)}
                                     </Container>
                                 </Container>
-                                <Container extraProps={`font-size: 1.5vw; width: 8.5vw; color: ${mvConsts.colors.text.primary} `} >
+                                <Container extraProps={`font-size: 1.5vw; width: 8.5vw; color: ${mvConsts.colors.text.primary}; ${m(`font-size: 7.5vw; width: 42.5vw;`)} `} >
                                     {moment(book_details.timestamp).tz(`Europe/Moscow`).format(`HH:mm`)}
                                 </Container>
-                                <Container extraProps={`width: 2vw; height: 2vw; margin: 0 0.25vw 0 0.25vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
+                                <Container extraProps={`width: 2vw; height: 2vw; margin: 0 0.25vw 0 0.25vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white; ${m(`width: 10vw; height: 10vw; margin: 0 1.25vw 0 1.25vw; border-radius: 10vw; margin-left: 5vw; font-size: 3vw;`)}`} >
                                     {this.props.machines.map(i => i.objectId).indexOf(book_details.machineId) + 1}
                                 </Container>
                             </Container>
-                            <Container extraProps={`width: 17vw; flex-direction: row; justify-content: flex-start; `} >
+                            <Container extraProps={`width: 17vw; flex-direction: row; justify-content: flex-start; ${m(`width: 85vw;`)}`} >
                                 {/* {
                                     this.state.is_admin
                                         ? <MiniButton>
@@ -135,9 +143,9 @@ class LaundryBookDetails extends React.Component {
                                                     .catch((d) => { mvConsts.error(d) })
                                             }}
                                         >
-                                            <img
+                                            <Image
+                                                width={2}
                                                 src={require('../../../assets/images/money.svg')}
-                                                style={{ width: `2vw` }}
                                                 alt={``}
                                             />
                                         </MiniButton>
@@ -180,6 +188,20 @@ let mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaundryBookDetails)
 
+const Avatar = styled.img`
+width: 3vw;
+border-radius: 3vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 15vw;
+    border-radius: 15vw;
+}`
+
+const Image = styled.img`
+width: ${props => props.width}vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => props.width * 5}vw;
+}`
+
 const MiniButton = styled.div`
 display: flex;
 justify-content: center;
@@ -192,6 +214,11 @@ background-color: ${mvConsts.colors.background.secondary};
 border-radius: 0.5vw;
 cursor: pointer;
 transition: 0.2s;
-`
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 15vw;
+    height: 15vw;
+    margin: 1.25vw;
+    border-radius: 2.5vw;
+}`
 
 /*eslint-enable no-unused-vars*/
