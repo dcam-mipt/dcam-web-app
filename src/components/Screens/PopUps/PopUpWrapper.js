@@ -56,7 +56,7 @@ class PopUpWrapper extends React.Component {
                         }
                     }}
                 >
-                    
+
                 </Wrapper>
                 {this.props.children}
             </Container>
@@ -85,13 +85,13 @@ display: flex
 justify-content: center
 align-items: center
 flex-direction: column
-width: 100vw;
-height: 100vh;
 position: absolute;
 z-index: 1;
 top: 0;
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, ${props => props.anyMobilePopUp ? 0.2 : 0});
     backdrop-filter: blur(${props => props.anyMobilePopUp ? 5 : 0}px);
     visibility: ${props => props.anyMobilePopUp ? `visible` : `hidden`};
