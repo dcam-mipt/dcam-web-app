@@ -1,13 +1,14 @@
 /*eslint-disable no-unused-vars*/
 import types from '../ActionTypes.js'
 import mvConsts from '../../constants/mvConsts'
+import moment from 'moment'
 
 const initialState = {
     loading: false,
     selected_slots: [],
     laundry: [],
     book_details: undefined,
-};
+ };
 
 export default (state = initialState, action) => {
     switch (action.type) {
