@@ -44,30 +44,20 @@ class PopUpWrapper extends React.Component {
 
     render = () => {
 
-        let anyMobilePopUp = this.props.popUpWindow !== mvConsts.popUps.EMPTY && this.props.mobile
+        let anyMobilePopUp = this.props.popUpWindow !== mvConsts.popUps.EMPTY
 
         return (
             <Container>
-                <Container
-                    extraProps={`
-                        width: 100vw;
-                        height: 100vh;
-                        position: absolute;
-                        background-color: rgba(0, 0, 0, ${anyMobilePopUp ? 0.2 : 0});
-                        backdrop-filter: blur(${anyMobilePopUp ? 5 : 0}px);
-                        visibility: ${anyMobilePopUp ? `visible` : `hidden`};
-                        z-index: 2;
-                        top: 0;
-                        transition: 0.2s;
-                    `}
+                <Wrapper
+                    anyMobilePopUp={anyMobilePopUp}
                     onClick={() => {
                         if (this.props.popUpWindow !== mvConsts.popUps.EMPTY) {
                             this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
                         }
                     }}
                 >
-
-                </Container>
+                    
+                </Wrapper>
                 {this.props.children}
             </Container>
         )
@@ -77,7 +67,6 @@ class PopUpWrapper extends React.Component {
 let mapStateToProps = (state) => {
     return {
         popUpWindow: state.ui.popUpWindow,
-        mobile: state.ui.mobile,
     }
 };
 
@@ -90,6 +79,22 @@ let mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PopUpWrapper)
-// export default (PopUpWrapper)
+
+const Wrapper = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+width: 100vw;
+height: 100vh;
+position: absolute;
+z-index: 1;
+top: 0;
+transition: 0.2s;
+@media (min-width: 320px) and (max-width: 480px) {
+    background-color: rgba(0, 0, 0, ${props => props.anyMobilePopUp ? 0.2 : 0});
+    backdrop-filter: blur(${props => props.anyMobilePopUp ? 5 : 0}px);
+    visibility: ${props => props.anyMobilePopUp ? `visible` : `hidden`};
+}`
 
 /*eslint-enable no-unused-vars*/

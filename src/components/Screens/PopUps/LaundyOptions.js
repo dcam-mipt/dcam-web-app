@@ -28,17 +28,23 @@ class LaundryOptions extends React.Component {
         let visible = this.props.popUpWindow === mvConsts.popUps.LAUNDRY_OPTIONS
         let style = `
             border-radius: 1vw;
-            padding: 1vw 1vw 1vw 1vw
+            padding: 1vw 1vw 1vw 1vw;
             background-color: ${mvConsts.colors.background.primary};
             flex-direction: column
             position: absolute;
             top: ${visible ? 19 : 21}vh;
             right: 48vw;
             box-shadow: 0 0 2vw rgba(0, 0, 0, 0.2);
-            z-index: 2;
             opacity: ${visible ? 1 : 0};
             visibility: ${visible ? `visible` : `hidden`};
+            z-index: 2;
             transition: 0.2s;
+            @media (min-width: 320px) and (max-width: 480px) {
+                border-radius: 4vw;
+                top: ${visible ? 50 : 54}vh;
+                right: 2vw;
+                padding: 1vw 2vw 1vw 2vw;
+            }
         `
         return (
             <Container className={mvConsts.popUps.LAUNDRY_OPTIONS} extraProps={style} >
@@ -51,8 +57,11 @@ class LaundryOptions extends React.Component {
 let vk_settings = (component, visible) => {
     return (
         <Container extraProps={`flex-direction: row`} >
-            <img src={component.state.vk.photo_200} style={{ width: `3vw`, borderRadius: `3vw` }} alt={``} />
-            <Container extraProps={`margin: 0 1vw 0 1vw; color: ${mvConsts.colors.text.primary}`} >
+            <Avatar
+                src={component.state.vk.photo_200}
+                alt={``}
+            />
+            <Container extraProps={`margin: 0 1vw 0 1vw; color: ${mvConsts.colors.text.primary}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; }`} >
                 {component.state.vk.first_name} {component.state.vk.last_name}
             </Container>
             <Button visible={visible} backgroundColor={mvConsts.colors.vk} onClick={() => {
@@ -108,6 +117,19 @@ let mapDispatchToProps = (dispatch) => {
         },
     }
 }
+
+const Avatar = styled.img`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+width: 3vw;
+border-radius: 3vw;
+transition: 0.2s
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 10vw;
+    border-radius: 10vw;
+}`
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaundryOptions)
 /*eslint-enable no-unused-vars*/
