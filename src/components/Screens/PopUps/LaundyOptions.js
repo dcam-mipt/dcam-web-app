@@ -43,7 +43,7 @@ class LaundryOptions extends React.Component {
                 border-radius: 4vw;
                 top: ${visible ? 50 : 54}vh;
                 right: 2vw;
-                padding: 1vw 2vw 1vw 2vw;
+                padding: 2vw 2vw 2vw 2vw;
             }
         `
         return (
@@ -56,7 +56,7 @@ class LaundryOptions extends React.Component {
 
 let vk_settings = (component, visible) => {
     return (
-        <Container extraProps={`flex-direction: row`} >
+        <Container extraProps={`flex-direction: row; ${mvConsts.mobile_media_query(`width: 92vw; justify-content: space-around;`)}`} >
             <Avatar
                 src={component.state.vk.photo_200}
                 alt={``}

@@ -36,6 +36,13 @@ class ShoppingBasket extends React.Component {
             max-height: 70vh;
             overflow-y: scroll;
             transition: 0.2s;
+            @media (min-width: 320px) and (max-width: 480px) {
+                border-radius: 4vw;
+                top: ${visible ? 10 : 14}vh;
+                right: 2vw;
+                width: 96vw;
+                padding: 2vw 2vw 2vw 2vw;
+            }   
         `
         return (
             <Container className={mvConsts.popUps.SHOPPING_BASKET} extraProps={style} >
@@ -43,33 +50,37 @@ class ShoppingBasket extends React.Component {
                     this.props.selected_slots.map((item, index) => {
                         return (
                             <Slot key={index} >
-                                <Container width={5} alignItems={`flex-start; margin: 0.5vw;`} >
-                                    <Container extraProps={` color: ${mvConsts.colors.text.support}; font-size: 0.8vw; `} >
+                                <Container extraProps={`width: 5vw; align-items: flex-start; margin: 0.5vw; ${mvConsts.mobile_media_query(`width: 30vw`)}`} >
+                                    <Container extraProps={` color: ${mvConsts.colors.text.support}; font-size: 0.8vw; ${mvConsts.mobile_media_query(`font-size: 4vw;`)} `} >
                                         {mvConsts.weekDays.full[moment(item.timestamp).day()]}
                                     </Container>
-                                    <Container extraProps={` font-size: 0.8vw; color: ${mvConsts.colors.text.primary}; `} >
+                                    <Container extraProps={` font-size: 0.8vw; color: ${mvConsts.colors.text.primary}; ${mvConsts.mobile_media_query(`font-size: 4vw;`)} `} >
                                         {moment(item.timestamp).format('DD.MM.YY')}
                                     </Container>
                                 </Container>
                                 <Container>
-                                    <Container extraProps={` font-size: 1.5vw; color: ${mvConsts.colors.text.primary}; `} >
+                                    <Container extraProps={` font-size: 1.5vw; color: ${mvConsts.colors.text.primary}; ${mvConsts.mobile_media_query(`font-size: 7vw;`)} `} >
                                         {moment(item.timestamp).format('HH:mm')}
                                     </Container>
                                 </Container>
-                                <Container fontSize={1} extraProps={` margin: 0.5vw; width: 2vw; height: 2vw; border-radius: 2vw; background-color: ${mvConsts.colors.purple}; color: white; `} >
-                                    {this.props.machines.map(i => i.machineId).indexOf(item.machineId) + 1}
+                                <Container extraProps={`font-size: 1vw; margin: 0.5vw; width: 2vw; height: 2vw; border-radius: 2vw; background-color: ${mvConsts.colors.purple}; color: white; ${mvConsts.mobile_media_query(`font-size: 4vw; width: 8vw; height: 8vw; border-radius: 8vw; margin: 2.5vw;`)} `} >
+                                    {this.props.machines.map(i => i.objectId).indexOf(item.machineId) + 1}
                                 </Container>
-                                <Container width={2.5} extraProps={`color: ${mvConsts.colors.text.primary};`} >
+                                <Container extraProps={`width: 2.5vw; color: ${mvConsts.colors.text.primary}; ${mvConsts.mobile_media_query(`width: 12.5vw; font-size: 4vw;`)}`} >
                                     {this.props.laundry_cost} ₽
-                                    </Container>
-                                <Container extraProps={` border-left: 1px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; width: 1.5vw; height: 2vw; cursor: pointer; `} >
-                                    <img src={cross} alt={``} style={{ width: (1.2) + `vw`, marginLeft: `0.5vw` }} onClick={() => { this.props.selectSlot(item) }} />
+                                </Container>
+                                <Container extraProps={` border-left: 1px solid ${mvConsts.colors.background.support}; margin-left: 0.5vw; width: 1.5vw; height: 2vw; cursor: pointer; ${mvConsts.mobile_media_query(`width: 7.5vw; height: 8vw;`)} `} >
+                                    <Cross
+                                        src={cross}
+                                        alt={``}
+                                        onClick={() => { this.props.selectSlot(item) }}
+                                    />
                                 </Container>
                             </Slot>
                         )
                     })
                 }
-                <Container flexDirection={`row`} >
+                <Container extraProps={`flex-direction: row; ${mvConsts.mobile_media_query(`margin-top: 1vw;`)}`} >
                     <Button visible={visible} onClick={() => {
                         this.clearSelections();
                     }} >
@@ -137,6 +148,14 @@ let mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingBasket)
 
+const Cross = styled.img`
+width: 1.2vw;
+margin-left: 0.5vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 6vw;
+    margin-left: 2.5vw;
+}`
+
 const Slot = styled.div`
 display: flex
 justify-content: center
@@ -144,6 +163,9 @@ align-items: center
 flex-direction: row
 height: 3vw
 transition: 0.2s
+${mvConsts.mobile_media_query(`
+    height: 10vw;
+`)}
 `
 
 /*eslint-enable no-unused-vars*/

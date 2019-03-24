@@ -47,6 +47,13 @@ class Reservations extends React.Component {
             max-height: 70vh;
             overflow-y: scroll;
             transition: 0.2s;
+            @media (min-width: 320px) and (max-width: 480px) {
+                border-radius: 4vw;
+                top: ${visible ? 10 : 14}vh;
+                right: 2vw;
+                width: 96vw;
+                padding: 2vw 2vw 2vw 2vw;
+            }
         `
         return (
             <Container className={mvConsts.popUps.RESEVATIONS} extraProps={style} >
@@ -55,21 +62,25 @@ class Reservations extends React.Component {
                         return (
                             <Slot key={index} >
                                 <Container>
-                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.support}`} >
+                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.support}; ${mvConsts.mobile_media_query(`width: 30vw; font-size: 4vw;`)}`} >
                                         {mvConsts.weekDays.full[moment(item.timestamp).tz(`Europe/Moscow`).day()]}
                                     </Container>
-                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.primary}`} >
+                                    <Container extraProps={`width: 5vw; align-items: flex-start; font-size: 0.8vw; color: ${mvConsts.colors.text.primary}; ${mvConsts.mobile_media_query(`width: 30vw; font-size: 4vw;`)}`} >
                                         {moment(item.timestamp).tz(`Europe/Moscow`).format(`DD.MM.YY`)}
                                     </Container>
                                 </Container>
-                                <Container extraProps={`font-size: 1.5vw; color: ${mvConsts.colors.text.primary} `} >
+                                <Container extraProps={`font-size: 1.5vw; color: ${mvConsts.colors.text.primary}; ${mvConsts.mobile_media_query(`font-size: 6vw;`)}`} >
                                     {moment(item.timestamp).tz(`Europe/Moscow`).format(`HH:mm`)}
                                 </Container>
-                                <Container extraProps={`width: 2vw; height: 2vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white;`} >
+                                <Container extraProps={`width: 2vw; height: 2vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; margin-left: 1vw; color: white; ${mvConsts.mobile_media_query(`width: 10vw; height: 10vw; border-radius: 10vw; margin-left: 5vw; font-size: 3vw;`)}`} >
                                     {this.props.machines.map(i => i.objectId).indexOf(item.machineId) + 1}
                                 </Container>
                                 <Container extraProps={` margin-left: 0.5vw; height: 2vw; cursor: pointer; `} >
-                                    <img src={arrow} alt={``} style={{ width: `1.2vw`, marginLeft: `0.5vw` }} onClick={() => { this.props.openLaundryBookDetails(item) }} />
+                                    <Arrow
+                                        src={arrow}
+                                        alt={``}
+                                        onClick={() => { this.props.openLaundryBookDetails(item) }}
+                                    />
                                 </Container>
                             </Slot>
                         )
@@ -108,6 +119,17 @@ align-items: center
 flex-direction: row
 height: 3vw
 transition: 0.2s
+${mvConsts.mobile_media_query(`
+    height: 12vw;
+`)}
 `
+
+const Arrow = styled.img`
+width: 1.2vw;
+margin-left: 0.5vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 6vw;
+    margin-left: 2.5vw;
+}`
 
 /*eslint-enable no-unused-vars*/
