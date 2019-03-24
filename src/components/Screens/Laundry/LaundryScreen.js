@@ -14,6 +14,10 @@ import uiActions from '../../../redux/actions/UIActions'
 import { connect } from 'react-redux'
 import cros from '../../../assets/images/cros.svg'
 import money from '../../../assets/images/money.svg'
+import bag from '../../../assets/images/bag.svg'
+import pencil from '../../../assets/images/pencil.svg'
+import settings from '../../../assets/images/settings_selected.svg'
+import invoice_back from '../../../assets/images/invoice_back.svg'
 import axios from 'axios';
 
 // mobile media query
@@ -104,6 +108,34 @@ class LaundryScreen extends React.Component {
         this.machines_sub.unsubscribe();
     }
     render = () => {
+        let buttons = [
+            {
+                visible: this.props.is_admin,
+                backgroundColor: mvConsts.colors.accept,
+                onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_SETTINGS) },
+                image: pencil,
+                title: `Редактирование`
+            },
+            {
+                backgroundColor: mvConsts.colors.lightblue,
+                onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_OPTIONS) },
+                image: settings,
+                title: `Настройки`
+            },
+            {
+                disabled: !this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length,
+                onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.RESEVATIONS) },
+                image: invoice_back,
+                title: `Стирки | ${this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length}`
+            },
+            {
+                disabled: !this.props.selected_slots.length,
+                backgroundColor: mvConsts.colors.accept,
+                onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.SHOPPING_BASKET) },
+                image: bag,
+                title: `Корзина | ${this.props.selected_slots.length}`
+            },
+        ]
         return (
             <Container flexDirection={`row`} extraProps={`position: relative; ${m(`flex-direction: column; height: 100%;`)}`} >
                 <TimePointer visible={this.state.selectedDay === +moment(this.props.server_time).tz(`Europe/Moscow`).startOf(`day`)} >
@@ -134,29 +166,18 @@ class LaundryScreen extends React.Component {
                             </Button>
                         </Container>
                         <Container extraProps={`flex-direction: row;`} >
-                            <Button
-                                visible={this.props.is_admin}
-                                backgroundColor={mvConsts.colors.accept}
-                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_SETTINGS) }}
-                            >
-                                Редактирование
-                            </Button>
-                            <Button backgroundColor={mvConsts.colors.lightblue} onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_OPTIONS) }}  >
-                                Настройки
-                            </Button>
-                            <Button
-                                disabled={!this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length}
-                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.RESEVATIONS) }}
-                            >
-                                Стирки | {this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length}
-                            </Button>
-                            <Button
-                                disabled={!this.props.selected_slots.length}
-                                backgroundColor={mvConsts.colors.accept}
-                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.SHOPPING_BASKET) }}
-                            >
-                                Корзина | {this.props.selected_slots.length}
-                            </Button>
+                            {
+                                buttons.map((i, index) => {
+                                    return (
+                                        <Button
+                                            {...i}
+                                            key={index}
+                                        >
+                                            {i.title}
+                                        </Button>
+                                    )
+                                })
+                            }
                         </Container>
                     </Header>
                     <Container extraProps={`width: 64vw; height: 80vh; justify-content: flex-start; ${m(`display: none;`)} `} >
@@ -270,6 +291,24 @@ class LaundryScreen extends React.Component {
                             )
                         })
                     }
+                    <BottomButtons>
+                        {
+                            buttons.filter((i, index) => i.visible !== false).map((i, index) => {
+                                return (
+                                    <Button
+                                        key={index}
+                                        {...i}
+                                    >
+                                        <img
+                                            src={i.image}
+                                            style={{ width: `6vw`, }}
+                                            alt={``}
+                                        />
+                                    </Button>
+                                )
+                            })
+                        }
+                    </BottomButtons>
                 </DayWrapper>
             </Container>
         )
@@ -347,6 +386,17 @@ const TimePointer = (props) => {
         </Wrapper>
     )
 }
+
+const BottomButtons = styled.div`
+display: none;
+@media (min-width: 320px) and (max-width: 480px) {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    width: 100vw;
+    transition: 0.2s;
+}`
 
 const DayWrapper = styled.div`
 display: flex;

@@ -15,6 +15,8 @@ import usersActions from '../../redux/actions/UsersActions'
 import constantsActions from '../../redux/actions/ConstantsActions'
 import screens from './screens'
 import axios from 'axios'
+import menu from '../../assets/images/menu.svg'
+import dcam_logo from '../../assets/images/dcam_logo.svg'
 
 let shadeColor2 = (color, percent) => {
     // eslint-disable-next-line
@@ -92,9 +94,20 @@ class MainScreen extends React.Component {
         return (
             <Wrapper>
                 <Menu>
-                    <Logo>
-                        <span role="img" aria-label="dcam">🌿</span>
-                    </Logo>
+                    <DcamLogo src={dcam_logo} alt={``} />
+                    <MobileMenu>
+                        <Container extraProps={`width: 70vw; font-size: 5vw; color: ${mvConsts.colors.text.primary}`} >
+                            dcam.
+                        </Container>
+                        <Container extraProps={`width: 15vw;`} >
+                        <img
+                            src={menu}
+                            style={{ width: `8vw` }}
+                            alt={``}
+                            onClick={() => {}}
+                        />
+                        </Container>
+                    </MobileMenu>
                     <MenuItemsRow>
                         {
                             menuItems.filter(i => !i.admin || this.props.is_admin).map((item, index) => {
@@ -190,6 +203,24 @@ let mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
 
+const DcamLogo = styled.img`
+width: 4vw;
+transition: 0.2s
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 10vw;
+}`
+
+const MobileMenu = styled.div`
+display: none;
+@media (min-width: 320px) and (max-width: 480px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    transition: 0.2s;
+}
+`;
+
 const MenuIcon = styled.img`
 width: 2.5vw;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -206,9 +237,7 @@ width: 6vw
 height: 90vh
 transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 100vw;
-    height: 7vh;
-    flex-direction: row;
+    display: none;
 }
 `
 
@@ -245,12 +274,6 @@ border-right: 0.15vw solid ${props => props.selected ? props.color : `transparen
     background-color: ${props => !props.selected ? mvConsts.colors.background.secondary : shadeColor2(props.color, 0.3)};
 }
 // transition: 0.2s;
-@media (min-width: 320px) and (max-width: 480px) {
-    width: ${props => props.width}vw;
-    height: 7vh;
-    border-right: transparent;
-    border-top: 1vw solid ${props => props.selected ? props.color : `transparent`};
-}
 `
 
 const Logo = styled.div`
@@ -262,7 +285,7 @@ height: 10vh;
 transition: 0.2s;
 border-bottom: 0.1vh solid ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
-    display: none;
+    width: 15vw;
 }
 `
 
@@ -288,8 +311,8 @@ height: 92vh;
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw
-    height: 93vh;
-    margin-top: 7vh;
+    height: 90vh;
+    padding-top: 10vh;
 }
 `
 
@@ -308,6 +331,7 @@ transition: 0.2s;
     top: 0;
     width: 100vw;
     height: 7vh;
+    flex-direction: row;
 }
 `
 
