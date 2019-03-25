@@ -91,10 +91,7 @@ class ShoppingBasket extends React.Component {
                         disabled={this.props.selected_slots.length * this.props.laundry_cost > this.props.money}
                         backgroundColor={mvConsts.colors.accept}
                         onClick={() => {
-                            // if (!this.props.is_nfc_owner) {
-                            //     this.props.setPopUpWindow(mvConsts.popUps.GET_NFC)
-                            //     return
-                            // }
+                            // if (!thiя 
                             let array = this.props.selected_slots
                             let book = () => {
                                 let data = {

@@ -117,12 +117,12 @@ class LaundryScreen extends React.Component {
                 image: pencil,
                 title: `Редактирование`
             },
-            {
-                backgroundColor: mvConsts.colors.lightblue,
-                onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_OPTIONS) },
-                image: settings,
-                title: `Настройки`
-            },
+            // {
+            //     backgroundColor: mvConsts.colors.lightblue,
+            //     onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.LAUNDRY_OPTIONS) },
+            //     image: settings,
+            //     title: `Настройки`
+            // },
             {
                 disabled: !this.props.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(this.props.server_time).add(-2, `hour`).startOf(`hour`)).length,
                 onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.RESEVATIONS) },
