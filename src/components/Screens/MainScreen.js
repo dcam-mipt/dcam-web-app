@@ -101,12 +101,12 @@ class MainScreen extends React.Component {
                             dcam.
                         </Container>
                         <Container extraProps={`width: 15vw;`} >
-                        <img
-                            src={menu_gray}
-                            style={{ width: `8vw` }}
-                            alt={``}
-                            onClick={() => {}}
-                        />
+                            <img
+                                src={menu}
+                                style={{ width: `8vw` }}
+                                alt={``}
+                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.MOBILE_MENU) }}
+                            />
                         </Container>
                     </MobileMenu>
                     <MenuItemsRow>

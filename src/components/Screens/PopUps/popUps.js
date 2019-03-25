@@ -10,6 +10,7 @@ import LaundyOptions from './LaundyOptions'
 import ClubBook from './ClubBook'
 import ClubEdit from './ClubEdit'
 import LaundryBookDetails from './LaundryBookDetails'
+import MobileMenu from './MobileMenu'
 
 export default [
     <TopProfileMenu name={mvConsts.popUps.TOP_PROFILE_MENU} />,
@@ -22,4 +23,5 @@ export default [
     <ClubBook name={mvConsts.popUps.CLUB_BOOK} />,
     <ClubEdit name={mvConsts.popUps.CLUB_EDIT} />,
     <LaundryBookDetails name={mvConsts.popUps.LAUNDRY_BOOK_DETAILS} />,
+    <MobileMenu name={mvConsts.popUps.MOBILE_MENU} />,
 ]

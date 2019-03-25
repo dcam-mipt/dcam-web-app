@@ -20,7 +20,7 @@ class TopBalanceWindow extends React.Component {
         order_id: ``,
     }
     render = () => {
-        let visible = this.props.popUpWindow === mvConsts.popUps.TOP_BALANCE_WINDOW
+        let visible = this.props.visible
         let style = `
             padding: 1vw;
             border-radius: 1vw;
@@ -30,13 +30,19 @@ class TopBalanceWindow extends React.Component {
             z-index: ${visible ? 3 : -1};
             opacity: ${visible ? 1 : 0};
             visibility: ${visible ? `visible` : `hidden`};
-            // box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
             background-color: ${mvConsts.colors.background.primary};
             transition: opacity 0.2s, top 0.2s, visibility 0.2s;
+            @media (min-width: 320px) and (max-width: 480px) {
+                border-radius: 4vw;
+                top: ${visible ? 10 : 14}vh;
+                right: 2vw;
+                padding: 2vw 2vw 2vw 2vw;
+            }   
         `
         return (
             <Container className={mvConsts.popUps.TOP_BALANCE_WINDOW} extraProps={style} >
-                <Container extraProps={`flex-direction: row; color: ${mvConsts.colors.text.primary}`} >
+                <Container extraProps={`flex-direction: row; color: ${mvConsts.colors.text.primary}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; };`} >
                     Пополнить <span role="img" aria-label="martini">🍸</span>
                 </Container>
                 <Input
@@ -72,7 +78,7 @@ class TopBalanceWindow extends React.Component {
 
 let mapStateToProps = (state) => {
     return {
-        popUpWindow: state.ui.popUpWindow,
+        visible: state.ui.popUpWindow === mvConsts.popUps.TOP_BALANCE_WINDOW,
     }
 };
 

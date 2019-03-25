@@ -19,7 +19,7 @@ import styled, { keyframes } from 'styled-components'
 import rotate from '../assets/images/rotate.svg'
 import { connect } from 'react-redux'
 
-Parse.initialize(`dcam`, `dcam`, `dcam`, `dcam`);
+Parse.initialize(config.PARSE_APP_ID, config.PARSE_JS_KEY);
 Parse.serverURL = config.PARSE_SERVER_URL
 
 let popUpsRender = popUps.map((item, index) => {

@@ -20,7 +20,6 @@ let m = mvConsts.mobile_media_query
 class LaundryBookDetails extends React.Component {
     state = {
         user: undefined,
-        is_admin: false,
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.book_details) {
@@ -29,14 +28,6 @@ class LaundryBookDetails extends React.Component {
                 .then((d) => { this.setState({ user: d.data }) })
                 .catch((d) => { mvConsts.error(d) })
         }
-    }
-    componentDidMount() {
-        new Parse.Query(`Roles`)
-            .equalTo(`userId`, Parse.User.current().id)
-            .equalTo(`role`, `ADMIN`)
-            .first()
-            .then((d) => { this.setState({ is_admin: d ? true : false }) })
-            .catch((d) => { mvConsts.error(d) })
     }
     render = () => {
         let visible = this.props.popUpWindow === mvConsts.popUps.LAUNDRY_BOOK_DETAILS
@@ -123,7 +114,7 @@ class LaundryBookDetails extends React.Component {
                             </Container>
                             <Container extraProps={`width: 17vw; flex-direction: row; justify-content: flex-start; ${m(`width: 85vw;`)}`} >
                                 {/* {
-                                    this.state.is_admin
+                                    this.props.is_admin
                                         ? <MiniButton>
                                             <img
                                                 src={require('../../../assets/images/trash.svg')}
@@ -134,7 +125,7 @@ class LaundryBookDetails extends React.Component {
                                         : null
                                 } */}
                                 {
-                                    (this.state.is_admin || is_my_book)
+                                    (this.props.is_admin || is_my_book)
                                         //  && !little_time_to
                                         ? <MiniButton
                                             onClick={() => {
@@ -169,6 +160,7 @@ let mapStateToProps = (state) => {
         laundry: state.laundry.laundry.filter(i => i.userId === Parse.User.current().id && +moment(i.timestamp) > +moment(state.constants.server_time).startOf(`hour`)).sort((a, b) => a.timestamp - b.timestamp),
         machines: state.machines.machines,
         book_details: state.laundry.book_details,
+        is_admin: state.ui.is_admin,
     }
 };
 

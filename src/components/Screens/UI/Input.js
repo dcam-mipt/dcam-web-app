@@ -36,6 +36,14 @@ class MyInput extends React.Component {
             ::placeholder {
                 color: ${mvConsts.colors.text.support};
             }
+            @media (min-width: 320px) and (max-width: 480px) {
+                width: ${4 * width * (this.props.width ? 0.01 * this.props.width : (this.props.short ? 0.0625 : 0.15))}vw;
+                height: ${4 * width * (this.props.visible ? 0.01 : 0)}vw;
+                padding: ${4 * width * (this.props.visible ? 0.01 : 0)}vw;
+                border-radius: ${4 * width * 0.005}vw;
+                margin: ${4 * width * (this.props.visible ? 0.0025 : 0)}vw;
+                font-size: ${4 * width * 0.01}vw;
+            }
         `
 
         return (
