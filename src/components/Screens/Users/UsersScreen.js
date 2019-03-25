@@ -48,7 +48,7 @@ class UsersScreen extends React.Component {
     }
     getUsersList = () => {
         axios.get(`http://dcam.pro/api/users/get_users_list`)
-            .then((d) => { this.props.setUsersList(d.data) })
+            .then((d) => { console.log(d.data); this.props.setUsersList(d.data) })
             .catch((d) => { mvConsts.error(d) })
     }
     render = () => {

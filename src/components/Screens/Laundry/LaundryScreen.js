@@ -283,8 +283,7 @@ class LaundryScreen extends React.Component {
                                                                         .catch((d) => { mvConsts.error(d) })
                                                                 }}
                                                             />
-                                                            // : book ? book.email.split(`@`)[0] : `-`
-                                                            : book ? book.email : `-`
+                                                            : book ? book.email.split(`.`)[0] : `-`
                                                     }
                                                 </Machine>
                                             )
