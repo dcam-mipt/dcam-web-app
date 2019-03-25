@@ -259,6 +259,7 @@ class LaundryScreen extends React.Component {
                                                     context={context}
                                                     className={`ignore`}
                                                     onClick={() => {
+                                                        console.log(book);
                                                         if (book) {
                                                             if (!isBefore && book) {
                                                                 this.props.openLaundryBookDetails(book)
@@ -282,7 +283,8 @@ class LaundryScreen extends React.Component {
                                                                         .catch((d) => { mvConsts.error(d) })
                                                                 }}
                                                             />
-                                                            : book ? book.email.split(`@`)[0] : `-`
+                                                            // : book ? book.email.split(`@`)[0] : `-`
+                                                            : book ? book.email : `-`
                                                     }
                                                 </Machine>
                                             )
@@ -295,7 +297,7 @@ class LaundryScreen extends React.Component {
                     <BottomCalendar>
                         <Container
                             extraProps={`width: 24vw; height: 10vw; border-radius: 2vw; background-color: ${mvConsts.colors.background.primary}; font-size: 3vw; color: ${mvConsts.colors.text.support}`}
-                            onClick={() => { if (+moment(this.props.server_time).startOf(`day`) <=  +moment(this.state.selectedDay).add(-1, `day`)) {this.setState({ selectedDay: +moment(this.state.selectedDay).add(-1, `day`) })} }}
+                            onClick={() => { if (+moment(this.props.server_time).startOf(`day`) <= +moment(this.state.selectedDay).add(-1, `day`)) { this.setState({ selectedDay: +moment(this.state.selectedDay).add(-1, `day`) }) } }}
                         >
                             {moment(this.state.selectedDay).add(-1, `day`).format(`DD.MM`)}
                         </Container>
@@ -314,7 +316,7 @@ class LaundryScreen extends React.Component {
                         </Container>
                         <Container
                             extraProps={`width: 24vw; height: 10vw; border-radius: 2vw; background-color: ${mvConsts.colors.background.primary}; font-size: 3vw; color: ${mvConsts.colors.text.support}`}
-                            onClick={() => { if (+moment(this.props.server_time).startOf(`week`).add(3, `week`) >=  +moment(this.state.selectedDay).add(1, `day`)) {this.setState({ selectedDay: +moment(this.state.selectedDay).add(1, `day`) })} }}
+                            onClick={() => { if (+moment(this.props.server_time).startOf(`week`).add(3, `week`) >= +moment(this.state.selectedDay).add(1, `day`)) { this.setState({ selectedDay: +moment(this.state.selectedDay).add(1, `day`) }) } }}
                         >
                             {moment(this.state.selectedDay).add(1, `day`).format(`DD.MM`)}
                         </Container>

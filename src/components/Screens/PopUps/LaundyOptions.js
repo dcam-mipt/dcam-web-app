@@ -83,7 +83,7 @@ let vk_settings = (component, visible) => {
 let get_vk = (component, visible) => {
     return (
         <Container>
-            <Container extraProps={`color: ${mvConsts.colors.text.primary}; width: 13vw; font-size: 0.8vw; text-align: left; margin: 1vw;`} >
+            <Container extraProps={`color: ${mvConsts.colors.text.primary}; width: 13vw; font-size: 0.8vw; text-align: left; margin: 1vw; ${mvConsts.mobile_media_query(`font-size: 4vw; width: 90vw;`)}`} >
                 Привяжите Ваш профиль ВКонтакте, и Вам станут доступны настройки уведомлений. Вы в любой момент можете удалить эту привязку.
             </Container>
             <Button visible={visible} backgroundColor={mvConsts.colors.vk} onClick={() => {
