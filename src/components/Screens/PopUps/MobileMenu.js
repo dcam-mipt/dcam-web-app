@@ -37,9 +37,9 @@ class MobileMenu extends React.Component {
                         <Container extraProps={` width: 15vw; height: 15vw; border-radius: 15vw; background-color: ${this.props.money > 0 ? mvConsts.colors.accept : mvConsts.colors.background.support}; color: white; font-size: 3vw; transition: background-color 0.2s; `} >
                             {this.props.money} ₽
                         </Container>
-                        <Button onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_BALANCE_WINDOW) }} >
+                        {/* <Button onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_BALANCE_WINDOW) }} >
                             Пополнить
-                        </Button>
+                        </Button> */}
                     </Container>
                 </ProfileTab>
             </Wrapper>
