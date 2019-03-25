@@ -48,7 +48,7 @@ class UsersScreen extends React.Component {
     }
     getUsersList = () => {
         axios.get(`http://dcam.pro/api/users/get_users_list`)
-            .then((d) => { console.log(d.data); this.props.setUsersList(d.data) })
+            .then((d) => { this.props.setUsersList(d.data) })
             .catch((d) => { mvConsts.error(d) })
     }
     render = () => {
@@ -63,7 +63,7 @@ class UsersScreen extends React.Component {
                             {
                                 this.props.users_list
                                     .filter(i => i.username.split(`@`)[0].indexOf(this.state.filter) > -1)
-                                    .sort((a, b) => b.last_seen - a.last_seen)
+                                    .sort((a, b) => +moment(b.last_seen) - +moment(a.last_seen))
                                     .map((i, index) => {
                                         let is_online = +moment() - i.last_seen < 120000
                                         let was_today = +moment().startOf(`day`) === +moment(i.last_seen).startOf(`day`) && i.last_seen !== undefined
