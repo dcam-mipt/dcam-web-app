@@ -115,7 +115,7 @@ class UsersScreen extends React.Component {
                                             <Button backgroundColor={mvConsts.colors.accept} onClick={() => {
                                                 if (!isNaN(this.state.promotion)) {
                                                     axios.get(`http://dcam.pro/api/balance/edit/${this.state.selected_user.objectId}/${this.state.promotion}`)
-                                                        .then((d) => { console.log(d) })
+                                                        .then((d) => { })
                                                         .catch((d) => { mvConsts.error(d) })
                                                 }
                                             }} >
@@ -127,7 +127,7 @@ class UsersScreen extends React.Component {
                                             <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => {
                                                 if (!isNaN(this.state.penalty)) {
                                                     axios.get(`http://dcam.pro/api/balance/edit/${this.state.selected_user.objectId}/${-this.state.penalty}`)
-                                                        .then((d) => { console.log(d) })
+                                                        .then((d) => { })
                                                         .catch((d) => { mvConsts.error(d) })
                                                 }
                                             }} >

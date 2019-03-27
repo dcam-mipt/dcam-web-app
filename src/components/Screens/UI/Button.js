@@ -18,39 +18,17 @@ class MyButton extends React.Component {
         short: true,
         disabled: false,
         backgroundColor: mvConsts.colors.yellow,
+        shaped: false,
         onClick: () => { },
     }
 
     render = () => {
-
-        let width = 100
-
         let style = `
-            width: ${100 * (this.props.short ? 0.0825 : 0.17)}vw;
-            height: ${100 * (this.props.visible ? 0.03 : 0)}vw;
-            padding: ${100 * (this.props.visible ? 0.01 : 0)}vw;
-            border-radius: ${100 * 0.005}vw;
-            background-color: ${this.props.disabled ? mvConsts.colors.background.support : this.props.backgroundColor};
-            margin: ${100 * (this.props.visible ? 0.0025 : 0)}vw;
-            color: white;
-            font-size: ${100 * 0.008}vw;
-            cursor: ${this.props.disabled ? null : `pointer`};
-            visibility: ${this.props.visible ? `visible` : `hidden`};
-            opacity: ${this.props.visible ? 1 : 0};
-            transition: 0.2s;
-            transition-delay: ${this.props.visible ? -1 : 0.2}s;
-            @media (min-width: 320px) and (max-width: 480px) {
-                width: ${100 * (this.props.short ? 0.0825 * 4 : 0.17 * 4)}vw;
-                height: ${100 * (this.props.visible ? 0.03 * 4 : 0)}vw;
-                padding: ${100 * (this.props.visible ? 0.01 * 4 : 0)}vw;
-                border-radius: ${100 * 0.005 * 4}vw;
-                margin: ${100 * (this.props.visible ? 0.0025 * 4 : 0)}vw;
-                font-size: ${100 * 0.008 * 4}vw;
-            }
+            
         `
         return (
-            <Container
-                extraProps={style}
+            <Wrapper
+                {...this.props}
                 onClick={() => {
                     if (!this.props.disabled) {
                         this.props.onClick()
@@ -58,7 +36,7 @@ class MyButton extends React.Component {
                 }}
             >
                 {this.props.children || this.props.title}
-            </Container>
+            </Wrapper>
         )
     }
 }
@@ -70,6 +48,38 @@ let mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(MyButton)
-// export default (Button)
+
+const Wrapper = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+transition: 0.2s
+width: ${props => props.short ? 6.25 : 15}vw;
+height: ${props => +props.visible}vw;
+padding: ${props => +props.visible}vw;
+border-radius: 0.5vw;
+background-color: ${props => props.shaped ? `transparent` : props.disabled ? mvConsts.colors.background.support : props.backgroundColor};
+margin: ${props => +props.visible / 4}vw;
+color: ${props => props.shaped ? props.backgroundColor : `white`};
+font-size: 0.8vw;
+cursor: ${props => props.disabled ? null : `pointer`};
+visibility: ${props => props.visible ? `visible` : `hidden`};
+opacity: ${props => props.visible ? 1 : 0};
+transition: 0.2s;
+transition-delay: ${props => props.visible ? -1 : 0.2}s;
+box-shadow:inset 0px 0px 0px ${props => +props.shaped * 0.05}vw ${props => props.backgroundColor};
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => props.short ? 33 : 68}vw;
+    height: ${props => props.visible ? 12 : 0}vw;
+    padding: ${props => props.visible ? 0.04 : 0}vw;
+    border-radius: 2vw;
+    margin: ${props => props.visible ? 1 : 0}vw;
+    box-shadow:inset 0px 0px 0px ${props => +props.shaped * 0.25}vw ${props => props.backgroundColor};
+font-size: 4vw;
+}
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
 
 /*eslint-enable no-unused-vars*/

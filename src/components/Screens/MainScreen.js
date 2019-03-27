@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import styled, { keyframes } from 'styled-components'
 import Parse from 'parse'
 import Button from './UI/Button'
+import Input from './UI/Input'
 import GoogleAPI from '../../API/GoogleAPI'
 import VK from '../../API/VKAPI'
 import mvConsts from '../../constants/mvConsts'
@@ -96,7 +97,7 @@ class MainScreen extends React.Component {
             <Wrapper>
                 <Menu>
                     <DcamLogo src={dcam_logo} alt={``} />
-                    <MobileMenu>
+                    <MobileHeader>
                         <Container extraProps={`width: 70vw; font-size: 5vw; color: ${mvConsts.colors.text.primary}`} >
                             dcam.
                         </Container>
@@ -105,10 +106,10 @@ class MainScreen extends React.Component {
                                 src={menu}
                                 style={{ width: `8vw` }}
                                 alt={``}
-                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.MOBILE_MENU) }}
+                                onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_PROFILE_MENU) }}
                             />
                         </Container>
-                    </MobileMenu>
+                    </MobileHeader>
                     <MenuItemsRow>
                         {
                             menuItems.filter(i => !i.admin || this.props.is_admin).map((item, index) => {
@@ -134,28 +135,15 @@ class MainScreen extends React.Component {
                 <RightPart>
                     <Header>
                         <MoneyBalance
-                            width={4}
-                            selected={this.props.popUpWindow === mvConsts.popUps.TOP_BALANCE_WINDOW}
-                        // onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_BALANCE_WINDOW) }}
-                        >
-                            <Container extraProps={` width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${this.props.money > 0 ? mvConsts.colors.accept : mvConsts.colors.background.support}; color: white; font-size: 0.8vw; transition: background-color 0.2s; `} >
-                                {this.props.money} ₽
-                            </Container>
-                        </MoneyBalance>
-                        <MoneyBalance
-                            width={16}
                             selected={this.props.popUpWindow === mvConsts.popUps.TOP_PROFILE_MENU}
                             onClick={() => { this.props.setPopUpWindow(mvConsts.popUps.TOP_PROFILE_MENU) }}
                         >
+                            <Container extraProps={` width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${this.props.money > 0 ? mvConsts.colors.accept : mvConsts.colors.background.support}; color: white; font-size: 0.8vw; margin-right: 0.5vw; `} >
+                                {this.props.money} ₽
+                            </Container>
                             <Container extraProps={` width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${mvConsts.colors.background.support}; `} >
                                 <img src={Parse.User.current().get(`avatar`)} alt={``} style={{ width: `3vw`, borderRadius: `3vw`, }} />
                             </Container>
-                            <Container alignItems={`flex-start`} extraProps={` width: 9vw; height: 1vw; margin: 0.5vw; color: ${mvConsts.colors.text.primary}; `} >
-                                {/* {Parse.User.current().get(`name`).split(` `)[0]} */}
-                                {Parse.User.current().get(`username`).split(`@`)[0]}
-                            </Container>
-                            {/*<img src={require('../../assets/images/arrow_down.svg')} alt={``} style={{ width: `1vw`, }} />*/}
-                            🍕
                         </MoneyBalance>
                     </Header>
                     <MainPart>
@@ -211,7 +199,7 @@ transition: 0.2s
     width: 10vw;
 }`
 
-const MobileMenu = styled.div`
+const MobileHeader = styled.div`
 display: none;
 @media (min-width: 320px) and (max-width: 480px) {
     display: flex;
@@ -247,10 +235,10 @@ display: flex
 justify-content: center
 align-items: center
 flex-direction: row
-width: ${props => props.width ? props.width : 4}vw;
 height: 4vw;
+padding: 0 0.5vw 0 0.5vw;
 border-radius: 1vw;
-margin: 0.5vw;
+margin: 0.5vw 1.5vw 0.5vw 1.5vw;
 cursor: pointer;
 &:hover { background-color: ${mvConsts.colors.background.primary}; };
 ${props => props.selected ? `background-color: ${mvConsts.colors.background.primary};` : null};

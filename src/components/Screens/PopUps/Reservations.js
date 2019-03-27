@@ -57,6 +57,9 @@ class Reservations extends React.Component {
         `
         return (
             <Container className={mvConsts.popUps.RESEVATIONS} extraProps={style} >
+                <Container extraProps={`font-family: Lato-Bold; font-size: 1.2vw; margin: 0 0 0.5vw 0vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 11vw;`)}`} >
+                    Мои стирки
+                </Container>
                 {
                     this.props.laundry.map((item, index) => {
                         return (

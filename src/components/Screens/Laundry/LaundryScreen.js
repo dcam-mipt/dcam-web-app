@@ -134,7 +134,7 @@ class LaundryScreen extends React.Component {
                 backgroundColor: mvConsts.colors.accept,
                 onClick: () => { this.props.setPopUpWindow(mvConsts.popUps.SHOPPING_BASKET) },
                 image: bag,
-                title: `Корзина | ${this.props.selected_slots.length}`
+                title: `Корзина | ${this.props.selected_slots.length}`,
             },
         ]
         return (

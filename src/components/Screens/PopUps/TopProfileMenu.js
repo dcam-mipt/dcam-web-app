@@ -2,92 +2,171 @@
 import mvConsts from '../../../constants/mvConsts'
 import actions from '../../../redux/actions/UIActions'
 import GoogleAPI from '../../../API/GoogleAPI'
-
+import Parse from 'parse'
 import React from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
-
-import user_selected from '../../../assets/images/user_selected.png'
-import settings_selected from '../../../assets/images/settings_selected.svg'
-import logout from '../../../assets/images/logout.png'
-
-// Components
 import Container from '../../Container'
+import Button from '../UI/Button'
+import Input from '../UI/Input'
+import validator from 'validator'
+import axios from 'axios'
+import VK from '../../../API/VKAPI'
+import vk_logo from '../../../assets/images/vk_logo.svg'
+import cros from '../../../assets/images/cros.svg'
+
+let m = mvConsts.mobile_media_query
 
 class TopProfileMenu extends React.Component {
-
     static defaultProps = {
         visible: false,
     }
-
-    // state = {
-    //
-    // }
-
-    // componentDidMount() {
-
-    // }
-
+    state = {
+        value: ``,
+        order_id: ``,
+        vk: Parse.User.current().get(`vk`),
+    }
+    componentDidMount() {
+        if (Parse.User.current().get(`vk`)) {
+            VK.getUser(Parse.User.current().get(`vk`).split(`/`).pop(), (d) => {
+                this.setState({ vk: d[0] })
+            })
+        }
+    }
     render = () => {
-
-        let visible = this.props.popUpWindow === mvConsts.popUps.TOP_PROFILE_MENU;
-
-        let style = `
-            // width: 10vw;
-            padding: 0 1vw 0 1vw;
-            height: 4vw;
-            border-radius: 1vw;
-            position: absolute;
-            top: ${visible ? 10 : 12}vh;
-            right: 0.5vw;
-            z-index: 1;
-            opacity: ${visible ? 1 : 0};
-            visibility: ${visible ? `visible` : `hidden`};
-            // box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
-            transition: opacity 0.2s, top 0.2s, visibility 0.2s;
-        `
-
-        let items = [
-            // {
-            //     image: user_selected,
-            //     onClick: () => {},
-            // },
-            // {
-            //     image: settings_selected,
-            //     onClick: () => {},
-            // },
-            {
-                image: logout,
-                onClick: () => {
-                    GoogleAPI.signOut()
-                    this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
-                },
-            },
-        ]
-        
         return (
-            <Container className={mvConsts.popUps.TOP_PROFILE_MENU} flexDirection={`row`} backgroundColor={mvConsts.colors.background.primary} extraProps={style} >
-                {
-                    items.map((item, index) => {
-                        return (
-                            <Container key={index} extraProps={`
-                                padding: 0.5vw;
-                                border-left: ${+(index === items.length - 1 && items.length > 1)}px solid ${mvConsts.colors.background.secondary};
-                                cursor: pointer;
-                            `} onClick={() => {item.onClick()}} >
-                                <img src={item.image} alt={``} style={{ width: `2vw`, }} />
+            <Wrapper visible={this.props.visible} className={mvConsts.popUps.TOP_PROFILE_MENU} >
+                <Container extraProps={`padding: 0.5vw; border-radius: 1vw; background-color: ${mvConsts.colors.background.primary}; ${m(`padding: 2.5vw; border-radius: 5vw;`)}`} >
+                    <Container extraProps={`font-family: Lato-Bold; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${m(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                        Профиль
+                    </Container>
+                    <Container extraProps={`flex-direction: row; justify-content: space-between; width: 96%;`} >
+                        <Container extraProps={`flex-direction: row;`} >
+                            <Container extraProps={`width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${mvConsts.colors.background.support}; color: white; font-size: 0.8vw; margin-right: 0.5vw; ${m(`width: 15vw; height: 15vw; border-radius: 15vw; font-size: 4vw; margin-right: 2.5vw;`)}; `} >
+                                <Image
+                                    src={Parse.User.current().get(`avatar`)}
+                                    width={3}
+                                    extraProps={`border-radius: 15vw; `}
+                                />
                             </Container>
-                        )
-                    })
-                }
-            </Container>
+                            <Container extraProps={`width: 9vw; margin-left: 0.5vw; align-items: flex-start; ${m(`width: 45vw; margin-left: 2.5vw; font-size: 5vw;`)}`} >
+                                {Parse.User.current().get(`username`).split(`@`)[0]}
+                            </Container>
+                        </Container>
+                        <Container extraProps={` width: 3vw; height: 3vw; border-radius: 3vw; background-color: ${this.props.money > 0 ? mvConsts.colors.accept : mvConsts.colors.background.support}; color: white; font-size: 0.8vw; margin-right: 0.5vw; ${m(`width: 15vw; height: 15vw; border-radius: 15vw; font-size: 4vw; margin-right: 2.5vw;`)}; `} >
+                            {this.props.money} ₽
+                        </Container>
+                    </Container>
+                    <Container extraProps={`width: 100%; align-items: flex-start; margin-top: 1vw;`} >
+                        <Button short={true} shaped={true} backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => {
+                            GoogleAPI.signOut()
+                            this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
+                        }} >
+                            Выйти
+                        </Button>
+                    </Container>
+                    <Container extraProps={`font-family: Lato-Bold; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                        Пополнение счета
+                    </Container>
+                    <Container extraProps={`flex-direction: row; width: 100%; justify-content: flex-start;`} >
+                        <Input
+                            placeholder={`Сумма`}
+                            short={true}
+                            onChange={(d) => { this.setState({ value: d }) }}
+                            value={this.state.value}
+                            validator={(d) => validator.isInt(d)}
+                        />
+                        <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
+                            <input type="hidden" name="receiver" value="410018436058863" />
+                            <input type="hidden" name="label" value={this.state.order_id} />
+                            <input type="hidden" name="quickpay-form" value="donate" />
+                            <input type="hidden" name="targets" value={`Идентификатор транзакции: ${this.state.order_id}`} />
+                            <input type="hidden" name="sum" value={+this.state.value} data-type="number" />
+                            <input type="hidden" name="paymentType" value="AC" />
+                            <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
+                            <Button
+                                visible={this.props.visible}
+                                disabled={this.state.value < 2}
+                                backgroundColor={mvConsts.colors.accept}
+                                onClick={() => {
+                                    axios.get(`http://dcam.pro/api/transactions/start_yandex/${+this.state.value}`)
+                                        .then((d) => {
+                                            this.setState({ order_id: d.data })
+                                            document.getElementById(`yandex_money_button`).click()
+                                        })
+                                }}
+                            >
+                                Далее
+                            </Button>
+                        </form>
+                    </Container>
+                </Container>
+                <Container extraProps={`margin-top: 0.5vw; padding: 0.5vw; border-radius: 1vw; background-color: ${mvConsts.colors.background.primary}; ${m(`padding: 2.5vw; border-radius: 5vw; margin-top: 2.5vw;`)}`} >
+                    <Container extraProps={`font-family: Lato-Bold; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                        ВКонтакте
+                    </Container>
+                    {
+                        Parse.User.current().get(`vk`)
+                            ? <Container extraProps={`width: 96%; align-items: flex-start;`} >
+                                <Container extraProps={`flex-direction: row; padding-left: 0.5vw;`} >
+                                    <Image
+                                        width={3}
+                                        extraProps={`border-radius: 15vw;`}
+                                        src={this.state.vk.photo_200}
+                                    />
+                                    <Container extraProps={`margin: 0 1vw 0 1vw; font-size: 1vw; justify-content flex-start; color: ${mvConsts.colors.text.primary}; @media (min-width: 320px) and (max-width: 480px) { margin: 0 5vw 0 5vw; font-size: 4vw; }`} >
+                                        {this.state.vk.first_name} {this.state.vk.last_name}
+                                    </Container>
+                                    <Image
+                                        width={1}
+                                        src={cros}
+                                        extraProps={`cursor: pointer;`}
+                                        onClick={() => {
+                                            new Parse.Query(`User`).equalTo(`objectId`, Parse.User.current().id).first()
+                                                .then((user) => {
+                                                    user.set(`vk`, null)
+                                                    user.save()
+                                                        .then((d) => { this.setState({ vk: undefined }) })
+                                                        .catch((d) => { mvConsts.error(d) })
+                                                })
+                                                .catch((d) => { mvConsts.error(d) })
+                                        }}
+                                    />
+                                </Container>
+                            </Container>
+                            : <Container extraProps={`width: 96%; justify-content: space-between; flex-direction: row;`} >
+                                <Container extraProps={`${m(`font-size: 4vw;`)}`} >
+                                    Привязать профиль
+                                </Container>
+                                <Button visible={this.props.visible} backgroundColor={mvConsts.colors.vk} onClick={() => {
+                                    VK.login((d) => {
+                                        new Parse.Query(`User`).equalTo(`objectId`, Parse.User.current().id).first()
+                                            .then((user) => {
+                                                user.set(`vk`, d.session.user.href)
+                                                user.save()
+                                                    .then((d) => { VK.getUser(d.get(`vk`).split(`/`).pop(), (d) => { this.setState({ vk: d[0] }) }) })
+                                                    .catch((d) => { mvConsts.error(d) })
+                                            })
+                                            .catch((d) => { mvConsts.error(d) })
+                                    })
+                                }} >
+                                    <Image
+                                        width={1}
+                                        src={vk_logo}
+                                    />
+                                </Button>
+                            </Container>
+                    }
+                </Container>
+            </Wrapper>
         )
     }
 }
 
 let mapStateToProps = (state) => {
     return {
-        popUpWindow: state.ui.popUpWindow,
+        visible: state.ui.popUpWindow === mvConsts.popUps.TOP_PROFILE_MENU,
+        money: state.constants.money,
     }
 };
 
@@ -103,6 +182,30 @@ let mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopProfileMenu)
-// export default (TopProfileMenu)
+
+const Wrapper = styled.div`
+border-radius: 1vw;
+flex-direction: column
+position: absolute;
+top: ${props => props.visible ? 10 : 12}vh;
+right: 1.5vw;
+z-index: 2;
+opacity: ${props => props.visible ? 1 : 0};
+visibility: ${props => props.visible ? `visible` : `hidden`};
+transition: 0.2s;
+@media (min-width: 320px) and (max-width: 480px) {
+    border-radius: 4vw;
+    top: ${props => props.visible ? 10 : 14}vh;
+    right: 2vw;
+    width: 92vw;
+    padding: 2vw 2vw 2vw 2vw;
+}`
+
+const Image = styled.img`
+width: ${props => props.width}vw;
+${props => props.extraProps}
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => props.width * 5}vw;
+}`
 
 /*eslint-enable no-unused-vars*/

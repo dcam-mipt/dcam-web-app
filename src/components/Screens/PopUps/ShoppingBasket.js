@@ -19,7 +19,7 @@ class ShoppingBasket extends React.Component {
         this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
     }
     render = () => {
-        let visible = this.props.popUpWindow === mvConsts.popUps.SHOPPING_BASKET
+        let visible = this.props.popUpWindow === this.props.name
         let style = `
             border-radius: 1vw;
             padding: 1vw 1vw 1vw 1vw
@@ -46,6 +46,9 @@ class ShoppingBasket extends React.Component {
         `
         return (
             <Container className={mvConsts.popUps.SHOPPING_BASKET} extraProps={style} >
+                <Container extraProps={`font-family: Lato-Bold; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                    Корзина
+                </Container>
                 {
                     this.props.selected_slots.map((item, index) => {
                         return (
@@ -81,7 +84,7 @@ class ShoppingBasket extends React.Component {
                     })
                 }
                 <Container extraProps={`flex-direction: row; ${mvConsts.mobile_media_query(`margin-top: 1vw;`)}`} >
-                    <Button visible={visible} onClick={() => {
+                    <Button visible={visible} shaped={true} onClick={() => {
                         this.clearSelections();
                     }} >
                         Очистить
