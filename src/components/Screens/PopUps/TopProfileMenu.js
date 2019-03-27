@@ -101,63 +101,6 @@ class TopProfileMenu extends React.Component {
                         </form>
                     </Container>
                 </Container>
-                <Container extraProps={`margin-top: 0.5vw; padding: 0.5vw; border-radius: 1vw; background-color: ${mvConsts.colors.background.primary}; ${m(`padding: 2.5vw; border-radius: 5vw; margin-top: 2.5vw;`)}`} >
-                    <Container extraProps={`font-family: Lato-Bold; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
-                        ВКонтакте
-                    </Container>
-                    {
-                        Parse.User.current().get(`vk`)
-                            ? <Container extraProps={`width: 96%; align-items: flex-start;`} >
-                                <Container extraProps={`flex-direction: row; padding-left: 0.5vw;`} >
-                                    <Image
-                                        width={3}
-                                        extraProps={`border-radius: 15vw;`}
-                                        src={this.state.vk.photo_200}
-                                    />
-                                    <Container extraProps={`margin: 0 1vw 0 1vw; font-size: 1vw; justify-content flex-start; color: ${mvConsts.colors.text.primary}; @media (min-width: 320px) and (max-width: 480px) { margin: 0 5vw 0 5vw; font-size: 4vw; }`} >
-                                        {this.state.vk.first_name} {this.state.vk.last_name}
-                                    </Container>
-                                    <Image
-                                        width={1}
-                                        src={cros}
-                                        extraProps={`cursor: pointer;`}
-                                        onClick={() => {
-                                            new Parse.Query(`User`).equalTo(`objectId`, Parse.User.current().id).first()
-                                                .then((user) => {
-                                                    user.set(`vk`, null)
-                                                    user.save()
-                                                        .then((d) => { this.setState({ vk: undefined }) })
-                                                        .catch((d) => { mvConsts.error(d) })
-                                                })
-                                                .catch((d) => { mvConsts.error(d) })
-                                        }}
-                                    />
-                                </Container>
-                            </Container>
-                            : <Container extraProps={`width: 96%; justify-content: space-between; flex-direction: row;`} >
-                                <Container extraProps={`${m(`font-size: 4vw;`)}`} >
-                                    Привязать профиль
-                                </Container>
-                                <Button visible={this.props.visible} backgroundColor={mvConsts.colors.vk} onClick={() => {
-                                    VK.login((d) => {
-                                        new Parse.Query(`User`).equalTo(`objectId`, Parse.User.current().id).first()
-                                            .then((user) => {
-                                                user.set(`vk`, d.session.user.href)
-                                                user.save()
-                                                    .then((d) => { VK.getUser(d.get(`vk`).split(`/`).pop(), (d) => { this.setState({ vk: d[0] }) }) })
-                                                    .catch((d) => { mvConsts.error(d) })
-                                            })
-                                            .catch((d) => { mvConsts.error(d) })
-                                    })
-                                }} >
-                                    <Image
-                                        width={1}
-                                        src={vk_logo}
-                                    />
-                                </Button>
-                            </Container>
-                    }
-                </Container>
             </Wrapper>
         )
     }
