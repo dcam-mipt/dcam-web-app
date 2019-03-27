@@ -37,7 +37,7 @@ export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { })
                 .then(() => {
                     onInit()
                     // check for auth conflicts
-                    if (GoogleAPI.isAuthorized()) {
+                    // if (GoogleAPI.isAuthorized()) {
                         if (Parse.User.current()) {
                             new Parse.Query(`User`)
                                 .equalTo(`objectId`, Parse.User.current().id)
@@ -56,15 +56,15 @@ export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { })
                             signInOrUpParse()
                                 .then((d) => { onSignIn(d) })
                         }
-                    } else {
-                        if (GoogleAPI.isAuthorized()) {
-                            // sign out parse
-                            Parse.User.logOut()
-                        } else {
-                            // all right
-                            Parse.User.logOut()
-                        }
-                    }
+                    // } else {
+                    //     if (GoogleAPI.isAuthorized()) {
+                    //         // sign out parse
+                    //         Parse.User.logOut()
+                    //     } else {
+                    //         // all right
+                    //         Parse.User.logOut()
+                    //     }
+                    // }
                     GoogleAPI.subscribeSignIn((isSignedIn) => {
                         if (isSignedIn) {
                             if (Parse.User.current()) {

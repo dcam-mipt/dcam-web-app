@@ -14,15 +14,6 @@ import Parse from 'parse'
 import axios from 'axios'
 
 let unbookLaundry = (book) => {
-    // new Parse.Query(`Laundry`)
-    //     .equalTo(`objectId`, )
-    //     .first()
-    //     .then((d) => {
-    //         d.destroy()
-    //             // .then((d) => { console.log(d) })
-    //             .catch((d) => { mvConsts.error(d) })
-    //     })
-    //     .catch((d) => { mvConsts.error(d) })
     axios.get(`http://dcam.pro/api/laundry/unbook/${book.laundryId}`)
         .then((d) => { console.log(d) })
         .catch((d) => { mvConsts.error(d) })
