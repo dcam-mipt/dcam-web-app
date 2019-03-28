@@ -58,7 +58,7 @@ class PopUpWrapper extends React.Component {
                 >
 
                 </Wrapper>
-                {this.props.children}
+                {this.props.children.props.name === this.props.popUpWindow ? this.props.children : null}
             </Container>
         )
     }
@@ -89,13 +89,14 @@ position: absolute;
 z-index: 1;
 top: 0;
 transition: 0.2s;
-@media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
     opacity: ${props => +props.anyPopUp}
     visibility: ${props => props.anyPopUp ? `visible` : `hidden`};    
+@media (min-width: 320px) and (max-width: 480px) {
+    
 }`
 
 /*eslint-enable no-unused-vars*/
