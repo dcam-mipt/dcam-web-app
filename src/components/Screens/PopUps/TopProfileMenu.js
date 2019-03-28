@@ -138,10 +138,11 @@ visibility: ${props => props.visible ? `visible` : `hidden`};
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
     border-radius: 4vw;
-    top: ${props => props.visible ? 10 : 14}vh;
+    top: 10vh;
     right: 2vw;
     width: 92vw;
     padding: 2vw 2vw 2vw 2vw;
+    transition: 0;
 }`
 
 const Image = styled.img`
