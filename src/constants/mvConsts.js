@@ -56,7 +56,7 @@ let darkTheme = {
 
 export default {
 
-    mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d} }`,
+    mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d}; transition: 0; }`,
 
     error: (d) => { Sentry.captureException(d); console.log(d) },
 

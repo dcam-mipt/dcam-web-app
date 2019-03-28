@@ -136,14 +136,13 @@ z-index: 2;
 opacity: ${props => props.visible ? 1 : 0};
 visibility: ${props => props.visible ? `visible` : `hidden`};
 transition: 0.2s;
-@media (min-width: 320px) and (max-width: 480px) {
+${mvConsts.mobile_media_query(`
     border-radius: 4vw;
     top: 10vh;
     right: 2vw;
     width: 92vw;
     padding: 2vw 2vw 2vw 2vw;
-    transition: 0;
-}`
+`)}`
 
 const Image = styled.img`
 width: ${props => props.width}vw;

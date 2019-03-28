@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.ec28878e.chunk.css",
-  "main.js": "/static/js/main.f2a3610a.chunk.js",
-  "main.js.map": "/static/js/main.f2a3610a.chunk.js.map",
+  "main.js": "/static/js/main.78b1f8d6.chunk.js",
+  "main.js.map": "/static/js/main.78b1f8d6.chunk.js.map",
   "static/js/1.fa3c8f00.chunk.js": "/static/js/1.fa3c8f00.chunk.js",
   "static/js/1.fa3c8f00.chunk.js.map": "/static/js/1.fa3c8f00.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.229c360f.js",
@@ -22,12 +22,12 @@
   "static/media/menu.svg": "/static/media/menu.7bbd1e5d.svg",
   "static/media/dcam_logo.svg": "/static/media/dcam_logo.651305c1.svg",
   "static/media/upload.svg": "/static/media/upload.e7bc3c08.svg",
-  "static/media/index.css": "/static/media/Lato-Regular.fa62c04b.ttf",
+  "static/media/index.css": "/static/media/Lato-Black.e798200a.ttf",
   "static/media/settings_selected.svg": "/static/media/settings_selected.a6f5efe6.svg",
   "static/media/menu_gray.svg": "/static/media/menu_gray.78a80e9a.svg",
   "static/media/rotate.svg": "/static/media/rotate.7aee00ff.svg",
   "static/css/main.ec28878e.chunk.css.map": "/static/css/main.ec28878e.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.540933844f1ba0a6d44d44bbccecb8d3.js": "/precache-manifest.540933844f1ba0a6d44d44bbccecb8d3.js",
+  "precache-manifest.6ed92b0dd9ae41615398a553f64598c8.js": "/precache-manifest.6ed92b0dd9ae41615398a553f64598c8.js",
   "service-worker.js": "/service-worker.js"
 }
