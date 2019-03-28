@@ -53,6 +53,7 @@ class MyInput extends React.Component {
                 extraProps={style}
                 placeholder={this.props.placeholder}
                 type={this.props.number ? `number` : this.props.password ? `password` : `input`}
+                pattern={this.props.number ? `[0-9]*` : null}
                 defaultValue={this.props.defaultValue}
                 value={this.props.value}
                 textAlign={this.props.textAlign}
