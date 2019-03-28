@@ -75,6 +75,7 @@ class TopProfileMenu extends React.Component {
                             onChange={(d) => { this.setState({ value: d }) }}
                             value={this.state.value}
                             validator={(d) => validator.isInt(d)}
+                            number={true}
                         />
                         <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
                             <input type="hidden" name="receiver" value="410018436058863" />

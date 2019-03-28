@@ -11,6 +11,8 @@ class MyInput extends React.Component {
         placeholder: `placeholder`,
         visible: true,
         short: false,
+        number: false,
+        password: false,
         suffix: ``,
         onEnterPress: () => { },
         onChange: () => { },
@@ -50,7 +52,7 @@ class MyInput extends React.Component {
             <Input
                 extraProps={style}
                 placeholder={this.props.placeholder}
-                type={this.props.password ? `password` : `input`}
+                type={this.props.number ? `number` : this.props.password ? `password` : `input`}
                 defaultValue={this.props.defaultValue}
                 value={this.props.value}
                 textAlign={this.props.textAlign}
