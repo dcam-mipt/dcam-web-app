@@ -22,12 +22,12 @@
   "static/media/menu.svg": "/static/media/menu.7bbd1e5d.svg",
   "static/media/dcam_logo.svg": "/static/media/dcam_logo.651305c1.svg",
   "static/media/upload.svg": "/static/media/upload.e7bc3c08.svg",
-  "static/media/index.css": "/static/media/Lato-Regular.fa62c04b.ttf",
+  "static/media/index.css": "/static/media/Lato-Black.e798200a.ttf",
   "static/media/settings_selected.svg": "/static/media/settings_selected.a6f5efe6.svg",
   "static/media/menu_gray.svg": "/static/media/menu_gray.78a80e9a.svg",
   "static/media/rotate.svg": "/static/media/rotate.7aee00ff.svg",
   "static/css/main.ec28878e.chunk.css.map": "/static/css/main.ec28878e.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.5b1d8fb29d3e88077a1cc6787305a5c0.js": "/precache-manifest.5b1d8fb29d3e88077a1cc6787305a5c0.js",
+  "precache-manifest.979bc6297ca7ca1eceb7281fbc115d47.js": "/precache-manifest.979bc6297ca7ca1eceb7281fbc115d47.js",
   "service-worker.js": "/service-worker.js"
 }
