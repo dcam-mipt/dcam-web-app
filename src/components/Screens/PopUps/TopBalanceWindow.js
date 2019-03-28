@@ -45,13 +45,14 @@ class TopBalanceWindow extends React.Component {
                 <Container extraProps={`flex-direction: row; color: ${mvConsts.colors.text.primary}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; };`} >
                     Пополнить <span role="img" aria-label="martini">🍸</span>
                 </Container>
-                <Input
+                {/* <Input
                     placeholder={`Сумма`}
                     short={true}
-                    // onChange={(d) => { this.setState({ value: d }) }}
-                    // value={this.state.value}
-                    // validator={(d) => validator.isInt(d)}
-                />
+                    onChange={(d) => { this.setState({ value: d }) }}
+                    value={this.state.value}
+                    validator={(d) => validator.isInt(d)}
+                /> */}
+                <input type={`text`} />
                 <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
                     <input type="hidden" name="receiver" value="410018436058863" />
                     <input type="hidden" name="label" value={this.state.order_id} />
