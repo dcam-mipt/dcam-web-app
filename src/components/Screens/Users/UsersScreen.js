@@ -84,7 +84,7 @@ class UsersScreen extends React.Component {
                                                     }
                                                 </Container>
                                                 <Container extraProps={`margin-left: 1vw; align-items: flex-start;`} >
-                                                    <Container extraProps={`font-size: 1vw`} >
+                                                    <Container extraProps={`font-size: 1vw; color: ${mvConsts.colors.text.primary};`} >
                                                         {i.username.split(`@`)[0]}
                                                     </Container>
                                                     <Container extraProps={`color: ${mvConsts.colors.text.support}`} >
@@ -102,10 +102,10 @@ class UsersScreen extends React.Component {
                             this.state.selected_user
                                 ? <Container>
                                     <Container extraProps={`padding: 0.5vw; border-radius: 0.5vw; margin-bottom: 0.5vw; background-color: ${mvConsts.colors.background.primary};`} >
-                                        <Container extraProps={`width: 17vw; align-items: flex-start; font-size: 1vw;`} >
+                                        <Container extraProps={`width: 17vw; color: ${mvConsts.colors.text.primary}; align-items: flex-start; font-size: 1vw;`} >
                                             {this.state.selected_user.username.split(`@`)[0]}
                                         </Container>
-                                        <Container extraProps={`width: 17vw; align-items: flex-start; font-size: 1vw;`} >
+                                        <Container extraProps={`width: 17vw; color: ${mvConsts.colors.text.primary}; align-items: flex-start; font-size: 1vw;`} >
                                             {this.state.selected_user.money} ₽
                                         </Container>
                                     </Container>

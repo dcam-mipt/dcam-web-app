@@ -32,7 +32,7 @@ class TopBalanceWindow extends React.Component {
             visibility: ${visible ? `visible` : `hidden`};
             box-shadow: 0 0 2vw rgba(0, 0, 0, 0.05);
             background-color: ${mvConsts.colors.background.primary};
-            transition: opacity 0.2s, top 0.2s, visibility 0.2s;
+            transition: 0.2s;
             @media (min-width: 320px) and (max-width: 480px) {
                 border-radius: 4vw;
                 top: ${visible ? 10 : 14}vh;
@@ -50,7 +50,7 @@ class TopBalanceWindow extends React.Component {
                     short={true}
                     onChange={(d) => { this.setState({ value: d }) }}
                     value={this.state.value}
-                    validator={(d) => validator.isInt(d)}
+                    // validator={(d) => validator.isInt(d)}
                 />
                 <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
                     <input type="hidden" name="receiver" value="410018436058863" />

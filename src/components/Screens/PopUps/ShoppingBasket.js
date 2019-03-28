@@ -46,7 +46,7 @@ class ShoppingBasket extends React.Component {
         `
         return (
             <Container className={mvConsts.popUps.SHOPPING_BASKET} extraProps={style} >
-                <Container extraProps={`font-family: Lato-Bold; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                <Container extraProps={`font-family: Lato-Bold; color: ${mvConsts.colors.text.primary}; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
                     Корзина
                 </Container>
                 {

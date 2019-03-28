@@ -20,37 +20,9 @@ class MyInput extends React.Component {
     }
 
     render = () => {
-
-        let width = this.props.mobile ? 400 : 100
-
-        let style = `
-            width: ${width * (this.props.width ? 0.01 * this.props.width : (this.props.short ? 0.0625 : 0.15))}vw;
-            height: ${width * (this.props.visible ? 0.01 : 0)}vw;
-            padding: ${width * (this.props.visible ? 0.01 : 0)}vw;
-            border-radius: ${width * 0.005}vw;
-            background-color: ${this.props.backgroundColor ? this.props.backgroundColor : mvConsts.colors.background.secondary};
-            margin: ${width * (this.props.visible ? 0.0025 : 0)}vw;
-            color: ${this.props.color ? this.props.color : mvConsts.colors.text.primary};
-            font-size: ${width * 0.01}vw;
-            visibility: ${this.props.visible ? `visible` : `hidden`};
-            opacity: ${this.props.visible ? 1 : 0};
-            transition: visibility 0.2s, opaicty 0.2s, height 0.2s; 
-            ::placeholder {
-                color: ${mvConsts.colors.text.support};
-            }
-            @media (min-width: 320px) and (max-width: 480px) {
-                width: ${4 * width * (this.props.width ? 0.01 * this.props.width : (this.props.short ? 0.0625 : 0.15))}vw;
-                height: ${4 * width * (this.props.visible ? 0.01 : 0)}vw;
-                padding: ${4 * width * (this.props.visible ? 0.01 : 0)}vw;
-                border-radius: ${4 * width * 0.005}vw;
-                margin: ${4 * width * (this.props.visible ? 0.0025 : 0)}vw;
-                font-size: ${4 * width * 0.01}vw;
-            }
-        `
-
         return (
             <Input
-                extraProps={style}
+                {...this.props}
                 placeholder={this.props.placeholder}
                 // type={this.props.number ? `number` : this.props.password ? `password` : `input`}
                 pattern={this.props.number ? `[0-9]*` : null}
@@ -82,17 +54,35 @@ export default connect(mapStateToProps)(MyInput)
 // export default (Button)
 
 const Input = styled.input`
-    width: ${props => props.width === undefined ? 18 : props.width}${props => props.widthUnit === undefined ? 'vw' : props.widthUnit};
-    height: ${props => props.square ? props.width === undefined ? 5 : props.width : props.height === undefined ? 5 : props.height}${props => props.heightUnit === undefined ? 'vh' : props.heightUnit};
-    ${props => props.backgroundColor === undefined ? null : `background-color: ${props.backgroundColor}`}
     outline: none;
     border: none;
     text-align: center;
-    font-size: ${props => props.fontSize ? props.fontSize : 1}vw;
-    ${props => props.color === undefined ? null : `color: ${props.color}`}
+    font-size: 0.8vw;
     text-align: ${props => props.textAlign ? props.textAlign : `left`};
+    width: ${props => props.short ? 6.25 : 15}vw;
+    height: ${props => +props.visible}vw;
+    padding: ${props => +props.visible}vw;
+    border-radius: 0.5vw;
+    background-color: ${props => props.backgroundColor ? props.backgroundColor : mvConsts.colors.background.secondary};
+    margin: ${props => +props.visible * 0.25}vw;
+    color: ${props => props.color ? props.color : mvConsts.colors.text.primary};
+    font-size: 1vw;
+    visibility: ${props => props.visible ? `visible` : `hidden`};
+    opacity: ${props => +props.visible};
+    transition: visibility 0.2s, opaicty 0.2s, height 0.2s; 
+    ::placeholder {
+        color: ${mvConsts.colors.text.support};
+    }
+    @media (min-width: 320px) and (max-width: 480px) {
+        width: ${props => props.short ? 27 : 68}vw;
+        height: ${props => +props.visible * 5}vw;
+        padding: ${props => +props.visible * 4}vw;
+        border-radius: 2vw;
+        margin: ${props => +props.visible}vw;
+        font-size: 4vw;
+    }
     &::-webkit-input-placeholder {
-        ${props => props.placeholderColor === undefined ? null : `color: ${props.placeholderColor}`}
+        ${props => props.placeholderColor === undefined ? null : `color: ${props => props.placeholderColor}`}
     }
     
     ${props => props.extraProps === undefined ? null : props.extraProps}

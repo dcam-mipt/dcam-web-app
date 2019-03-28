@@ -37,7 +37,7 @@ class TopProfileMenu extends React.Component {
         return (
             <Wrapper visible={this.props.visible} className={mvConsts.popUps.TOP_PROFILE_MENU} >
                 <Container extraProps={`padding: 0.5vw; border-radius: 1vw; background-color: ${mvConsts.colors.background.primary}; ${m(`padding: 2.5vw; border-radius: 5vw;`)}`} >
-                    <Container extraProps={`font-family: Lato-Bold; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${m(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                    <Container extraProps={`font-family: Lato-Bold; color: ${mvConsts.colors.text.primary}; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${m(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
                         Профиль
                     </Container>
                     <Container extraProps={`flex-direction: row; justify-content: space-between; width: 96%;`} >
@@ -49,7 +49,7 @@ class TopProfileMenu extends React.Component {
                                     extraProps={`border-radius: 15vw; `}
                                 />
                             </Container>
-                            <Container extraProps={`width: 9vw; margin-left: 0.5vw; align-items: flex-start; ${m(`width: 45vw; margin-left: 2.5vw; font-size: 5vw;`)}`} >
+                            <Container extraProps={`width: 9vw; color: ${mvConsts.colors.text.primary}; margin-left: 0.5vw; align-items: flex-start; ${m(`width: 45vw; margin-left: 2.5vw; font-size: 5vw;`)}`} >
                                 {Parse.User.current().get(`username`).split(`@`)[0]}
                             </Container>
                         </Container>
@@ -65,7 +65,7 @@ class TopProfileMenu extends React.Component {
                             Выйти
                         </Button>
                     </Container>
-                    <Container extraProps={`font-family: Lato-Bold; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
+                    <Container extraProps={`font-family: Lato-Bold; color: ${mvConsts.colors.text.primary}; width: 100%; padding: 0.5vw; font-size: 1.2vw; margin: 0 0 0.5vw 0.5vw; align-items: flex-start; ${mvConsts.mobile_media_query(`font-size: 6vw; margin: 2.5vw 0 2.5vw 5vw;`)}`} >
                         Пополнение счета
                     </Container>
                     <Container extraProps={`flex-direction: row; width: 100%; justify-content: flex-start;`} >
