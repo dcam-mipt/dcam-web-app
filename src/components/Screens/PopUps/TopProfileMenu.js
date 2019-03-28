@@ -143,11 +143,14 @@ ${mvConsts.mobile_media_query(`
     right: 2vw;
     width: 92vw;
     padding: 2vw 2vw 2vw 2vw;
+    transition: 0s;
 `)}`
 
 const Image = styled.img`
 width: ${props => props.width}vw;
 ${props => props.extraProps}
-`
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => props.width * 5}vw;
+}`
 
 /*eslint-enable no-unused-vars*/

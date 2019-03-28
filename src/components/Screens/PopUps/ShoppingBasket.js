@@ -42,6 +42,7 @@ class ShoppingBasket extends React.Component {
                 right: 2vw;
                 width: 96vw;
                 padding: 2vw 2vw 2vw 2vw;
+                transition: 0s;
             }   
         `
         return (
