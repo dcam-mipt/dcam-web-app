@@ -45,13 +45,15 @@ class TopBalanceWindow extends React.Component {
                 <Container extraProps={`flex-direction: row; color: ${mvConsts.colors.text.primary}; @media (min-width: 320px) and (max-width: 480px) { font-size: 4vw; };`} >
                     Пополнить <span role="img" aria-label="martini">🍸</span>
                 </Container>
-                <Input
-                    placeholder={`Сумма`}
-                    short={true}
-                    onChange={(d) => { this.setState({ value: d }) }}
-                    value={this.state.value}
-                    // validator={(d) => validator.isInt(d)}
-                />
+                <form>
+                    <Input
+                        placeholder={`Сумма`}
+                        short={true}
+                        onChange={(d) => { this.setState({ value: d }) }}
+                        value={this.state.value}
+                        validator={(d) => validator.isInt(d)}
+                    />
+                </form>
                 <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
                     <input type="hidden" name="receiver" value="410018436058863" />
                     <input type="hidden" name="label" value={this.state.order_id} />
@@ -61,7 +63,6 @@ class TopBalanceWindow extends React.Component {
                     <input type="hidden" name="paymentType" value="AC" />
                     <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
                     <Button visible={visible} disabled={this.state.value < 2} backgroundColor={mvConsts.colors.accept} onClick={() => {
-                        // Parse.Cloud.run(`saveTransaction`, { value: +this.state.value })
                         axios.get(`http://dcam.pro/api/transactions/start_yandex/${+this.state.value}`)
                             .then((d) => {
                                 this.setState({ order_id: d.data })
