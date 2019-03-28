@@ -69,14 +69,15 @@ class TopProfileMenu extends React.Component {
                         Пополнение счета
                     </Container>
                     <Container extraProps={`flex-direction: row; width: 100%; justify-content: flex-start;`} >
-                        <Input
+                        {/* <Input
                             placeholder={`Сумма`}
                             short={true}
                             onChange={(d) => { this.setState({ value: d }) }}
                             value={this.state.value}
-                            // validator={(d) => validator.isInt(d)}
+                            validator={(d) => validator.isInt(d)}
                             number={true}
-                        />
+                        /> */}
+                        <input type={`text`} />
                         <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
                             <input type="hidden" name="receiver" value="410018436058863" />
                             <input type="hidden" name="label" value={this.state.order_id} />
