@@ -148,8 +148,6 @@ ${mvConsts.mobile_media_query(`
 const Image = styled.img`
 width: ${props => props.width}vw;
 ${props => props.extraProps}
-@media (min-width: 320px) and (max-width: 480px) {
-    width: ${props => props.width * 5}vw;
-}`
+`
 
 /*eslint-enable no-unused-vars*/
