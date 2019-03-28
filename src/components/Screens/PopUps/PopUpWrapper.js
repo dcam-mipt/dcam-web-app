@@ -34,12 +34,12 @@ class PopUpWrapper extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // this.hideElement(this.props.children.props.name, nextProps.popUpWindow)
-        // if (nextProps.popUpWindow !== mvConsts.popUps.EMPTY && nextProps.mobile) {
-        //     document.getElementsByTagName(`body`)[0].style.position = `fixed`
-        // } else {
-        //     document.getElementsByTagName(`body`)[0].style.position = `inherit`
-        // }
+        this.hideElement(this.props.children.props.name, nextProps.popUpWindow)
+        if (nextProps.popUpWindow !== mvConsts.popUps.EMPTY && nextProps.mobile) {
+            document.getElementsByTagName(`body`)[0].style.position = `fixed`
+        } else {
+            document.getElementsByTagName(`body`)[0].style.position = `inherit`
+        }
     }
 
     render = () => {
