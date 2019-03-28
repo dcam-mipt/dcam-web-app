@@ -12,7 +12,10 @@ let signInOrUpParse = async () => {
             if (d) {
                 // sign in
                 return Parse.User.logIn(user.U3, user.Eea)
-                    .then((d) => { return Parse.User.current(); })
+                    .then((d) => {
+                        localStorage.setItem(`dcam_session_token`, d.get(`sessionToken`))
+                        return Parse.User.current()
+                    })
                     .catch((d) => { mvConsts.error(d) })
             } else {
                 // sign up
@@ -37,7 +40,7 @@ export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { })
                 .then(() => {
                     onInit()
                     // check for auth conflicts
-                    // if (GoogleAPI.isAuthorized()) {
+                    if (GoogleAPI.isAuthorized()) {
                         if (Parse.User.current()) {
                             new Parse.Query(`User`)
                                 .equalTo(`objectId`, Parse.User.current().id)
@@ -56,15 +59,15 @@ export default (onInit = () => { }, onSignIn = () => { }, onSignOut = () => { })
                             signInOrUpParse()
                                 .then((d) => { onSignIn(d) })
                         }
-                    // } else {
-                    //     if (GoogleAPI.isAuthorized()) {
-                    //         // sign out parse
-                    //         Parse.User.logOut()
-                    //     } else {
-                    //         // all right
-                    //         Parse.User.logOut()
-                    //     }
-                    // }
+                    } else {
+                        if (GoogleAPI.isAuthorized()) {
+                            // sign out parse
+                            Parse.User.logOut()
+                        } else {
+                            // all right
+                            Parse.User.logOut()
+                        }
+                    }
                     GoogleAPI.subscribeSignIn((isSignedIn) => {
                         if (isSignedIn) {
                             if (Parse.User.current()) {

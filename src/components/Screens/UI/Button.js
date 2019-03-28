@@ -68,14 +68,14 @@ visibility: ${props => props.visible ? `visible` : `hidden`};
 opacity: ${props => props.visible ? 1 : 0};
 transition: 0.2s;
 transition-delay: ${props => props.visible ? -1 : 0.2}s;
-box-shadow:inset 0px 0px 0px ${props => +props.shaped * 0.05}vw ${props => props.backgroundColor};
+border: ${props=> +props.shaped * 0.1}vw solid ${props => props.backgroundColor}
+outline-offset: 0.25vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.short ? 33 : 68}vw;
     height: ${props => props.visible ? 12 : 0}vw;
     padding: ${props => props.visible ? 0.04 : 0}vw;
     border-radius: 2vw;
     margin: ${props => props.visible ? 1 : 0}vw;
-    box-shadow:inset 0px 0px 0px ${props => +props.shaped * 0.25}vw ${props => props.backgroundColor};
 font-size: 4vw;
 }
 @media (min-width: 320px) and (max-width: 480px) {

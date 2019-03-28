@@ -34,24 +34,24 @@ class PopUpWrapper extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.hideElement(this.props.children.props.name, nextProps.popUpWindow)
-        if (nextProps.popUpWindow !== mvConsts.popUps.EMPTY && nextProps.mobile) {
-            document.getElementsByTagName(`body`)[0].style.position = `fixed`
-        } else {
-            document.getElementsByTagName(`body`)[0].style.position = `inherit`
-        }
+        // this.hideElement(this.props.children.props.name, nextProps.popUpWindow)
+        // if (nextProps.popUpWindow !== mvConsts.popUps.EMPTY && nextProps.mobile) {
+        //     document.getElementsByTagName(`body`)[0].style.position = `fixed`
+        // } else {
+        //     document.getElementsByTagName(`body`)[0].style.position = `inherit`
+        // }
     }
 
     render = () => {
 
-        let anyMobilePopUp = this.props.popUpWindow !== mvConsts.popUps.EMPTY
+        let anyPopUp = this.props.popUpWindow !== mvConsts.popUps.EMPTY
 
         return (
             <Container>
                 <Wrapper
-                    anyMobilePopUp={anyMobilePopUp}
+                    anyPopUp={anyPopUp}
                     onClick={() => {
-                        if (this.props.popUpWindow !== mvConsts.popUps.EMPTY) {
+                        if (anyPopUp) {
                             this.props.setPopUpWindow(mvConsts.popUps.EMPTY)
                         }
                     }}
@@ -89,12 +89,14 @@ position: absolute;
 z-index: 1;
 top: 0;
 transition: 0.2s;
+width: 100vw;
+height: 100vh;
+background-color: rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+opacity: ${props => +props.anyPopUp}
+visibility: ${props => props.anyPopUp ? `visible` : `hidden`};
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, ${props => props.anyMobilePopUp ? 0.2 : 0});
-    backdrop-filter: blur(${props => props.anyMobilePopUp ? 5 : 0}px);
-    visibility: ${props => props.anyMobilePopUp ? `visible` : `hidden`};
+    
 }`
 
 /*eslint-enable no-unused-vars*/
