@@ -1,21 +1,5 @@
-/**
- * Created by mityabeldii on 10.06.2017.
- */
 /*eslint-disable no-unused-vars*/
-import moment from 'moment'
-import axios from 'axios'
 import * as Sentry from '@sentry/browser';
-
-let sunrise = +moment().startOf(`day`).add(7, `hour`)
-let sunset = +moment().startOf(`day`).add(19, `hour`)
-
-// axios.get(`http://api.openweathermap.org/data/2.5/weather?q=Moscow,RU&APPID=0579fe15f41ee155e5acbf5059f29b0c`)
-//     .then((d) => {
-//         sunrise = d.data.sys.sunrise * 1000
-//         sunset = d.data.sys.sunset * 1000
-//     })
-//     .catch((d) => { mvConsts.error(d) })
-
 let dayTheme = {
     yellow: "#FFCC00",
     accept: "#2DC76D",
@@ -55,22 +39,14 @@ let darkTheme = {
 }
 
 export default {
-
     mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d}; transition: 0; }`,
-
     error: (d) => { Sentry.captureException(d); console.log(d) },
-
-    // colors: dayTheme,
-    // colors: darkTheme,
-    colors: +moment() > sunset || +moment() < sunrise ? darkTheme : dayTheme,
-
+    colors: dayTheme,
     weekDays: {
         short: [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`],
         full: [`воскресенье`, `понедельник`, `вторник`, `среда`, `четверг`, `пятница`, `суббота`]
     },
-
     month: [`Январь`, `Февраль`, `Март`, `Апрель`, `Май`, `Июнь`, `Июль`, `Август`, `Октябрь`, `Сентябрь`, `Ноябрь`, `Декабрь`,],
-
     colors_: {
         SPACE_NAVY: `#25265E`,
         STEEL_GREY: `#868697`,
@@ -81,49 +57,8 @@ export default {
         WARM_ORANGE: `#FF7052`,
         GOLDEN_BAY: `#FFC800`,
     },
-
     screens: {
-        home: "HOME",
         laundry: "LAUNDRY",
-        users: "USERS",
-        club: "club",
-        settings: "SETTINGS",
-        settings_user: "SETTINGS_USER",
-        settings_notifications: "SETTINGS_NOTIFICATIONS",
-        settings_payment: "SETTINGS_PAYMENT",
-    },
-
-    roles: {
-        USER: `USER`,
-        ADMIN: `ADMIN`,
-        LAUNDRY_WATCHER: `LAUNDRY_WATCHER`,
-    },
-
-    popUps: {
-        BOOKING_WINDOW: "BOOKING_WINDOW",
-        TOP_PROFILE_MENU: "TOP_PROFILE_MENU",
-        TOP_BALANCE_WINDOW: "TOP_BALANCE_WINDOW",
-        RESEVATIONS: "RESEVATIONS",
-        MOBILE_MENU: "MOBILE_MENU",
-        LAUNDRY_SETTINGS: "LAUNDRY_SETTINGS",
-        EMPTY: "EMPTY",
-        SHOPPING_BASKET: "SHOPPING_BASKET",
-        GET_NFC: "GET_NFC",
-        LAUNDRY_OPTIONS: "LAUNDRY_OPTIONS",
-        CLUB_BOOK: "CLUB_BOOK",
-        CLUB_EDIT: "CLUB_EDIT",
-        LAUNDRY_BOOK_DETAILS: "LAUNDRY_BOOK_DETAILS",
-    },
-
-    status: {
-        booked: "booked",
-        myBook: "myBook",
-        selected: "selected",
-        free: "free",
-    },
-
-    errors: {
-        emptyAccount: `users account is exist, but empty`,
     },
 }
 /*eslint-enable no-unused-vars*/

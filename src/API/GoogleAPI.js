@@ -1,5 +1,4 @@
 /*eslint-disable no-unused-vars*/
-
 let { gapi } = window,
     GoogleAuth,
     SCOPE = 'https://www.googleapis.com/auth/userinfo.email',
@@ -12,27 +11,41 @@ let appOptions = {
     'hosted_domain': 'phystech.edu'
 }
 
-let initClient = () => {
-    return gapi.client.init(appOptions)
+let initClient = () => new Promise((resolve, reject) => {
+    gapi.client.init(appOptions)
         .then((d) => {
             GoogleAuth = gapi.auth2.getAuthInstance();
             setSigninStatus();
-        });
-}
+            resolve(d)
+        })
+        .catch((d) => { reject(d) })
+})
 
-let initGoogle = (userId) => {
-    return new Promise((resolve, reject) => {
-        gapi.load('client:auth2', resolve, reject)
-    });
-}
+let initGoogle = () => new Promise((resolve, reject) => {
+    gapi.load('client:auth2', resolve, reject)
+})
 
-let signIn = () => {
-    GoogleAuth.signIn();
-}
+let init = () => new Promise((resolve, reject) => {
+    GoogleAPI.initGoogle()
+        .then((d) => {
+            GoogleAPI.initClient()
+                .then((d) => { resolve(d) })
+                .catch((d) => { reject(d) })
+        })
+        .catch((d) => { reject(d) })
+})
 
-let signOut = () => {
-    GoogleAuth.signOut();
-}
+let signIn = () => new Promise((resolve, reject) => {
+    GoogleAuth.signIn()
+        .then((d) => { resolve(d) })
+        .catch((d) => { reject(d) })
+})
+
+let signOut = () => new Promise((resolve, reject) => {
+    GoogleAuth.signOut()
+        .then((d) => { resolve(d) })
+        .catch((d) => { reject(d) })
+})
 
 let revokeAccess = () => {
     GoogleAuth.disconnect();
@@ -77,7 +90,7 @@ GoogleAPI = {
     isAuthorized: isAuthorized,
     GoogleAuth: GoogleAuth,
     subscribeSignIn: subscribeSignIn,
-    // initGoogleAsync: initGoogleAsync,
+    init: init,
 }
 
 export default GoogleAPI
