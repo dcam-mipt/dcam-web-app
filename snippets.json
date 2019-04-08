@@ -1,0 +1,51 @@
+{
+    "Print to console": {
+        "prefix": "cl",
+        "body": [
+            "console.log($1);",
+        ],
+    },
+    "Container": {
+        "prefix": "con",
+        "body": [
+            "<Container extraProps={`$1`} >",
+            "\t$2",
+            "</Container>",
+        ],
+    },
+    "Function": {
+        "prefix": "f",
+        "body": [
+            "($1) => {$2}",
+        ],
+    },
+    "style": {
+        "prefix": "s",
+        "body": [
+            "const $1 = styled.div`",
+            "display: flex",
+            "justify-content: center",
+            "align-items: center",
+            "flex-direction: column",
+            "transition: 0.2s",
+            "@media (min-width: 320px) and (max-width: 480px) {",
+            "\t",
+            "}`",
+        ],
+    },
+    "then": {
+        "prefix": "th",
+        "body": [
+            ".then((d) => { console.log(d) })",
+            ".catch((d) => { console.log(d) })",
+        ],
+    },
+    "js": {
+        "prefix": "js",
+        "body": [
+            "/*eslint-disable no-unused-vars*/",
+            "$0",
+            "/*eslint-enable no-unused-vars*/",
+        ],
+    },
+}

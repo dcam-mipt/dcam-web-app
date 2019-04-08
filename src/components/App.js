@@ -2,28 +2,28 @@
 import React, { useState, useEffect } from 'react'
 import GoogleAPI from '../api/GoogleAPI'
 import styled from 'styled-components'
+import { connect } from  'react-redux'
+import Main from './Main'
+import Entry from './Entry'
 
 let GoogleWrapper = (props) => {
+    console.log(props.user)
     let [init, setInit] = useState(false)
     useEffect(() => {
         GoogleAPI.init()
             .then((d) => { setInit(true) })
-            .catch((d) => { console.log(`google initialization error`) })
+            .catch((d) => {
+                console.log(`google initialization error`)
+            })
     })
-    return init ? <UserWrapper /> : <LoadingPage />
+    return init ? props.user.token ? <Main/> : <Entry/> : <LoadingPage/>
 }
 
-let LoadingPage = () => {
-    return (
+let LoadingPage = (props) => {
+     return (
         <LoadingPageWrapper>
             loading
         </LoadingPageWrapper>
-    )
-}
-
-let UserWrapper = () => {
-    return (
-        <div>user wrapper</div>
     )
 }
 
@@ -40,5 +40,11 @@ background-color: white;
     
 }`
 
-export default GoogleWrapper
+let mapStateToProps = (state) => {
+    return {
+        user: state.user
+    }
+}
+
+export default connect(mapStateToProps)(GoogleWrapper)
 /*eslint-enable no-unused-vars*/
