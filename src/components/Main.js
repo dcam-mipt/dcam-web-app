@@ -2,13 +2,22 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import userActions from '../redux/actions/UserActions'
+import machinesActions from '../redux/actions/MachinesActions'
+import laundryActions from '../redux/actions/LaundryActions'
 import Laundry from './Laundry'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
+import Button from './Button'
 
 let Main = (props) => {
     axios.defaults.headers.common.Authorization = props.user.token
+    axios.get(`http://dcam.pro/api/machines/get`)
+        .then((d) => { props.setMachines(d.data) })
+        .catch((d) => { console.log(d) })
+    axios.get(`http://dcam.pro/api/laundry/get`)
+        .then((d) => { props.setLaundry(d.data) })
+        .catch((d) => { console.log(d) })
     useEffect(() => () => { axios.defaults.headers.common.Authorization = undefined })
     let signOut = () => new Promise((resolve, reject) => {
         axios.get(`http://dcam.pro/api/auth/sign_out`)
@@ -22,7 +31,9 @@ let Main = (props) => {
             </Menu>
             <Workspace>
                 <Header>
-
+                    <Button onClick={() => { signOut() }} >
+                        sign out
+                    </Button>
                 </Header>
                 <Space>
                     <Laundry />
@@ -41,6 +52,12 @@ let mapDispatchToProps = (dispatch) => {
     return {
         setToken: (data) => {
             return dispatch(userActions.setToken(data))
+        },
+        setMachines: (data) => {
+            return dispatch(machinesActions.setMachines(data))
+        },
+        setLaundry: (data) => {
+            return dispatch(laundryActions.setLaundry(data))
         },
     }
 }

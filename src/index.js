@@ -11,9 +11,9 @@ import { reducer } from './redux/reducers'
 
 const store = createStore(reducer);
 
-Sentry.init({
-    dsn: "https://11f6f8cd95ef4b56882cfaafedcc3b59@sentry.io/1417450"
-});
+// Sentry.init({
+//     dsn: "https://11f6f8cd95ef4b56882cfaafedcc3b59@sentry.io/1417450"
+// });
 
 let main = () => {
     return (
