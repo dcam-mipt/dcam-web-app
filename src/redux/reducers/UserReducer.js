@@ -3,9 +3,10 @@ import types from '../ActionTypes.js'
 import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
-    user_info: undefined,
+    user: undefined,
     is_admin: false,
-    token: localStorage.getItem(`dcam_token`)
+    token: localStorage.getItem(`dcam_token`),
+    balance: 0,
 };
 
 export default (state = initialState, action) => {
@@ -14,7 +15,7 @@ export default (state = initialState, action) => {
         case types.SET_USER_INFO:
             return {
                 ...state,
-                user_info: action.data,
+                user: action.data,
             };
         case types.SET_TOKEN:
             return {
@@ -25,6 +26,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 is_admin: action.data,
+            };
+        case types.SET_BALANCE:
+            return {
+                ...state,
+                balance: action.data,
             };
 
         default:

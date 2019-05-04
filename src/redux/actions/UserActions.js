@@ -24,5 +24,11 @@ export default {
             data: data
         }
     },
+    setBalance: (data) => {
+        return {
+            type: types.SET_BALANCE,
+            data: data
+        }
+    },
 }
 /*eslint-enable no-unused-vars*/

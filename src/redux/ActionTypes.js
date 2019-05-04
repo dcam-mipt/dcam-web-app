@@ -6,5 +6,6 @@ export default {
     SET_TOKEN: `SET_TOKEN`,
     SET_MACHINES: `SET_MACHINES`,
     SET_LAUNDRY: `SET_LAUNDRY`,
+    SET_BALANCE: `SET_BALANCE`,
 }
 /*eslint-enable no-unused-vars*/

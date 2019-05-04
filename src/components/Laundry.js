@@ -8,7 +8,6 @@ import moment, { defineLocale } from 'moment'
 import Button from './Button'
 import useComponentVisible from './useComponentVisible'
 import mvConsts from '../constants/mvConsts';
-import { fdatasync } from 'fs';
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -28,11 +27,16 @@ let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
     let [mobileCalendar, setMobileCalendar] = useState(false)
     let [selectedSlots, selectSlot, setSelectedSlots] = useSlots([])
-    let [ref, bucketVisible, setBucketVisible] = useComponentVisible(false);
+    let [bucketRef, bucketVisible, setBucketVisible] = useComponentVisible(false);
+    let [reservationsRef, reservationsVisible, setReservationsVisible] = useComponentVisible(false);
+    let [selectedBook, setSelectedBook] = useState(undefined)
+    let [bookRef, bookVisible, setBookVisible] = useComponentVisible(false);
+    let my_reservations = props.user ? props.laundry.filter(i => i.user_id === props.user.objectId) : []
     useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
+    useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     return (
         <GlobalWrapper>
-            <PopUp ref={ref} visible={bucketVisible} >
+            <PopUp ref={bucketRef} visible={bucketVisible} >
                 {
                     selectedSlots.map((i, index) => {
                         return (
@@ -52,7 +56,7 @@ let Laundry = (props) => {
                         )
                     })
                 }
-                <Button>
+                <Button onClick={() => { setSelectedSlots([]) }} >
                     clear
                 </Button>
                 <Button onClick={() => {
@@ -62,7 +66,7 @@ let Laundry = (props) => {
                             .then((d) => {
                                 a = a.filter((i, index) => index > 0)
                                 setSelectedSlots(a)
-                                a.length && deal()
+                                a.length ? deal() : document.location.reload();
                             })
                             .catch((d) => { console.log(d); reject(d) })
                     })
@@ -70,6 +74,50 @@ let Laundry = (props) => {
                 }} >
                     book
                 </Button>
+            </PopUp>
+            <PopUp ref={reservationsRef} visible={reservationsVisible} >
+                {
+                    my_reservations.map((i, index) => {
+                        return (
+                            <BasketRecord key={index} >
+                                <div>
+                                    {moment(i.timestamp).format(`DD.MM`)}, {moment(i.timestamp).format(`HH:mm`)}
+                                </div>
+                                <MachineCircle>
+                                    {props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}
+                                </MachineCircle>
+                                <div
+                                    onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${i.objectId}`).then(() => { document.location.reload(); }) }}
+                                >
+                                    delete
+                                </div>
+                            </BasketRecord>
+                        )
+                    })
+                }
+            </PopUp>
+            <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
+                {
+                    selectedBook && <BasketRecord>
+                        <div>
+                            {selectedBook.email.split(`@`)[0]}
+                        </div>
+                        <div>
+                            {moment(selectedBook.timestamp).format(`DD.MM`)}, {moment(selectedBook.timestamp).format(`HH:mm`)}
+                        </div>
+                        <MachineCircle>
+                            {props.machines.map(i => i.objectId).indexOf(selectedBook.machine_id) + 1}
+                        </MachineCircle>
+                        {
+                            props.is_admin
+                            && <div
+                                onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${selectedBook.objectId}`).then(() => { document.location.reload(); }) }}
+                            >
+                                delete
+                            </div>
+                        }
+                    </BasketRecord>
+                }
             </PopUp>
             <MobileCalendarButton>
                 <Button onClick={() => { setMobileCalendar(!mobileCalendar) }} >
@@ -85,7 +133,7 @@ let Laundry = (props) => {
                         <Button onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
                             Сегодня
                         </Button>
-                        <Button>
+                        <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
                             Стирки
                         </Button>
                         <Button disabled={!selectedSlots.length} onClick={() => { setBucketVisible(!bucketVisible) }} >
@@ -130,12 +178,12 @@ let Laundry = (props) => {
                                             let slot_data = { machine_id: machine.objectId, timestamp: timestamp }
                                             let is_book = props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
                                             let book = is_book && props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId)[0]
-                                            let is_my_book = props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId)
+                                            let is_my_book = my_reservations.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
                                             return (
                                                 <Machine
                                                     width={21 / props.machines.length}
                                                     key={machine_index}
-                                                    onClick={() => { !is_book && selectSlot(slot_data) }}
+                                                    onClick={() => { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) }}
                                                     is_selected={selectedSlots.filter((i, index) => compareObjects(i, slot_data)).length}
                                                     is_book={is_book}
                                                     is_my_book={is_my_book}
@@ -159,6 +207,8 @@ let mapStateToProps = (state) => {
     return {
         machines: state.machines.machines,
         laundry: state.laundry.laundry,
+        user: state.user.user,
+        is_admin: state.user.is_admin,
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -235,7 +285,7 @@ transition: 0.2s
 width: ${props => props.width}vw;
 height: 3vw;
 cursor: pointer;
-background-color: ${props => props.is_selected ? mvConsts.colors.lightblue : `lightgrey`};
+background-color: ${props => props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : `lightgrey`};
 color: white;
 font-size: 0.8vw;
 @media (min-width: 320px) and (max-width: 480px) {
