@@ -11,28 +11,51 @@ import mvConsts from '../constants/mvConsts'
 import Button from './Button'
 import Input from './Input'
 import useComponentVisible from './useComponentVisible'
+import AdminTools from './AdminTools';
+
+let screens = [
+    {
+        image: require('../assets/images/laundry_selected.svg'),
+        name: mvConsts.screens.LAUNDRY,
+        admin: false,
+        component: Laundry,
+    },
+    {
+        image: require('../assets/images/admin.svg'),
+        name: mvConsts.screens.ADMIN,
+        admin: true,
+        component: AdminTools,
+    },
+]
 
 let Main = (props) => {
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
-        axios.get(`http://dcam.pro/api/machines/get`)
-            .then((d) => { props.setMachines(d.data) })
-            .catch((d) => { console.log(d) })
-        axios.get(`http://dcam.pro/api/laundry/get`)
-            .then((d) => { props.setLaundry(d.data) })
-            .catch((d) => { console.log(d) })
         axios.get(`http://dcam.pro/api/user/get_my_info`)
-            .then((d) => { props.setUserInfo(d.data) })
-            .catch((d) => { console.log(d) })
-        axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
-            .then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
-            .catch((d) => { console.log(d) })
+            .then((d) => {
+                props.setUserInfo(d.data)
+                axios.get(`http://dcam.pro/api/machines/get`)
+                    .then((d) => { props.setMachines(d.data) })
+                    .catch((d) => { console.log(d) })
+                axios.get(`http://dcam.pro/api/laundry/get`)
+                    .then((d) => { props.setLaundry(d.data) })
+                    .catch((d) => { console.log(d) })
+                axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
+                    .then((d) => { console.log(d); props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
+                    .catch((d) => { console.log(d) })
+            })
+            .catch((d) => {
+                signOut()
+                    .then((d) => { console.log(d) })
+                    .catch((d) => { console.log(d) })
+            })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     })
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
+        props.setToken(undefined);
         axios.get(`http://dcam.pro/api/auth/sign_out`)
-            .then((d) => { props.setToken(undefined); resolve(d); })
+            .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
     })
     let [value, setValue] = useState(``)
@@ -75,7 +98,7 @@ let Main = (props) => {
                 </Button>
             </PopUp>
             <Menu>
-
+                {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage src={item.image} key={index} />)}
             </Menu>
             <Workspace>
                 <Header>
@@ -94,6 +117,7 @@ let Main = (props) => {
 let mapStateToProps = (state) => {
     return {
         token: state.user.token,
+        is_admin: state.user.is_admin
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -141,6 +165,33 @@ background-color: ${mvConsts.colors.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 8vh;
+    flex-direction: row
+    justify-content: space-around
+}`
+
+const MenuItem = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+transition: 0.2s;
+width: 6vw;
+height: 6vw;
+cursor: pointer;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 8vh;
+    height: 8vh;
+}`
+
+const MenuItemImage = styled.img`
+transition: 0.2s;
+width: 3vw;
+height: 3vw;
+padding: 1.5vw;
+cursor: pointer;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 4vh;
+    height: 4vh;
 }`
 
 const Workspace = styled.div`

@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
-import GoogleAPI from '../api/GoogleAPI'
+import GoogleAPI from '../API/GoogleAPI'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Main from './Main'

@@ -1,4 +1,5 @@
 /*eslint-disable no-unused-vars*/
+/*eslint-disable no-unused-vars*/
 let { gapi } = window,
     GoogleAuth,
     SCOPE = 'https://www.googleapis.com/auth/userinfo.email',
@@ -94,3 +95,4 @@ GoogleAPI = {
 }
 
 export default GoogleAPI
+/*eslint-enable no-unused-vars*/

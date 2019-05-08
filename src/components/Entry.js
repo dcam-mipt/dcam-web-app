@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
 import { connect } from 'react-redux'
-import GoogleAPI from '../api/GoogleAPI'
+import GoogleAPI from '../API/GoogleAPI'
 import userActions from '../redux/actions/UserActions'
 import axios from 'axios'
 import styled from 'styled-components'

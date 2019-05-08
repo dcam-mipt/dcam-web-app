@@ -3,7 +3,7 @@ import types from '../ActionTypes.js'
 import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
-    mainAppScreen: undefined,
+    mainAppScreen: mvConsts.screens.laundry,
     is_admin: false,
 };
 

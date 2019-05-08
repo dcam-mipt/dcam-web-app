@@ -336,7 +336,7 @@ justify-content: center
 align-items: center
 flex-direction: column
 transition: 0.2s
-width: 100vw;
+width: 94vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
     

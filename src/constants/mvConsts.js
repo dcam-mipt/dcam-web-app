@@ -59,6 +59,7 @@ export default {
     },
     screens: {
         laundry: "LAUNDRY",
+        admin: "ADMIN",
     },
 }
 /*eslint-enable no-unused-vars*/
