@@ -299,8 +299,6 @@ width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `flex` : `none`};
     width: 100vw;
-    positoin: fixed;
-    top: 10vh;
 }`
 
 const Schedule = styled.div`
