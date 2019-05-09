@@ -393,8 +393,12 @@ transition: 0.2s
 width: 94vw;
 height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
+    height: 100vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
-}`
+}
+`
 
 const CalendarHeader = styled.div`
 display: flex

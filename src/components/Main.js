@@ -166,6 +166,9 @@ width: 100vw;
 height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: column;
+    height: 100vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
 }`
 
@@ -223,6 +226,9 @@ height: 100vh;
 background-color: ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
+    height: 100vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
 }`
 
