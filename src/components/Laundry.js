@@ -284,7 +284,7 @@ width: 94vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     flex-direction: column;
     justify-content: flex-start
 }`
@@ -392,7 +392,7 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 94vw;
-height: 100vh;
+height: 100%;
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`
