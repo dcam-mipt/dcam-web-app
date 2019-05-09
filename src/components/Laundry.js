@@ -36,9 +36,6 @@ let Laundry = (props) => {
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     let header = (
         <CalendarHeader>
-            <Title>
-                Стирка | {moment(selectedDay).format(`DD.MM`)}
-            </Title>
             <Button only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
                 Сегодня
             </Button>
@@ -167,6 +164,8 @@ let Laundry = (props) => {
                                                 onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
                                                 is_selected_day={selectedDay === +moment(start_of_day).startOf(`day`)}
                                                 is_today={+moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)}
+                                                is_before={is_before}
+                                                is_weekend={+moment(start_of_day).isoWeekday() > 5}
                                             >
                                                 {moment(start_of_day).format(`DD.MM`)}
                                             </Day>
@@ -360,7 +359,8 @@ flex-direction: column
 transition: 0.2s
 width: 8.5vw;
 height: 8.5vw;
-background-color: white;
+background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? `white` : props.is_weekend ? `#e0e0e0` : `#d6d6d6`};
+border-radius: ${props => props.is_selected_day ? 0.5 : 0}vw;
 border: 0.2vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : `transparent`}
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -401,21 +401,6 @@ width: 100vw;
     background-color : white;
     position: fixed;
     top: 0;
-}`
-
-const Title = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
-width: 9vw;
-padding: 0.9vw;
-border-radius: 0.5vw;
-background-color: white;
-font-size: 1vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    display: none;
 }`
 
 const Flex = styled.div`
