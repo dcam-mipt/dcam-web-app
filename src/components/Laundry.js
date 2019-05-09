@@ -55,7 +55,7 @@ let Laundry = (props) => {
             <PopUp ref={bucketRef} visible={bucketVisible} >
                 <Flex>
                     {
-                        selectedSlots.map((i, index) => {
+                        selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                             return (
                                 <BasketRecord key={index} >
                                     <div>
@@ -77,20 +77,20 @@ let Laundry = (props) => {
                         <Button onClick={() => { setSelectedSlots([]) }} >
                             Очистить
                         </Button>
-                            <Button onClick={() => {
-                                let a = selectedSlots
-                                let deal = () => new Promise((resolve, reject) => {
-                                    axios.get(`http://dcam.pro/api/laundry/book/${a[0].timestamp}/${a[0].machine_id}`)
-                                        .then((d) => {
-                                            a = a.filter((i, index) => index > 0)
-                                            setSelectedSlots(a)
-                                            a.length ? deal() : document.location.reload();
-                                        })
-                                        .catch((d) => { console.log(d); reject(d) })
-                                })
-                                a.length && deal()
-                            }} >
-                                Купить
+                        <Button onClick={() => {
+                            let a = selectedSlots
+                            let deal = () => new Promise((resolve, reject) => {
+                                axios.get(`http://dcam.pro/api/laundry/book/${a[0].timestamp}/${a[0].machine_id}`)
+                                    .then((d) => {
+                                        a = a.filter((i, index) => index > 0)
+                                        setSelectedSlots(a)
+                                        a.length ? deal() : document.location.reload();
+                                    })
+                                    .catch((d) => { console.log(d); reject(d) })
+                            })
+                            a.length && deal()
+                        }} >
+                            Купить
                         </Button>
                     </Flex>
                 </Flex>
@@ -98,7 +98,7 @@ let Laundry = (props) => {
             <PopUp ref={reservationsRef} visible={reservationsVisible} >
                 <Flex>
                     {
-                        my_reservations.map((i, index) => {
+                        my_reservations.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                             return (
                                 <BasketRecord key={index} >
                                     <div>
@@ -137,20 +137,16 @@ let Laundry = (props) => {
                                     onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${selectedBook.objectId}`).then(() => { document.location.reload(); }) }}
                                 >
                                     Удалить
-                            </div>
+                                </div>
                             }
                         </BasketRecord>
                     }
                 </Flex>
             </PopUp>
-            <MobileHeader only_mobile >
-                {header}
-            </MobileHeader>
             <Wrapper>
+                <Flex only_mobile > {header} </Flex>
                 <Calendar mobileCalendar={mobileCalendar} >
-                    <MobileHeader only_desktop>
-                        {header}
-                    </MobileHeader>
+                    <Flex only_desktop > {header} </Flex>
                     {
                         new Array(4).fill(0).map((week, week_index) => {
                             return (
@@ -180,7 +176,7 @@ let Laundry = (props) => {
                     {
                         <TwoHourRow>
                             <TimeNode />
-                            {new Array(4).fill(0).map((i, index) => <Machine index={index} key={index} width={props.machines.length} >{index + 1}</Machine>)}
+                            {props.machines.map((i, index) => <Machine index={index} key={index} width={props.machines.length} >{index + 1}</Machine>)}
                         </TwoHourRow>
                     }
                     {
@@ -241,17 +237,6 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
 
-const MobileHeader = styled.div`
-display: ${props => props.only_desktop ? `flex` : `none`};
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.only_mobile ? `flex` : `none`};
-    height: 8vh;
-}`
-
 const TimeNode = styled.div`
 display: flex
 justify-content: center
@@ -273,38 +258,49 @@ width: 94vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     flex-direction: column;
-    justify-content: flex-start
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    height: 85vh;
 }`
 
 const Calendar = styled.div`
 display: flex
-justify-content: flex-start
+justify-content: center
 align-items: center
-flex-direction: column
-transition: 0.2s
-width: 63vw;
-background-color: transparent;
+flex-direction: column;
+transition: 0.2s;
+width: 64vw;
+height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.mobileCalendar ? `block` : `none`};
+    display: ${props => props.mobileCalendar ? `block` : `none`}
     width: 100vw;
-    max-height: ${14 * 14}vw;
+    max-height: 92vh;
     overflow: scroll;
+    padding-bottom: 8vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    height: 85vh;
 }`
 
 const Schedule = styled.div`
 display: flex
-justify-content: flex-start
+justify-content: center
 align-items: center
-flex-direction: column
-transition: 0.2s
-background-color: transparent;
+flex-direction: column;
+transition: 0.2s;
+width: 30vw;
+height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.mobileCalendar ? `none` : `block`};
+    display: ${props => props.mobileCalendar ? `none` : `block`}
     width: 100vw;
-    max-height: ${14 * 14}vw;
+    max-height: ${13 * 14}vw;
     overflow: scroll;
+    padding-bottom: 8vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    height: 85vh;
 }`
 
 const TwoHourRow = styled.div`
@@ -339,6 +335,7 @@ border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index
     border-radius: ${props => +(props.index === 0) * 2}vw ${props => +(props.index === props.width - 1) * 2}vw ${props => +(props.index === props.width - 1) * 2}vw ${props => +(props.index === 0) * 2}vw;
     height: 12vw;
     font-size: 3vw;
+    border-width: 0.2vw;
 }`
 
 const WeekRow = styled.div`
@@ -380,7 +377,6 @@ flex-direction: column
 transition: 0.2s
 width: 94vw;
 height: 94vh;
-position: fixed;
 @media (min-width: 320px) and (max-width: 480px) {
     height: 100vh;
 }
@@ -395,26 +391,25 @@ justify-content: center
 align-items: center
 flex-direction: row
 transition: 0.2s
-margin-bottom: 1vw;
 width: 100vw;
 @media (min-width: 320px) and (max-width: 480px) {
     background-color : white;
-    position: fixed;
-    top: 0;
+    height: 8vh;
 }`
 
 const Flex = styled.div`
-display: flex
+display: ${props => props.only_mobile ? `none` : `flex`}
 justify-content: center
 align-items: center
 flex-direction: ${props => props.row ? `row` : `column`}
 transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
+    display: ${props => props.only_desktop ? `none` : `flex`}
     width: 100vw;
 }`
 
 const PopUp = styled.div`
-display: block;
+display: ${props => props.visible ? `flex` : `none`}
 max-height: 92vh;
 overflow: scroll;
 transition: 0.2s
@@ -428,7 +423,6 @@ visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
 padding: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.visible ? `flex` : `none`}
     position: fixed;
     width: 100vw;
     top: 0;

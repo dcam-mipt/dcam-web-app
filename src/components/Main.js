@@ -202,8 +202,8 @@ padding: 1.5vw;
 cursor: pointer;
 display: ${props => props.only_mobile ? `none` : `block`}
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 4vh;
-    height: 4vh;
+    width: 5vh;
+    height: 5vh;
     display: block;
 }`
 
@@ -260,7 +260,7 @@ transition: 0.2s
 }`
 
 const PopUp = styled.div`
-display: block;
+display: ${props => props.visible ? `flex` : `none`}
 max-height: 92vh;
 overflow: scroll;
 transition: 0.2s
@@ -274,7 +274,6 @@ visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
 padding: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.visible ? `flex` : `none`}
     position: fixed;
     width: 100vw;
     top: 0;
