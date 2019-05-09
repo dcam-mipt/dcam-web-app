@@ -33,8 +33,8 @@ margin: ${props => +props.visible / 4}vw;
 color: ${props => props.shaped ? props.backgroundColor : `white`};
 font-size: 0.8vw;
 cursor: ${props => props.disabled ? null : `pointer`};
-visibility: ${props => props.visible ? `visible` : `hidden`};
-opacity: ${props => +props.visible};
+visibility: ${props => (props.only_mobile ? false : props.visible) ? `visible` : `hidden`};
+opacity: ${props => +(props.only_mobile ? false : props.visible)};
 transition: 0.2s;
 transition-delay: ${props => props.visible ? -1 : 0.2}s;
 border: ${props => +props.shaped * 0.1}vw solid ${props => props.backgroundColor}
@@ -46,7 +46,9 @@ outline-offset: 0.25vw;
     border-radius: 2vw;
     margin: ${props => +props.visible}vw;
     border: ${props => +props.shaped * 0.4}vw solid ${props => props.backgroundColor}
-    outline-offset: 1vw;
+    visibility: ${props => (props.only_desktop ? false : props.visible) ? `visible` : `hidden`};
+    opacity: ${props => +(props.only_desktop ? false : props.visible)};
+
 font-size: 4vw;
 }
 `

@@ -3,22 +3,16 @@ import types from '../ActionTypes.js'
 import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
-    mainAppScreen: mvConsts.screens.laundry,
-    is_admin: false,
+    main_screen: mvConsts.screens.laundry,
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
 
-        case types.SET_MAIN_APP_SCREEN:
+        case types.SET_MAIN_SCREEN:
             return {
                 ...state,
-                mainAppScreen: action.data,
-            };
-        case types.SET_ADMIN:
-            return {
-                ...state,
-                is_admin: action.data,
+                main_screen: action.data,
             };
 
         default:

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import userActions from '../redux/actions/UserActions'
+import uiActions from '../redux/actions/UiActions'
 import machinesActions from '../redux/actions/MachinesActions'
 import laundryActions from '../redux/actions/LaundryActions'
 import Laundry from './Laundry'
@@ -12,19 +13,20 @@ import Button from './Button'
 import Input from './Input'
 import useComponentVisible from './useComponentVisible'
 import AdminTools from './AdminTools';
+import GoogleAPI from '../API/GoogleAPI'
 
 let screens = [
     {
         image: require('../assets/images/laundry_selected.svg'),
-        name: mvConsts.screens.LAUNDRY,
+        name: mvConsts.screens.laundry,
         admin: false,
-        component: Laundry,
+        component: <Laundry />,
     },
     {
         image: require('../assets/images/admin.svg'),
-        name: mvConsts.screens.ADMIN,
+        name: mvConsts.screens.admin,
         admin: true,
-        component: AdminTools,
+        component: <AdminTools />,
     },
 ]
 
@@ -33,7 +35,9 @@ let Main = (props) => {
         axios.defaults.headers.common.Authorization = props.token
         axios.get(`http://dcam.pro/api/user/get_my_info`)
             .then((d) => {
-                props.setUserInfo(d.data)
+                props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
+                axios.post(`http://dcam.pro/api/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
+                    .catch((d) => { console.log(d) })
                 axios.get(`http://dcam.pro/api/machines/get`)
                     .then((d) => { props.setMachines(d.data) })
                     .catch((d) => { console.log(d) })
@@ -41,7 +45,10 @@ let Main = (props) => {
                     .then((d) => { props.setLaundry(d.data) })
                     .catch((d) => { console.log(d) })
                 axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
-                    .then((d) => { console.log(d); props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
+                    .then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
+                    .catch((d) => { console.log(d) })
+                axios.get(`http://dcam.pro/api/balance/get_my_balance`)
+                    .then((d) => { props.setBalance(+d.data) })
                     .catch((d) => { console.log(d) })
             })
             .catch((d) => {
@@ -94,20 +101,20 @@ let Main = (props) => {
                     </Button>
                 </form>
                 <Button onClick={() => { signOut() }} >
-                    sign out
+                    Выйти
                 </Button>
             </PopUp>
             <Menu>
-                {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage src={item.image} key={index} />)}
+                {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
             </Menu>
             <Workspace>
                 <Header>
                     <Button onClick={() => { setProfileVisible(!profileVisible) }} >
-                        0р
+                        {props.balance}р
                     </Button>
                 </Header>
                 <Space>
-                    <Laundry />
+                    {screens.filter(i => i.name === props.main_screen)[0].component}
                 </Space>
             </Workspace>
         </Wrapper>
@@ -117,7 +124,9 @@ let Main = (props) => {
 let mapStateToProps = (state) => {
     return {
         token: state.user.token,
-        is_admin: state.user.is_admin
+        is_admin: state.user.is_admin,
+        main_screen: state.ui.main_screen,
+        balance: state.user.balance,
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -136,6 +145,12 @@ let mapDispatchToProps = (dispatch) => {
         },
         setLaundry: (data) => {
             return dispatch(laundryActions.setLaundry(data))
+        },
+        setMainScreen: (data) => {
+            return dispatch(uiActions.setMainScreen(data))
+        },
+        setBalance: (data) => {
+            return dispatch(userActions.setBalance(data))
         },
     }
 }
@@ -164,7 +179,9 @@ height: 100vh;
 background-color: ${mvConsts.colors.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 8vh;
+    height: 6vh;
+    bottom: 0;
+    position: fixed;
     flex-direction: row
     justify-content: space-around
 }`
@@ -205,7 +222,7 @@ height: 100vh;
 background-color: ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 92vh;
+    height: 100vh;
 }`
 
 const Header = styled.div`
@@ -247,6 +264,6 @@ visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
 padding: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    display: ${props => props.visible ? `flex` : `none`}
 }`
 /*eslint-enable no-unused-vars*/
