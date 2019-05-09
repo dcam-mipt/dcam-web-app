@@ -163,7 +163,7 @@ align-items: center
 flex-direction: row;
 transition: 0.2s
 width: 100vw;
-height: 100vh;
+height: 100%;
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: column;
 }`
@@ -175,7 +175,7 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 6vw;
-height: 100vh;
+height: 100%;
 background-color: ${mvConsts.colors.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
@@ -218,11 +218,11 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 94vw;
-height: 100vh;
+height: 100%;
 background-color: ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
 }`
 
 const Header = styled.div`
