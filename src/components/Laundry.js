@@ -325,7 +325,7 @@ width: 30vw;
 height: 3.2vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 0vw;
+    height: 9vw;
 }`
 
 const Machine = styled.div`
