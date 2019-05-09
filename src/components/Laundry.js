@@ -297,10 +297,8 @@ flex-direction: column
 transition: 0.2s
 width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.mobileCalendar ? `block` : `none`};
+    display: ${props => props.mobileCalendar ? `flex` : `none`};
     width: 100vw;
-    max-height: 90vh;
-    overflow: scroll;
 }`
 
 const Schedule = styled.div`
@@ -392,7 +390,7 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 94vw;
-height: 100%;
+height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`
