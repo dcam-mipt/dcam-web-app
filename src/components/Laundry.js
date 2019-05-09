@@ -39,7 +39,7 @@ let Laundry = (props) => {
             <Title>
                 Стирка | {moment(selectedDay).format(`DD.MM`)}
             </Title>
-            <Button onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
+            <Button only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
                 Сегодня
             </Button>
             <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
@@ -297,8 +297,12 @@ flex-direction: column
 transition: 0.2s
 width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.mobileCalendar ? `flex` : `none`};
+    display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
+    max-height: 92vh;
+    overflow: scroll;
+    position: fixed;
+    top: 6vh;
 }`
 
 const Schedule = styled.div`
