@@ -70,42 +70,45 @@ let Main = (props) => {
     return (
         <Wrapper>
             <PopUp ref={profileRef} visible={profileVisible} >
-                <Input
-                    placeholder={`Сумма`}
-                    short={true}
-                    onChange={(d) => { !isNaN(d.target.value) && setValue(d.target.value) }}
-                    value={value}
-                    // validator={(d) => validator.isInt(d)}
-                    number={true}
-                />
-                <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
-                    <input type="hidden" name="receiver" value="410018436058863" />
-                    <input type="hidden" name="label" value={order_id} />
-                    <input type="hidden" name="quickpay-form" value="donate" />
-                    <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
-                    <input type="hidden" name="sum" value={+value} data-type="number" />
-                    <input type="hidden" name="paymentType" value="AC" />
-                    <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
-                    <Button
-                        disabled={value < 2}
-                        backgroundColor={mvConsts.colors.accept}
-                        onClick={() => {
-                            axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}`)
-                                .then((d) => {
-                                    setOrderId(d.data)
-                                    document.getElementById(`yandex_money_button`).click()
-                                })
-                        }}
-                    >
-                        Пополнить
+                <Flex>
+                    <Input
+                        placeholder={`Сумма`}
+                        short={true}
+                        onChange={(d) => { !isNaN(d.target.value) && setValue(d.target.value) }}
+                        value={value}
+                        // validator={(d) => validator.isInt(d)}
+                        number={true}
+                    />
+                    <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
+                        <input type="hidden" name="receiver" value="410018436058863" />
+                        <input type="hidden" name="label" value={order_id} />
+                        <input type="hidden" name="quickpay-form" value="donate" />
+                        <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
+                        <input type="hidden" name="sum" value={+value} data-type="number" />
+                        <input type="hidden" name="paymentType" value="AC" />
+                        <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
+                        <Button
+                            disabled={value < 2}
+                            backgroundColor={mvConsts.colors.accept}
+                            onClick={() => {
+                                axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}`)
+                                    .then((d) => {
+                                        setOrderId(d.data)
+                                        document.getElementById(`yandex_money_button`).click()
+                                    })
+                            }}
+                        >
+                            Пополнить
+                        </Button>
+                    </form>
+                    <Button onClick={() => { signOut() }} >
+                        Выйти
                     </Button>
-                </form>
-                <Button onClick={() => { signOut() }} >
-                    Выйти
-                </Button>
+                </Flex>
             </PopUp>
             <Menu>
                 {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
+                <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/laundry_selected.svg`)} />
             </Menu>
             <Workspace>
                 <Header>
@@ -156,6 +159,17 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
 
+const Flex = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: ${props => props.row ? `row` : `column`}
+transition: 0.2s
+width: 100vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
 const Wrapper = styled.div`
 display: flex
 justify-content: center
@@ -191,29 +205,17 @@ z-index: 2;
     justify-content: space-around
 }`
 
-const MenuItem = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-transition: 0.2s;
-width: 6vw;
-height: 6vw;
-cursor: pointer;
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 8vh;
-    height: 8vh;
-}`
-
 const MenuItemImage = styled.img`
 transition: 0.2s;
 width: 3vw;
 height: 3vw;
 padding: 1.5vw;
 cursor: pointer;
+display: ${props => props.only_mobile ? `none` : `block`}
 @media (min-width: 320px) and (max-width: 480px) {
     width: 4vh;
     height: 4vh;
+    display: block;
 }`
 
 const Workspace = styled.div`
@@ -273,5 +275,8 @@ opacity: ${props => +props.visible};
 padding: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.visible ? `flex` : `none`}
+    width: 100vw;
+    top: 0;
+    right: 0;
 }`
 /*eslint-enable no-unused-vars*/

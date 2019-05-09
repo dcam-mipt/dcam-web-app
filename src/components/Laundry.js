@@ -282,7 +282,6 @@ flex-direction: row;
 transition: 0.2s;
 width: 94vw;
 height: 92vh;
-position: fixed;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100%;
@@ -300,7 +299,7 @@ width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
-    max-height: 92vh;
+    max-height: 88vh;
     overflow: scroll;
 }`
 
@@ -394,7 +393,7 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 94vw;
-height: 100vh;
+height: 94vh;
 position: fixed;
 @media (min-width: 320px) and (max-width: 480px) {
     height: 100vh;
