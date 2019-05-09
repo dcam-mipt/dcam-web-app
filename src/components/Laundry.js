@@ -289,7 +289,7 @@ width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
-    max-height: 88vh;
+    max-height: 80vh;
     overflow: scroll;
 }`
 
@@ -302,7 +302,7 @@ transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `none` : `block`};
     width: 100vw;
-    max-height: 88vh;
+    max-height: 80vh;
     overflow: scroll;
 }`
 

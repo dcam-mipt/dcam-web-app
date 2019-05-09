@@ -216,6 +216,7 @@ transition: 0.2s
 width: 94vw;
 height: 100vh;
 background-color: ${mvConsts.colors.background.secondary};
+position: fixed;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;
