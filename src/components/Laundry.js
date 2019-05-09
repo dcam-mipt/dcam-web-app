@@ -300,6 +300,7 @@ width: 63vw;
     display: ${props => props.mobileCalendar ? `flex` : `none`};
     width: 100vw;
     positoin: fixed;
+    top: 10vh;
 }`
 
 const Schedule = styled.div`
