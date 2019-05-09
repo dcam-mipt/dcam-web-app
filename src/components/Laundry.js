@@ -282,6 +282,7 @@ flex-direction: row;
 transition: 0.2s;
 width: 94vw;
 height: 92vh;
+position: fixed;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100%;
@@ -394,6 +395,7 @@ flex-direction: column
 transition: 0.2s
 width: 94vw;
 height: 100vh;
+position: fixed;
 @media (min-width: 320px) and (max-width: 480px) {
     height: 100vh;
 }
