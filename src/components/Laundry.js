@@ -325,7 +325,7 @@ width: 30vw;
 height: 3.2vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 11vw;
+    height: 0vw;
 }`
 
 const Machine = styled.div`
@@ -345,8 +345,8 @@ border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => 20 / props.width * 5}vw;
     border-radius: ${props => +(props.index === 0) * 2}vw ${props => +(props.index === props.width - 1) * 2}vw ${props => +(props.index === props.width - 1) * 2}vw ${props => +(props.index === 0) * 2}vw;
-    height: 10vw;
-    font-size: 4vw;
+    height: 8vw;
+    font-size: 3vw;
 }`
 
 const WeekRow = styled.div`
