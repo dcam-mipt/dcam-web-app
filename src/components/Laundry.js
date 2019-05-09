@@ -286,10 +286,11 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 63vw;
+background-color: transparent;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
-    max-height: 50vh;
+    max-height: 75vh;
     overflow: scroll;
 }`
 
@@ -299,10 +300,11 @@ justify-content: flex-start
 align-items: center
 flex-direction: column
 transition: 0.2s
+background-color: transparent;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `none` : `block`};
     width: 100vw;
-    max-height: 50vh;
+    max-height: 75vh;
     overflow: scroll;
 }`
 
