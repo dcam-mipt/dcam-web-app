@@ -242,16 +242,6 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
 
-const Flex = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: ${props => props.row ? `row` : `column`}
-transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
 const MobileHeader = styled.div`
 display: ${props => props.only_desktop ? `flex` : `none`};
 justify-content: center
@@ -305,14 +295,15 @@ width: 63vw;
 
 const Schedule = styled.div`
 display: flex
-justify-content: center
+justify-content: flex-start
 align-items: center
 flex-direction: column
 transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.mobileCalendar ? `none` : `flex`};
+    display: ${props => props.mobileCalendar ? `none` : `block`};
     width: 100vw;
-    justify-content: flex-start;
+    max-height: 88vh;
+    overflow: scroll;
 }`
 
 const TwoHourRow = styled.div`
@@ -325,7 +316,7 @@ width: 30vw;
 height: 3.2vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 10vw;
+    height: 13vw;
 }`
 
 const Machine = styled.div`
@@ -345,7 +336,7 @@ border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => 20 / props.width * 5}vw;
     border-radius: ${props => +(props.index === 0) * 2}vw ${props => +(props.index === props.width - 1) * 2}vw ${props => +(props.index === props.width - 1) * 2}vw ${props => +(props.index === 0) * 2}vw;
-    height: 9vw;
+    height: 12vw;
     font-size: 3vw;
 }`
 
@@ -377,13 +368,6 @@ cursor: pointer;
     margin: 1vw;
     border-radius: 4vw;
     border: 1vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : `transparent`}
-}`
-
-const MobileCalendarButton = styled.div`
-display: none;
-transition: 0.2s
-@media (min-width: 320px) and (max-width: 480px) {
-    display: flex;
 }`
 
 const GlobalWrapper = styled.div`
@@ -432,6 +416,16 @@ font-size: 1vw;
     display: none;
 }`
 
+const Flex = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: ${props => props.row ? `row` : `column`}
+transition: 0.2s
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 100vw;
+}`
+
 const PopUp = styled.div`
 display: block;
 max-height: 92vh;
@@ -448,11 +442,10 @@ opacity: ${props => +props.visible};
 padding: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.visible ? `flex` : `none`}
+    position: fixed;
     width: 100vw;
     top: 0;
     right: 0;
-    justify-content: center
-    align-items: center
 }`
 
 const BasketRecord = styled.div`

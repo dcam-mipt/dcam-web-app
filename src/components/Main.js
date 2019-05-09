@@ -159,17 +159,6 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
 
-const Flex = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: ${props => props.row ? `row` : `column`}
-transition: 0.2s
-width: 100vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
 const Wrapper = styled.div`
 display: flex
 justify-content: center
@@ -259,6 +248,16 @@ height: 92vh;
     width: 100vw;
 }`
 
+const Flex = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: ${props => props.row ? `row` : `column`}
+transition: 0.2s
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 100vw;
+}`
+
 const PopUp = styled.div`
 display: block;
 max-height: 92vh;
@@ -275,6 +274,7 @@ opacity: ${props => +props.visible};
 padding: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.visible ? `flex` : `none`}
+    position: fixed;
     width: 100vw;
     top: 0;
     right: 0;
