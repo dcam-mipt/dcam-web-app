@@ -300,9 +300,9 @@ width: 63vw;
     display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
     max-height: 92vh;
-    overflow: scroll;
+    overflow: ${props => props.mobileCalendar ? `scroll` : `hidden`};
     position: fixed;
-    top: 6vh;
+    top: 8vh;
 }`
 
 const Schedule = styled.div`
