@@ -53,9 +53,9 @@ align-items: center
 flex-direction: row
 transition: 0.2s
 width: 100vw;
-height: 85vh;
+height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    height: 85vh;
 }`
 
 const Left = styled.div`
@@ -65,7 +65,7 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 70vw;
-height: 85vh;
+height: 100vh;
 background-color: ${mvConsts.colors.yellow};
 @media (min-width: 320px) and (max-width: 480px) {
     display: none;
@@ -77,9 +77,10 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 30vw;
-height: 85vh;
+height: 100vh;
 background-color: ${mvConsts.colors.purple};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
+    height: 85vh;
 }`
 /*eslint-enable no-unused-vars*/

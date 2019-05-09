@@ -166,6 +166,7 @@ width: 100vw;
 height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: column;
+    height: 85vh;
 }`
 
 const Menu = styled.div`
@@ -222,7 +223,7 @@ height: 100vh;
 background-color: ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    height: 100vh;
+    height: 85vh;
 }`
 
 const Header = styled.div`
