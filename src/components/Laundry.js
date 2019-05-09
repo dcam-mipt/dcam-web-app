@@ -290,7 +290,7 @@ background-color: transparent;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
-    max-height: 75vh;
+    max-height: 72vh;
     overflow: scroll;
 }`
 
@@ -304,7 +304,7 @@ background-color: transparent;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `none` : `block`};
     width: 100vw;
-    max-height: 75vh;
+    max-height: 72vh;
     overflow: scroll;
 }`
 
