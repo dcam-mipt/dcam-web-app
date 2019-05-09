@@ -299,6 +299,7 @@ width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `flex` : `none`};
     width: 100vw;
+    positoin: fixed;
 }`
 
 const Schedule = styled.div`
@@ -370,6 +371,7 @@ border: 0.2vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : 
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
+    height: 3vw;
     padding: 2vw;
     margin: 1vw;
     border-radius: 4vw;
