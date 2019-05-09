@@ -300,7 +300,7 @@ width: 63vw;
     display: ${props => props.mobileCalendar ? `block` : `none`};
     width: 100vw;
     max-height: 92vh;
-    overflow: ${props => props.mobileCalendar ? `scroll` : `hidden`};
+    overflow: ${props => props.mobileCalendar ? `hidden` : `scroll`};
     position: fixed;
     top: 8vh;
 }`

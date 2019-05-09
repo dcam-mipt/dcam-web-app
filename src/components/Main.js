@@ -181,6 +181,7 @@ transition: 0.2s
 width: 6vw;
 height: 100vh;
 background-color: ${mvConsts.colors.background.primary};
+z-index: 2;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 6vh;
