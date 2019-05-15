@@ -1,4 +1,5 @@
 /*eslint-disable no-unused-vars*/
+
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import userActions from '../redux/actions/UserActions'
@@ -14,6 +15,7 @@ import Input from './Input'
 import useComponentVisible from './useComponentVisible'
 import AdminTools from './AdminTools';
 import GoogleAPI from '../API/GoogleAPI'
+import PopUp from './PopUp'
 
 let screens = [
     {
@@ -69,7 +71,13 @@ let Main = (props) => {
     let [order_id, setOrderId] = useState(0)
     return (
         <Wrapper>
-            <PopUp ref={profileRef} visible={profileVisible} >
+            <PopUp top={3} ref={profileRef} visible={profileVisible} >
+                <Flex row width={20} >
+                    <Image src={props.user && props.user.avatar} width={3} round />
+                    <Flex width={15} >{props.user && props.user.username.split(`@`)[0]}</Flex>
+                </Flex>
+                <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
+                <Flex>На счету: {props.balance}р</Flex>
                 <Flex>
                     <Input
                         placeholder={`Сумма`}
@@ -101,20 +109,17 @@ let Main = (props) => {
                             Пополнить
                         </Button>
                     </form>
-                    <Button onClick={() => { signOut() }} >
-                        Выйти
-                    </Button>
                 </Flex>
             </PopUp>
             <Menu>
                 {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
-                <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/laundry_selected.svg`)} />
+                <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
             </Menu>
             <Workspace>
                 <Header>
-                    <Button onClick={() => { setProfileVisible(!profileVisible) }} >
-                        {props.balance}р
-                    </Button>
+                    <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
+                        <Image src={require('../assets/images/menu.svg')} width={3} round />
+                    </MenuButton>
                 </Header>
                 <Space>
                     {screens.filter(i => i.name === props.main_screen)[0].component}
@@ -130,6 +135,7 @@ let mapStateToProps = (state) => {
         is_admin: state.user.is_admin,
         main_screen: state.ui.main_screen,
         balance: state.user.balance,
+        user: state.user.user,
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -207,6 +213,17 @@ display: ${props => props.only_mobile ? `none` : `block`}
     display: block;
 }`
 
+const Image = styled.img`
+width: ${props => props.width}vw;
+height: ${props => props.width}vw;
+transition: 0.2s
+border-radius: ${props => props.round && props.width}vw
+@media (min-width: 320px) and (max-width: 480px) {
+    width: ${props => props.width * 5}vw;
+    height: ${props => props.width * 5}vw;
+    border-radius: ${props => props.round && (props.width * 5)}vw
+}`
+
 const Workspace = styled.div`
 display: flex
 justify-content: center
@@ -228,11 +245,12 @@ overflow; hidden;
 const Header = styled.div`
 display: flex
 justify-content: center
-align-items: center
+align-items: flex-end
 flex-direction: column
 transition: 0.2s;
 width: 94vw;
 height: 8vh;
+padding: 0 2vw 0 0;
 @media (min-width: 320px) and (max-width: 480px) {
     display: none;
 }`
@@ -255,28 +273,24 @@ justify-content: center
 align-items: center
 flex-direction: ${props => props.row ? `row` : `column`}
 transition: 0.2s
+font-size: 0.8vw;
+${props => props.extra}
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 100vw;
+    font-size: 4vw;
 }`
 
-const PopUp = styled.div`
-display: ${props => props.visible ? `flex` : `none`}
-max-height: 92vh;
-overflow: scroll;
+const MenuButton = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
 transition: 0.2s
-border-radius: 1vw;
-background-color: white;
-z-index: 2;
-position: absolute;
-top: ${props => (props.visible ? 0 : 2) + 1}vw;
-right: 1vw;
-visibility: ${props => props.visible ? `visible` : `hidden`}
-opacity: ${props => +props.visible};
-padding: 1vw;
+width: 3.5vw;
+height: 3.5vw;
+border-radius: 0.5vw;
+background-color: ${props => props.selected && `white`};
+&:hover { background-color: white; }
 @media (min-width: 320px) and (max-width: 480px) {
-    position: fixed;
-    width: 100vw;
-    top: 0;
-    right: 0;
+    
 }`
 /*eslint-enable no-unused-vars*/

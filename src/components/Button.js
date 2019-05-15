@@ -33,10 +33,8 @@ margin: ${props => +props.visible / 4}vw;
 color: ${props => props.shaped ? props.backgroundColor : `white`};
 font-size: 0.8vw;
 cursor: ${props => props.disabled ? null : `pointer`};
-visibility: ${props => props.visible ? `visible` : `hidden`};
 opacity: ${props => +props.visible};
 transition: 0.2s;
-transition-delay: ${props => props.visible ? -1 : 0.2}s;
 border: ${props => +props.shaped * 0.1}vw solid ${props => props.backgroundColor}
 outline-offset: 0.25vw;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -46,10 +44,8 @@ outline-offset: 0.25vw;
     border-radius: 2vw;
     margin: ${props => +props.visible}vw;
     border: ${props => +props.shaped * 0.4}vw solid ${props => props.backgroundColor}
-    visibility: ${props => props.visible ? `visible` : `hidden`};
-    opacity: ${props => +props.visible};
-    display: ${props => props.only_desktop ? `none` : `flex`}
     font-size: 4vw;
+    display: ${props => props.only_desktop ? `none` : `flex`}
 }
 `
 /*eslint-enable no-unused-vars*/

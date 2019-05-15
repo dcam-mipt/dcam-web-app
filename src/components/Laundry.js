@@ -8,6 +8,7 @@ import moment, { defineLocale } from 'moment'
 import Button from './Button'
 import useComponentVisible from './useComponentVisible'
 import mvConsts from '../constants/mvConsts';
+import PopUp from './PopUp'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -98,7 +99,7 @@ let Laundry = (props) => {
             <PopUp ref={reservationsRef} visible={reservationsVisible} >
                 <Flex>
                     {
-                        my_reservations.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
+                        my_reservations.filter(i => i.timestamp >= +moment().startOf(`day`)).sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                             return (
                                 <BasketRecord key={index} >
                                     <div>
@@ -163,7 +164,7 @@ let Laundry = (props) => {
                                                 is_before={is_before}
                                                 is_weekend={+moment(start_of_day).isoWeekday() > 5}
                                             >
-                                                {moment(start_of_day).format(`DD.MM`)}
+                                                {dayCell(start_of_day, props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length, props.machines.length)}
                                             </Day>
                                         })
                                     }
@@ -236,6 +237,47 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
+
+let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
+    const Node = styled.div`
+    display: ${props => props.only_mobile ? `none` : `flex`}
+    justify-content: center
+    align-items: center
+    flex-direction: ${props => props.row ? `row` : `column`}
+    transition: 0.2s
+    width: 2vw;
+    height: 2vw;
+    color: ${props => props.color}
+    background-color: transparent;
+    ${props => props.extra_props}
+    @media (min-width: 320px) and (max-width: 480px) {
+        display: ${props => props.only_desktop ? `none` : `flex`}
+        width: 10vw;
+        height: 10vw;
+    }`
+    const ColumnRow = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    @media (min-width: 320px) and (max-width: 480px) {
+        flex-direction: row;
+    }`
+    let percentage = booked / (machines_number * 12)
+    let color = percentage > (2/3) ? mvConsts.colors.WARM_ORANGE : percentage < (1/3) ? mvConsts.colors.accept : mvConsts.colors.yellow
+    return (
+        <ColumnRow>
+            <Flex row extra={`width: 50vw;`} >
+                <Node>{moment(start_of_day).format(`DD`)}</Node>
+                . <Node>{moment(start_of_day).format(`MM`)}</Node>
+                </Flex>
+            <Flex row extra={`width: 50vw;`} >
+                <Node color={color} >{booked}</Node>
+                / <Node>{machines_number * 12}</Node>
+            </Flex>
+        </ColumnRow>
+    )
+}
 
 const TimeNode = styled.div`
 display: flex
@@ -403,30 +445,9 @@ justify-content: center
 align-items: center
 flex-direction: ${props => props.row ? `row` : `column`}
 transition: 0.2s
+${props => props.extra}
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
-    width: 100vw;
-}`
-
-const PopUp = styled.div`
-display: ${props => props.visible ? `flex` : `none`}
-max-height: 92vh;
-overflow: scroll;
-transition: 0.2s
-border-radius: 1vw;
-background-color: white;
-z-index: 2;
-position: absolute;
-top: ${props => (props.visible ? 0 : 2) + 1}vw;
-right: 1vw;
-visibility: ${props => props.visible ? `visible` : `hidden`}
-opacity: ${props => +props.visible};
-padding: 1vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    position: fixed;
-    width: 100vw;
-    top: 0;
-    right: 0;
 }`
 
 const BasketRecord = styled.div`

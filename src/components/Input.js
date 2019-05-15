@@ -21,7 +21,6 @@ const Input = styled.input`
     margin: ${props => +props.visible * 0.25}vw;
     color: ${props => props.color ? props.color : mvConsts.colors.text.primary};
     font-size: 1vw;
-    visibility: ${props => props.visible ? `visible` : `hidden`};
     opacity: ${props => +props.visible};
     transition: visibility 0.2s, opaicty 0.2s, height 0.2s; 
     ::placeholder {
