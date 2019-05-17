@@ -260,6 +260,7 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-color: red;
     @media (min-width: 320px) and (max-width: 480px) {
         flex-direction: row;
     }`
