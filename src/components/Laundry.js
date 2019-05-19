@@ -23,7 +23,7 @@ let useSlots = (initialIsVisible) => {
 
 let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
-    let [mobileCalendar, setMobileCalendar] = useState(true)
+    let [mobileCalendar, setMobileCalendar] = useState(false)
     let [selectedSlots, selectSlot, setSelectedSlots] = useSlots([])
     let [bucketRef, bucketVisible, setBucketVisible] = useComponentVisible(false);
     let [reservationsRef, reservationsVisible, setReservationsVisible] = useComponentVisible(false);
