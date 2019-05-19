@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import userActions from '../redux/actions/UserActions'
 import axios from 'axios'
 import styled from 'styled-components'
-import moment, { defineLocale } from 'moment'
+import moment, { weekdays } from 'moment'
 import Button from './Button'
 import useComponentVisible from './useComponentVisible'
 import mvConsts from '../constants/mvConsts';
@@ -15,8 +15,11 @@ let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 let useSlots = (initialIsVisible) => {
     const [selectedSlots, setSelectedSlots] = useState(initialIsVisible);
     let setSlots = (slot) => {
-        let newSelectedSlots = selectedSlots.filter(i => compareObjects(i, slot))
-        setSelectedSlots(newSelectedSlots.length ? newSelectedSlots : selectedSlots.concat([slot]))
+        if (selectedSlots.filter(i => compareObjects(i, slot)).length) {
+            setSelectedSlots(selectedSlots.filter(i => !compareObjects(i, slot)))
+        } else {
+            setSelectedSlots(selectedSlots.concat([slot]))
+        }
     }
     return [selectedSlots, setSlots, setSelectedSlots];
 }
@@ -34,17 +37,17 @@ let Laundry = (props) => {
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     let header = (
         <CalendarHeader>
-            <Button only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
+            <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
                 Сегодня
             </Button>
             <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
-                Стирки
+                Мои стирки
             </Button>
-            <Button disabled={!selectedSlots.length} onClick={() => { setBucketVisible(!bucketVisible) }} >
+            <Button backgroundColor={mvConsts.colors.lightblue} disabled={!selectedSlots.length} onClick={() => { setBucketVisible(!bucketVisible) }} >
                 Корзина
             </Button>
-            <Button only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
-                {mobileCalendar ? `Расписание` : `Календарь`}
+            <Button backgroundColor={mvConsts.colors.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
+                {mobileCalendar ? `Расписание` : moment(+selectedDay).format(`DD.MM`)}
             </Button>
         </CalendarHeader>
     )
@@ -56,17 +59,19 @@ let Laundry = (props) => {
                         selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                             return (
                                 <BasketRecord key={index} >
-                                    <div>
-                                        {moment(i.timestamp).format(`DD.MM`)}, {moment(i.timestamp).format(`HH:mm`)}
-                                    </div>
+                                    <Flex row >
+                                        <Flex>
+                                            <Flex>{moment(i.timestamp).format(`DD.MM`)}</Flex>
+                                            <Flex>{days_of_week[moment(i.timestamp).isoWeekday() - 1]}</Flex>
+                                        </Flex>
+                                        <Flex>{moment(i.timestamp).format(`HH:mm`)}</Flex>
+                                    </Flex>
                                     <MachineCircle>
                                         {props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}
                                     </MachineCircle>
-                                    <div
-                                        onClick={() => { selectSlot(i) }}
-                                    >
+                                    <Flex onClick={() => { selectSlot(i) }} >
                                         Удалить
-                                </div>
+                                    </Flex>
                                 </BasketRecord>
                             )
                         })
@@ -99,17 +104,19 @@ let Laundry = (props) => {
                         my_reservations.filter(i => i.timestamp >= +moment().startOf(`day`)).sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                             return (
                                 <BasketRecord key={index} >
-                                    <div>
-                                        {moment(i.timestamp).format(`DD.MM`)}, {moment(i.timestamp).format(`HH:mm`)}
-                                    </div>
+                                    <Flex row >
+                                        <Extra>
+                                            <Extra>{moment(i.timestamp).format(`DD.MM`)}</Extra>
+                                            <Flex>{days_of_week[moment(i.timestamp).isoWeekday() - 1].toLowerCase()}</Flex>
+                                        </Extra>
+                                        <Flex>{moment(i.timestamp).format(`HH:mm`)}</Flex>
+                                    </Flex>
                                     <MachineCircle>
                                         {props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}
                                     </MachineCircle>
-                                    <div
-                                        onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${i.objectId}`).then(() => { document.location.reload(); }) }}
-                                    >
+                                    <Flex onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${i.objectId}`).then(() => { document.location.reload(); }) }} >
                                         Удалить
-                                </div>
+                                </Flex>
                                 </BasketRecord>
                             )
                         })
@@ -120,22 +127,20 @@ let Laundry = (props) => {
                 <Flex>
                     {
                         selectedBook && <BasketRecord>
-                            <div>
+                            <Flex>
                                 {selectedBook.email.split(`@`)[0]}
-                            </div>
-                            <div>
+                            </Flex>
+                            <Flex>
                                 {moment(selectedBook.timestamp).format(`DD.MM`)}, {moment(selectedBook.timestamp).format(`HH:mm`)}
-                            </div>
+                            </Flex>
                             <MachineCircle>
                                 {props.machines.map(i => i.objectId).indexOf(selectedBook.machine_id) + 1}
                             </MachineCircle>
                             {
                                 props.is_admin
-                                && <div
-                                    onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${selectedBook.objectId}`).then(() => { document.location.reload(); }) }}
-                                >
+                                && <Flex lick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${selectedBook.objectId}`).then(() => { document.location.reload(); }) }} >
                                     Удалить
-                                </div>
+                                </Flex>
                             }
                         </BasketRecord>
                     }
@@ -241,16 +246,17 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
     let Extra = styled.div`${Flex}; ${props => props.extra}`
     let percentage = booked / (machines_number * 12)
     let color = percentage > (2 / 3) ? mvConsts.colors.WARM_ORANGE : percentage < (1 / 3) ? mvConsts.colors.accept : mvConsts.colors.yellow
+    let bold_style = `font-family: Bold; font-size: 6vw;`
     let mobile_cell = () => {
         return (
             <Flex row>
                 <Extra extra={` width: 40vw; color: ${moment(start_of_day).isoWeekday() > 5 ? mvConsts.colors.WARM_ORANGE : null}`} >
-                    <Extra extra={`font-size: 5vw;`} >{moment(start_of_day).format(`DD.MM`)}</Extra>
+                    <Extra extra={`${bold_style}`} >{moment(start_of_day).format(`DD.MM`)}</Extra>
                     <Extra>{days_of_week[moment(start_of_day).isoWeekday() - 1].toLowerCase()}</Extra>
                 </Extra>
                 <Flex row >
                     <Extra extra={`width: 20vw;`}>Свободно:</Extra>
-                    <Extra extra={`margin-left: 4vw; color: ${color}`} >{machines_number * 12 - booked}</Extra>
+                    <Extra extra={`margin-left: 4vw; color: ${color}; ${bold_style}`} >{machines_number * 12 - booked}</Extra>
                 </Flex>
             </Flex>
         )
@@ -405,6 +411,7 @@ cursor: pointer;
     padding: 2vw;
     margin: 1vw;
     border-radius: 4vw;
+    background-color: white;
     border: 1vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : `transparent`}
 }`
 
@@ -426,11 +433,11 @@ height: 94vh;
 
 const CalendarHeader = styled.div`
 display: flex
-justify-content: center
+justify-content: flex-end
 align-items: center
 flex-direction: row
 transition: 0.2s
-width: 100vw;
+width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
     background-color : white;
     height: 8vh;
@@ -446,6 +453,8 @@ ${props => props.extra}
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
 }`
+
+let Extra = styled.div`${Flex}; ${props => props.extra}`
 
 const BasketRecord = styled.div`
 display: flex

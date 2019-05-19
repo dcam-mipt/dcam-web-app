@@ -72,11 +72,11 @@ let Main = (props) => {
     return (
         <Wrapper>
             <PopUp top={3} ref={profileRef} visible={profileVisible} >
-                <Flex row width={20} >
+                <Flex row >
                     <Image src={props.user && props.user.avatar} width={3} round />
-                    <Flex width={15} >{props.user && props.user.username.split(`@`)[0]}</Flex>
+                    <NameBlock>{props.user && props.user.username.split(`@`)[0]}</NameBlock>
+                    <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
                 </Flex>
-                <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
                 <Flex>На счету: {props.balance}р</Flex>
                 <Flex>
                     <Input
@@ -164,6 +164,29 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
+
+const Flex = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: ${props => props.row ? `row` : `column`}
+transition: 0.2s
+font-size: 0.8vw;
+${props => props.extra}
+@media (min-width: 320px) and (max-width: 480px) {
+    font-size: 4vw;
+}`
+
+let Extra = styled.div`${Flex}; ${props => props.extra}`
+
+const NameBlock = styled.div`
+${Flex};
+font-size: 1vw;
+margin: 0 0.5vw 0 0.5vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    font-size: 6vw;
+    margin: 0 2vw 0 2vw;
+}`
 
 const Wrapper = styled.div`
 display: flex
@@ -265,18 +288,6 @@ width: 94vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-}`
-
-const Flex = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: ${props => props.row ? `row` : `column`}
-transition: 0.2s
-font-size: 0.8vw;
-${props => props.extra}
-@media (min-width: 320px) and (max-width: 480px) {
-    font-size: 4vw;
 }`
 
 const MenuButton = styled.div`

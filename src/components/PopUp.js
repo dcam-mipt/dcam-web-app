@@ -5,7 +5,7 @@ align-items: center;
 justify-content: center;
 max-height: 92vh;
 overflow: scroll;
-transition: 0.2s
+transition: 0.2s;
 border-radius: 1vw;
 background-color: white;
 z-index: 2;
@@ -21,6 +21,7 @@ flex-direction: column;
     width: 100vw;
     top: 0;
     right: 0;
+    transition: 0s;
 }`
 
 export default PopUp;
