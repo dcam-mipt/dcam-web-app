@@ -15,18 +15,15 @@ let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 let useSlots = (initialIsVisible) => {
     const [selectedSlots, setSelectedSlots] = useState(initialIsVisible);
     let setSlots = (slot) => {
-        if (selectedSlots.filter(i => compareObjects(i, slot)).length) {
-            setSelectedSlots(selectedSlots.filter(i => !compareObjects(i, slot)))
-        } else {
-            setSelectedSlots(selectedSlots.concat([slot]))
-        }
+        let newSelectedSlots = selectedSlots.filter(i => compareObjects(i, slot))
+        setSelectedSlots(newSelectedSlots.length ? newSelectedSlots : selectedSlots.concat([slot]))
     }
     return [selectedSlots, setSlots, setSelectedSlots];
 }
 
 let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
-    let [mobileCalendar, setMobileCalendar] = useState(false)
+    let [mobileCalendar, setMobileCalendar] = useState(true)
     let [selectedSlots, selectSlot, setSelectedSlots] = useSlots([])
     let [bucketRef, bucketVisible, setBucketVisible] = useComponentVisible(false);
     let [reservationsRef, reservationsVisible, setReservationsVisible] = useComponentVisible(false);
@@ -238,45 +235,45 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
 
+let days_of_week = [`Понедельник`, `Вторник`, `Среда`, `Четверг`, `Пятница`, `Суббота`, `Воскресенье`]
+
 let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
-    const Node = styled.div`
-    display: ${props => props.only_mobile ? `none` : `flex`}
-    justify-content: center
-    align-items: center
-    flex-direction: ${props => props.row ? `row` : `column`}
-    transition: 0.2s
-    width: 2vw;
-    height: 2vw;
-    color: ${props => props.color}
-    background-color: transparent;
-    ${props => props.extra_props}
-    @media (min-width: 320px) and (max-width: 480px) {
-        display: ${props => props.only_desktop ? `none` : `flex`}
-        width: 10vw;
-        height: 10vw;
-    }`
-    const ColumnRow = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: red;
-    @media (min-width: 320px) and (max-width: 480px) {
-        flex-direction: row;
-    }`
+    let Extra = styled.div`${Flex}; ${props => props.extra}`
     let percentage = booked / (machines_number * 12)
-    let color = percentage > (2/3) ? mvConsts.colors.WARM_ORANGE : percentage < (1/3) ? mvConsts.colors.accept : mvConsts.colors.yellow
-    return (
-        <ColumnRow>
-            <Flex row extra={`width: 50vw;`} >
-                <Node>{moment(start_of_day).format(`DD`)}</Node>
-                . <Node>{moment(start_of_day).format(`MM`)}</Node>
+    let color = percentage > (2 / 3) ? mvConsts.colors.WARM_ORANGE : percentage < (1 / 3) ? mvConsts.colors.accept : mvConsts.colors.yellow
+    let mobile_cell = () => {
+        return (
+            <Flex row>
+                <Extra extra={` width: 40vw; color: ${moment(start_of_day).isoWeekday() > 5 ? mvConsts.colors.WARM_ORANGE : null}`} >
+                    <Extra extra={`font-size: 5vw;`} >{moment(start_of_day).format(`DD.MM`)}</Extra>
+                    <Extra>{days_of_week[moment(start_of_day).isoWeekday() - 1].toLowerCase()}</Extra>
+                </Extra>
+                <Flex row >
+                    <Extra extra={`width: 20vw;`}>Свободно:</Extra>
+                    <Extra extra={`margin-left: 4vw; color: ${color}`} >{machines_number * 12 - booked}</Extra>
                 </Flex>
-            <Flex row extra={`width: 50vw;`} >
-                <Node color={color} >{booked}</Node>
-                / <Node>{machines_number * 12}</Node>
             </Flex>
-        </ColumnRow>
+        )
+    }
+    let desktop_cell = () => {
+        return (
+            <Flex>
+                <Flex row >
+                    <Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`DD`)}</Flex>
+                    .<Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`MM`)}</Flex>
+                </Flex>
+                <Flex row >
+                    <Flex extra={`width: 2vw; height: 2vw; color: ${color}`} >{machines_number * 12 - booked}</Flex>
+                    /<Flex extra={`width: 2vw; height: 2vw;`} >{machines_number * 12}</Flex>
+                </Flex>
+            </Flex>
+        )
+    }
+    return (
+        <Flex>
+            <Flex only_mobile>{mobile_cell()}</Flex>
+            <Flex only_desktop>{desktop_cell()}</Flex>
+        </Flex>
     )
 }
 
@@ -405,7 +402,6 @@ border: 0.2vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : 
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
-    height: 3vw;
     padding: 2vw;
     margin: 1vw;
     border-radius: 4vw;
