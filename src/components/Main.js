@@ -177,7 +177,7 @@ ${props => props.extra}
     font-size: 4vw;
 }`
 
-let Extra = styled.div`${Flex}; ${props => props.extra}`
+let Extra = styled(Flex)`${props => props.extra};`
 
 const NameBlock = styled.div`
 ${Flex};

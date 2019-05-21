@@ -62,7 +62,7 @@ let Laundry = (props) => {
                                     <Flex row >
                                         <Flex>
                                             <Flex>{moment(i.timestamp).format(`DD.MM`)}</Flex>
-                                            <Flex>{days_of_week[moment(i.timestamp).isoWeekday() - 1]}</Flex>
+                                            <Flex>{days_of_week_full[moment(i.timestamp).isoWeekday() - 1]}</Flex>
                                         </Flex>
                                         <Flex>{moment(i.timestamp).format(`HH:mm`)}</Flex>
                                     </Flex>
@@ -107,7 +107,7 @@ let Laundry = (props) => {
                                     <Flex row >
                                         <Extra>
                                             <Extra>{moment(i.timestamp).format(`DD.MM`)}</Extra>
-                                            <Flex>{days_of_week[moment(i.timestamp).isoWeekday() - 1].toLowerCase()}</Flex>
+                                            <Flex>{days_of_week_full[moment(i.timestamp).isoWeekday() - 1].toLowerCase()}</Flex>
                                         </Extra>
                                         <Flex>{moment(i.timestamp).format(`HH:mm`)}</Flex>
                                     </Flex>
@@ -240,19 +240,19 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
 
-let days_of_week = [`Понедельник`, `Вторник`, `Среда`, `Четверг`, `Пятница`, `Суббота`, `Воскресенье`]
+let days_of_week_full = [`Понедельник`, `Вторник`, `Среда`, `Четверг`, `Пятница`, `Суббота`, `Воскресенье`]
+let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 
 let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
-    let Extra = styled.div`${Flex}; ${props => props.extra}`
     let percentage = booked / (machines_number * 12)
     let color = percentage > (2 / 3) ? mvConsts.colors.WARM_ORANGE : percentage < (1 / 3) ? mvConsts.colors.accept : mvConsts.colors.yellow
     let bold_style = `font-family: Bold; font-size: 6vw;`
     let mobile_cell = () => {
         return (
             <Flex row>
-                <Extra extra={` width: 40vw; color: ${moment(start_of_day).isoWeekday() > 5 ? mvConsts.colors.WARM_ORANGE : null}`} >
-                    <Extra extra={`${bold_style}`} >{moment(start_of_day).format(`DD.MM`)}</Extra>
-                    <Extra>{days_of_week[moment(start_of_day).isoWeekday() - 1].toLowerCase()}</Extra>
+                <Extra row extra={`width: 40vw; color: ${moment(start_of_day).isoWeekday() > 5 ? mvConsts.colors.WARM_ORANGE : null};`} >
+                    <Extra>{days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}</Extra>
+                    <Extra extra={`${bold_style}; margin-left: 2vw;`} > {moment(start_of_day).format(`DD.MM`)}</Extra>
                 </Extra>
                 <Flex row >
                     <Extra extra={`width: 20vw;`}>Свободно:</Extra>
@@ -265,7 +265,7 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
         return (
             <Flex>
                 <Flex row >
-                    <Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`DD`)}</Flex>
+                    <Flex only_desktop extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`DD`)}</Flex>
                     .<Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`MM`)}</Flex>
                 </Flex>
                 <Flex row >
@@ -441,6 +441,7 @@ width: 63vw;
 @media (min-width: 320px) and (max-width: 480px) {
     background-color : white;
     height: 8vh;
+    width: 100vw;
 }`
 
 const Flex = styled.div`
@@ -454,7 +455,7 @@ ${props => props.extra}
     display: ${props => props.only_desktop ? `none` : `flex`}
 }`
 
-let Extra = styled.div`${Flex}; ${props => props.extra}`
+let Extra = styled(Flex)`${props => props.extra};`
 
 const BasketRecord = styled.div`
 display: flex
