@@ -1,14 +1,17 @@
 /*eslint-disable no-unused-vars*/
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import userActions from '../redux/actions/UserActions'
+import userActions from '../../redux/actions/UserActions'
 import axios from 'axios'
 import styled from 'styled-components'
 import moment, { weekdays } from 'moment'
-import Button from './Button'
-import useComponentVisible from './useComponentVisible'
-import mvConsts from '../constants/mvConsts';
-import PopUp from './PopUp'
+import Button from '../Button'
+import useComponentVisible from '../useComponentVisible'
+import mvConsts from '../../constants/mvConsts';
+import BookPopUp from './BookPopUp'
+import BucketPopUp from './BucketPopUp'
+import ReservationsPopUp from './ReservationsPopUp'
+import { Flex, Image, Extra, PopUp } from '../styled-templates'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -35,6 +38,7 @@ let Laundry = (props) => {
     let my_reservations = props.user ? props.laundry.filter(i => i.user_id === props.user.objectId) : []
     useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
+    useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
     let header = (
         <CalendarHeader>
             <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
@@ -54,97 +58,13 @@ let Laundry = (props) => {
     return (
         <GlobalWrapper>
             <PopUp ref={bucketRef} visible={bucketVisible} >
-                <Flex>
-                    {
-                        selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
-                            return (
-                                <BasketRecord key={index} >
-                                    <Flex row >
-                                        <Flex>
-                                            <Flex>{moment(i.timestamp).format(`DD.MM`)}</Flex>
-                                            <Flex>{days_of_week_full[moment(i.timestamp).isoWeekday() - 1]}</Flex>
-                                        </Flex>
-                                        <Flex>{moment(i.timestamp).format(`HH:mm`)}</Flex>
-                                    </Flex>
-                                    <MachineCircle>
-                                        {props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}
-                                    </MachineCircle>
-                                    <Flex onClick={() => { selectSlot(i) }} >
-                                        Удалить
-                                    </Flex>
-                                </BasketRecord>
-                            )
-                        })
-                    }
-                    <Flex row>
-                        <Button onClick={() => { setSelectedSlots([]) }} >
-                            Очистить
-                        </Button>
-                        <Button onClick={() => {
-                            let a = selectedSlots
-                            let deal = () => new Promise((resolve, reject) => {
-                                axios.get(`http://dcam.pro/api/laundry/book/${a[0].timestamp}/${a[0].machine_id}`)
-                                    .then((d) => {
-                                        a = a.filter((i, index) => index > 0)
-                                        setSelectedSlots(a)
-                                        a.length ? deal() : document.location.reload();
-                                    })
-                                    .catch((d) => { console.log(d); reject(d) })
-                            })
-                            a.length && deal()
-                        }} >
-                            Купить
-                        </Button>
-                    </Flex>
-                </Flex>
+                <BucketPopUp {...props} selectedSlots={selectedSlots} days_of_week_full setSelectedSlots={setSelectedSlots} />
             </PopUp>
             <PopUp ref={reservationsRef} visible={reservationsVisible} >
-                <Flex>
-                    {
-                        my_reservations.filter(i => i.timestamp >= +moment().startOf(`day`)).sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
-                            return (
-                                <BasketRecord key={index} >
-                                    <Flex row >
-                                        <Extra>
-                                            <Extra>{moment(i.timestamp).format(`DD.MM`)}</Extra>
-                                            <Flex>{days_of_week_full[moment(i.timestamp).isoWeekday() - 1].toLowerCase()}</Flex>
-                                        </Extra>
-                                        <Flex>{moment(i.timestamp).format(`HH:mm`)}</Flex>
-                                    </Flex>
-                                    <MachineCircle>
-                                        {props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}
-                                    </MachineCircle>
-                                    <Flex onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${i.objectId}`).then(() => { document.location.reload(); }) }} >
-                                        Удалить
-                                </Flex>
-                                </BasketRecord>
-                            )
-                        })
-                    }
-                </Flex>
+                <ReservationsPopUp {...props} days_of_week_full={days_of_week_full} my_reservations={my_reservations} setSelectedDay={setSelectedDay} />
             </PopUp>
             <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
-                <Flex>
-                    {
-                        selectedBook && <BasketRecord>
-                            <Flex>
-                                {selectedBook.email.split(`@`)[0]}
-                            </Flex>
-                            <Flex>
-                                {moment(selectedBook.timestamp).format(`DD.MM`)}, {moment(selectedBook.timestamp).format(`HH:mm`)}
-                            </Flex>
-                            <MachineCircle>
-                                {props.machines.map(i => i.objectId).indexOf(selectedBook.machine_id) + 1}
-                            </MachineCircle>
-                            {
-                                props.is_admin
-                                && <Flex lick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${selectedBook.objectId}`).then(() => { document.location.reload(); }) }} >
-                                    Удалить
-                                </Flex>
-                            }
-                        </BasketRecord>
-                    }
-                </Flex>
+                <BookPopUp {...props} selectedBook={selectedBook} />
             </PopUp>
             <Wrapper>
                 <Flex only_mobile > {header} </Flex>
@@ -160,6 +80,8 @@ let Laundry = (props) => {
                                             let is_before = start_of_day < +moment().startOf(`day`)
                                             return (mobileCalendar ? !is_before : true) && <Day
                                                 key={day_index}
+                                                day_index={day_index}
+                                                week_index={week_index}
                                                 onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
                                                 is_selected_day={selectedDay === +moment(start_of_day).startOf(`day`)}
                                                 is_today={+moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)}
@@ -403,7 +325,11 @@ transition: 0.2s
 width: 8.5vw;
 height: 8.5vw;
 background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? `white` : props.is_weekend ? `#e0e0e0` : `#d6d6d6`};
-border-radius: ${props => props.is_selected_day ? 0.5 : 0}vw;
+border-top-left-radius: ${props => +(props.week_index === 0 && props.day_index === 0) * 1}vw;
+border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index === 6) * 1}vw;
+border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
+border-bottom-right-radius: ${props => +(props.week_index === 3 && props.day_index === 6) * 1}vw;
+${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
 border: 0.2vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : `transparent`}
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -442,48 +368,5 @@ width: 63vw;
     background-color : white;
     height: 8vh;
     width: 100vw;
-}`
-
-const Flex = styled.div`
-display: ${props => props.only_mobile ? `none` : `flex`}
-justify-content: center
-align-items: center
-flex-direction: ${props => props.row ? `row` : `column`}
-transition: 0.2s
-${props => props.extra}
-@media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.only_desktop ? `none` : `flex`}
-}`
-
-let Extra = styled(Flex)`${props => props.extra};`
-
-const BasketRecord = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: row
-transition: 0.2s
-padding: 0.5vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
-const MachineCircle = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
-width: 2vw;
-height: 2vw;
-border-radius: 2vw;
-font-size: 0.8vw;
-background-color: ${mvConsts.colors.accept};
-color: white;
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 10vw;
-    height: 10vw;
-    border-radius: 10vw;
-    font-size: 4vw;
 }`
 /*eslint-enable no-unused-vars*/

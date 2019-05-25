@@ -6,7 +6,7 @@ import userActions from '../redux/actions/UserActions'
 import uiActions from '../redux/actions/UiActions'
 import machinesActions from '../redux/actions/MachinesActions'
 import laundryActions from '../redux/actions/LaundryActions'
-import Laundry from './Laundry'
+import Laundry from './Laundry/Laundry'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
@@ -15,7 +15,7 @@ import Input from './Input'
 import useComponentVisible from './useComponentVisible'
 import AdminTools from './AdminTools';
 import GoogleAPI from '../API/GoogleAPI'
-import PopUp from './PopUp'
+import {Flex, Image, Extra, PopUp} from './styled-templates'
 
 let screens = [
     {
@@ -165,20 +165,6 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
 
-const Flex = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: ${props => props.row ? `row` : `column`}
-transition: 0.2s
-font-size: 0.8vw;
-${props => props.extra}
-@media (min-width: 320px) and (max-width: 480px) {
-    font-size: 4vw;
-}`
-
-let Extra = styled(Flex)`${props => props.extra};`
-
 const NameBlock = styled.div`
 ${Flex};
 font-size: 1vw;
@@ -234,17 +220,6 @@ display: ${props => props.only_mobile ? `none` : `block`}
     width: 5vh;
     height: 5vh;
     display: block;
-}`
-
-const Image = styled.img`
-width: ${props => props.width}vw;
-height: ${props => props.width}vw;
-transition: 0.2s
-border-radius: ${props => props.round && props.width}vw
-@media (min-width: 320px) and (max-width: 480px) {
-    width: ${props => props.width * 5}vw;
-    height: ${props => props.width * 5}vw;
-    border-radius: ${props => props.round && (props.width * 5)}vw
 }`
 
 const Workspace = styled.div`
