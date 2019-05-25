@@ -15,7 +15,7 @@ import Input from './Input'
 import useComponentVisible from './useComponentVisible'
 import AdminTools from './AdminTools';
 import GoogleAPI from '../API/GoogleAPI'
-import {Flex, Image, Extra, PopUp} from './styled-templates'
+import { Flex, Image, Extra, PopUp } from './styled-templates'
 
 let screens = [
     {
@@ -33,6 +33,7 @@ let screens = [
 ]
 
 let Main = (props) => {
+    useEffect(() => { document.title = `dcam.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
         axios.get(`http://dcam.pro/api/user/get_my_info`)

@@ -33,55 +33,55 @@ let main = (props) => {
     })
     return (
         <Flex>
-            {/* {
-                        props.selectedBook && <BasketRecord>
-                            <Flex row >
-                                {props.selectedBook.email.split(`@`)[0]}
-                            </Flex>
-                            <Flex>
-                                {moment(props.selectedBook.timestamp).format(`DD.MM`)}, {moment(props.selectedBook.timestamp).format(`HH:mm`)}
-                            </Flex>
-                            <MachineCircle>
-                                {props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}
-                            </MachineCircle>
-                            {
-                                props.is_admin
-                                && <Flex lick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); }) }} >
-                                    Удалить
-                                </Flex>
-                            }
-                        </BasketRecord>
-                    } */}
             {
                 (owner_data && props.selectedBook) && <Flex>
-                    <Flex only_desktop >
-                        <Flex row >
+                    <Flex>
+                        <Extra extra={`margin-bottom: 1vw; padding-bottom: 1vw; width: 90%; justify-content: flex-start; border-bottom: 0.1vw dashed lightgrey;`} row >
                             <Image src={props.user.avatar} width={3} round />
-                            <Extra extra={`margin-left: 1vw;align-items: flex-start;`}>
+                            <Extra extra={`margin-left: 1vw; align-items: flex-start; width: 45%;`}>
                                 <Extra extra={`font-size: 1vw;`} >{owner_data.username.split(`@`)[0]}</Extra>
                                 <Extra extra={`color: darkgrey; font-size: 0.8vw;`} >{get_ser_status(owner_data.last_seen)}</Extra>
                             </Extra>
                             <Extra extra={`margin-left: 5vw`} >
                                 <Image width={3} />
                             </Extra>
-                        </Flex>
-                        <Extra extra={`margin-top: 1vw; width: 90%; justify-content: space-between;`} row >
+                        </Extra>
+                        <Extra extra={`width: 90%; justify-content: flex-start; `} row >
+                            <Title>Дата</Title>
                             <Extra extra={`align-items: flex-start;`} >
+                                <Extra extra={`color: darkgrey; font-size: 0.8vw;`} >{moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Extra>
                                 <Extra extra={`font-size: 1.6vw;`} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Extra>
-                                <Extra extra={`color: darkgrey; font-size: 1vw;`} >{moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Extra>
                             </Extra>
+                        </Extra>
+                        <Extra extra={`width: 90%; justify-content: flex-start; `} row >
+                            <Title>Машинка</Title>
                             <Extra row >
-                                <Extra extra={`margin-right: 0.5vw;`} >Машина: </Extra>
                                 <MachineCircle>
                                     {props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}
                                 </MachineCircle>
                             </Extra>
-                            <Image width={2} src={props.is_admin || props.selectedBook.user_id === props.user.user_id ? require(`../../assets/images/money.svg`) : null} />
                         </Extra>
+                        {
+                            (props.is_admin || props.selectedBook.user_id === props.user.user_id) && <>
+                                <Title>Упарвление</Title>
+                                <Extra extra={`width: 90%; justify-content: flex-start; `} row >
+                                    <Extra extra={`width: 3vw; height: 3vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.background.secondary}; cursor: pointer;`} row >
+                                        <Image
+                                            width={1.5}
+                                            src={require(`../../assets/images/money.svg`)}
+                                            onClick={() => {
+                                                axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
+                                                    .then(() => { document.location.reload(); })
+                                            }}
+                                        />
+                                    </Extra>
+                                </Extra>
+                            </>
+                        }
                     </Flex>
-                    <Flex only_mobile >
+                    {/* <Flex only_mobile >
                         still empty
-                    </Flex>
+                    </Flex> */}
                 </Flex>
             }
         </Flex>
@@ -101,16 +101,11 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
 
-const MachineCircle = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
-width: 2vw;
-height: 2vw;
-border-radius: 2vw;
-font-size: 0.8vw;
+const MachineCircle = styled(Extra)`
+width: 2.5vw;
+height: 2.5vw;
+border-radius: 2.5vw;
+font-size: 1vw;
 background-color: ${mvConsts.colors.accept};
 color: white;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -118,6 +113,16 @@ color: white;
     height: 10vw;
     border-radius: 10vw;
     font-size: 4vw;
+}`
+
+const Title = styled(Extra)`
+width: 45%;
+height: 3vw;
+align-items: flex-start;
+font-size: 0.8vw;
+color: darkgrey;
+@media (min-width: 320px) and (max-width: 480px) {
+    
 }`
 
 /*eslint-enable no-unused-vars*/
