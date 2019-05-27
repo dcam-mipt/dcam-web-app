@@ -7,6 +7,7 @@ height: ${props => props.width}vw;
 transition: 0.2s
 border-radius: ${props => props.round && props.width}vw
 visibility: ${props => props.src ? `visible` : `hidden`}
+cursor: ${props => props.pointer ? `pointer` : `null`}
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.width * 5}vw;
     height: ${props => props.width * 5}vw;
@@ -42,11 +43,19 @@ top: ${props => (props.top ? props.top : 0) + (props.visible ? 0 : 2) + 1}vw;
 right: 1vw;
 visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
-padding: 1vw;
+padding: 1.5vw;
 @media (min-width: 320px) and (max-width: 480px) {
+    padding-top: 5vw;
     width: 100vw;
     top: 0;
     right: 0;
     transition: 0s;
+}`
+
+export const Text = styled(Flex)`
+font-size: ${props => props.size ? props.size : 0.8}vw;
+color: ${props => props.color ? props.color : null};
+@media (min-width: 320px) and (max-width: 480px) {
+    font-size: ${props => (props.size ? props.size : 0.8) * 5}vw;
 }`
 /*eslint-enable no-unused-vars*/

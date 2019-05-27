@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Flex, Image, Extra, PopUp } from '../styled-templates'
+import { Flex, Image, Extra, PopUp, Text } from '../styled-templates'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
@@ -35,53 +35,41 @@ let main = (props) => {
         <Flex>
             {
                 (owner_data && props.selectedBook) && <Flex>
-                    <Flex>
-                        <Extra extra={`margin-bottom: 1vw; padding-bottom: 1vw; width: 90%; justify-content: flex-start; border-bottom: 0.1vw dashed lightgrey;`} row >
-                            <Image src={props.user.avatar} width={3} round />
-                            <Extra extra={`margin-left: 1vw; align-items: flex-start; width: 45%;`}>
-                                <Extra extra={`font-size: 1vw;`} >{owner_data.username.split(`@`)[0]}</Extra>
-                                <Extra extra={`color: darkgrey; font-size: 0.8vw;`} >{get_ser_status(owner_data.last_seen)}</Extra>
-                            </Extra>
-                            <Extra extra={`margin-left: 5vw`} >
-                                <Image width={3} />
-                            </Extra>
+                    <NameRow>
+                        <Image src={owner_data.avatar} width={3} round />
+                        <NameWrapper>
+                            <Text size={1} >{owner_data.username.split(`@`)[0]}</Text>
+                            <Text color={mvConsts.colors.text.support} >{get_ser_status(owner_data.last_seen)}</Text>
+                        </NameWrapper>
+                        <ImageWrapper><Image width={3} /></ImageWrapper>
+                    </NameRow>
+                    <Extra extra={`width: 100%;`} >
+                        <Extra extra={`width: 100%; `} row >
+                            <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                            <Half>
+                                <Text color={mvConsts.colors.text.support} >{moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
+                                <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
+                            </Half>
                         </Extra>
-                        <Extra extra={`width: 90%; justify-content: flex-start; `} row >
-                            <Title>Дата</Title>
-                            <Extra extra={`align-items: flex-start;`} >
-                                <Extra extra={`color: darkgrey; font-size: 0.8vw;`} >{moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Extra>
-                                <Extra extra={`font-size: 1.6vw;`} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Extra>
-                            </Extra>
-                        </Extra>
-                        <Extra extra={`width: 90%; justify-content: flex-start; `} row >
-                            <Title>Машинка</Title>
-                            <Extra row >
-                                <MachineCircle>
-                                    {props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}
-                                </MachineCircle>
-                            </Extra>
+                        <Extra extra={`width: 100%; `} row >
+                            <Half><Text color={mvConsts.colors.text.support} >Машинка</Text></Half>
+                            <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
                         </Extra>
                         {
-                            (props.is_admin || props.selectedBook.user_id === props.user.user_id) && <>
-                                <Title>Упарвление</Title>
-                                <Extra extra={`width: 90%; justify-content: flex-start; `} row >
-                                    <Extra extra={`width: 3vw; height: 3vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.background.secondary}; cursor: pointer;`} row >
-                                        <Image
-                                            width={1.5}
-                                            src={require(`../../assets/images/money.svg`)}
-                                            onClick={() => {
-                                                axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
-                                                    .then(() => { document.location.reload(); })
-                                            }}
-                                        />
-                                    </Extra>
-                                </Extra>
-                            </>
+                            (props.is_admin || props.user.user_id === props.selectedBook.user_id) &&
+                            <Extra extra={`width: 100%; `} row >
+                                <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
+                                <Half><Image
+                                    pointer
+                                    src={require(`../../assets/images/money.svg`)}
+                                    width={2}
+                                    onClick={() => {
+                                        axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); })
+                                    }}
+                                /></Half>
+                            </Extra>
                         }
-                    </Flex>
-                    {/* <Flex only_mobile >
-                        still empty
-                    </Flex> */}
+                    </Extra>
                 </Flex>
             }
         </Flex>
@@ -101,11 +89,49 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
 
-const MachineCircle = styled(Extra)`
-width: 2.5vw;
-height: 2.5vw;
-border-radius: 2.5vw;
-font-size: 1vw;
+const Half = styled(Flex)`
+width: 50%;
+align-items: flex-start;
+height: 3vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const NameWrapper = styled(Flex)`
+padding-left: 1vw;
+align-items: flex-start;
+@media (min-width: 320px) and (max-width: 480px) {
+    padding-left: 5vw;
+}`
+
+const ImageWrapper = styled(Flex)`
+width: 7vw;
+align-items: flex-end;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 35vw;
+}`
+
+const NameRow = styled(Flex)`
+flex-direction: row;
+border-bottom: 0.15vw dashed ${mvConsts.colors.background.secondary};
+margin-bottom: 0.5vw;
+padding-bottom: 0.5vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    border-bottom: 0.5vw dashed ${mvConsts.colors.background.secondary};
+    margin-bottom: 2.5vw;
+    padding-bottom: 2.5vw;
+}`
+
+const MachineCircle = styled.div`
+display: flex
+justify-content: center
+align-items: center
+flex-direction: column
+transition: 0.2s
+width: 2vw;
+height: 2vw;
+border-radius: 2vw;
+font-size: 0.8vw;
 background-color: ${mvConsts.colors.accept};
 color: white;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -113,16 +139,6 @@ color: white;
     height: 10vw;
     border-radius: 10vw;
     font-size: 4vw;
-}`
-
-const Title = styled(Extra)`
-width: 45%;
-height: 3vw;
-align-items: flex-start;
-font-size: 0.8vw;
-color: darkgrey;
-@media (min-width: 320px) and (max-width: 480px) {
-    
 }`
 
 /*eslint-enable no-unused-vars*/

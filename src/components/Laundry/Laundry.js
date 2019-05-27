@@ -35,10 +35,16 @@ let Laundry = (props) => {
     let [reservationsRef, reservationsVisible, setReservationsVisible] = useComponentVisible(false);
     let [selectedBook, setSelectedBook] = useState(undefined)
     let [bookRef, bookVisible, setBookVisible] = useComponentVisible(false);
-    let my_reservations = props.user ? props.laundry.filter(i => i.user_id === props.user.objectId) : []
+    let my_reservations = props.user ? props.laundry.filter(i => i.user_id === props.user.objectId && i.timestamp > +moment().add(-2, `hour`)) : []
     useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
+    useEffect(() => {
+        // if (props.laundry.length) {
+        //     setSelectedBook(props.laundry[0])
+        //     setBookVisible(true)
+        // }
+    })
     let header = (
         <CalendarHeader>
             <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
@@ -212,8 +218,10 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: 5vw;
+font-size: 0.8vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 15vw;
+    font-size: 4vw;
 }`
 
 const Wrapper = styled.div`
@@ -296,7 +304,7 @@ cursor: pointer;
 background-color: ${props => props.is_before ? `none` : props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : `lightgrey`};
 color: white;
 font-size: 0.8vw;
-border: 0.08vw solid ${props => props.is_before ? `transparent` : `white`};
+margin: 0 0.08vw 0 0;
 border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index === props.width - 1) * 0.5}vw ${props => +(props.index === props.width - 1) * 0.5}vw ${props => +(props.index === 0) * 0.5}vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => 20 / props.width * 5}vw;
@@ -330,7 +338,7 @@ border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index 
 border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
 border-bottom-right-radius: ${props => +(props.week_index === 3 && props.day_index === 6) * 1}vw;
 ${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
-border: 0.2vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : `transparent`}
+border: 0.1vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
@@ -363,7 +371,7 @@ justify-content: flex-end
 align-items: center
 flex-direction: row
 transition: 0.2s
-width: 63vw;
+width: 61vw;
 @media (min-width: 320px) and (max-width: 480px) {
     background-color : white;
     height: 8vh;
