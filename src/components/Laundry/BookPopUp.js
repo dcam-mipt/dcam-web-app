@@ -19,6 +19,8 @@ let get_ser_status = (timestamp) => {
     }
 }
 
+let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
+
 let main = (props) => {
     let [owner_data, setOwnerData] = useState(undefined)
     useEffect(() => {
@@ -48,7 +50,7 @@ let main = (props) => {
                             <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
                             <Half>
                                 <Text color={mvConsts.colors.text.support} >{moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
-                                <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
+                                <Text size={1.4} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
                             </Half>
                         </Extra>
                         <Extra extra={`width: 100%; `} row >
@@ -56,7 +58,7 @@ let main = (props) => {
                             <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
                         </Extra>
                         {
-                            (props.is_admin || props.user.user_id === props.selectedBook.user_id) &&
+                            (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
                             <Extra extra={`width: 100%; `} row >
                                 <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
                                 <Half><Image
@@ -94,7 +96,7 @@ width: 50%;
 align-items: flex-start;
 height: 3vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    height: 15vw;
 }`
 
 const NameWrapper = styled(Flex)`
