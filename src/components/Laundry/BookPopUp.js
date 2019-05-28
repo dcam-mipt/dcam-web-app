@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Flex, Image, Extra, Bar, Text, Rotor } from '../styled-templates'
+import { Flex, Image, Extra, Bar, Text, Rotor, BarWrapper } from '../styled-templates'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
@@ -39,7 +39,7 @@ let main = (props) => {
             {
                 loading
                     ? <Rotor><Image extra={``} src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
-                    : (owner_data && props.selectedBook) && <Flex extra={` > * { &:first-child { padding-top: 0; }; &:last-child { padding-bottom: 0; } } `} >
+                    : (owner_data && props.selectedBook) && <BarWrapper>
                         <Bar row >
                             <Image src={require(`../../assets/images/bookmark.svg`)} width={2} />
                             <Text size={1.5} >Запись в стиралку</Text>
@@ -79,7 +79,7 @@ let main = (props) => {
                                 </Extra>
                             }
                         </Bar>
-                    </Flex>
+                    </BarWrapper>
             }
         </Flex>
     )

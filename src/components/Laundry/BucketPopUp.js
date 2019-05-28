@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
-import { Flex, Image, Extra, Text, Bar } from '../styled-templates'
+import { Flex, Image, Extra, Text, Bar, BarWrapper } from '../styled-templates'
 import moment from 'moment'
 import Button from '../Button'
 import axios from 'axios'
@@ -14,7 +14,7 @@ let main = (props) => {
     let { selectedSlots, setSelectedSlots, selectSlot, days_of_week_full } = props
     let cost = selectedSlots.length * 25
     return (
-        <Flex extra={` > * { &:first-child { padding-top: 0; }; &:last-child { padding-bottom: 0; } } `} >
+        <BarWrapper>
             <Bar row >
                 <Image src={require(`../../assets/images/shopping-bag.svg`)} width={2} />
                 <Text size={1.5} >Корзина</Text>
@@ -58,7 +58,7 @@ let main = (props) => {
                     Купить ({cost}р)
                 </Button>
             </Bar>
-        </Flex>
+        </BarWrapper>
     )
 }
 

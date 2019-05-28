@@ -10,12 +10,12 @@ import Laundry from './Laundry/Laundry'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
-import Button from './Button'
-import Input from './Input'
 import useComponentVisible from './useComponentVisible'
 import AdminTools from './AdminTools';
 import GoogleAPI from '../API/GoogleAPI'
-import { Flex, Image, Extra, PopUp } from './styled-templates'
+import { Flex, Image, Text, PopUp } from './styled-templates'
+import ProfilePopUp from './ProfilePopUp';
+import CardPopUp from './CardPopUp';
 
 let screens = [
     {
@@ -62,62 +62,30 @@ let Main = (props) => {
         return () => { axios.defaults.headers.common.Authorization = undefined }
     })
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
+    let [cardRef, cardVisible, setCardVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
         props.setToken(undefined);
         axios.get(`http://dcam.pro/api/auth/sign_out`)
             .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
     })
-    let [value, setValue] = useState(``)
-    let [order_id, setOrderId] = useState(0)
     return (
         <Wrapper>
             <PopUp top={3} ref={profileRef} visible={profileVisible} >
-                <Flex row >
-                    <Image src={props.user && props.user.avatar} width={3} round />
-                    <NameBlock>{props.user && props.user.username.split(`@`)[0]}</NameBlock>
-                    <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
-                </Flex>
-                <Flex>На счету: {props.balance}р</Flex>
-                <Flex>
-                    <Input
-                        placeholder={`Сумма`}
-                        short={true}
-                        onChange={(d) => { !isNaN(d.target.value) && setValue(d.target.value) }}
-                        value={value}
-                        // validator={(d) => validator.isInt(d)}
-                        number={true}
-                    />
-                    <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
-                        <input type="hidden" name="receiver" value="410018436058863" />
-                        <input type="hidden" name="label" value={order_id} />
-                        <input type="hidden" name="quickpay-form" value="donate" />
-                        <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
-                        <input type="hidden" name="sum" value={+value} data-type="number" />
-                        <input type="hidden" name="paymentType" value="AC" />
-                        <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
-                        <Button
-                            disabled={value < 2}
-                            backgroundColor={mvConsts.colors.accept}
-                            onClick={() => {
-                                axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}`)
-                                    .then((d) => {
-                                        setOrderId(d.data)
-                                        document.getElementById(`yandex_money_button`).click()
-                                    })
-                            }}
-                        >
-                            Пополнить
-                        </Button>
-                    </form>
-                </Flex>
+                <ProfilePopUp signOut={signOut} />
+            </PopUp>
+            <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
+                <CardPopUp />
             </PopUp>
             <Menu>
                 {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
                 <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
             </Menu>
             <Workspace>
-                <Header>
+                <Header row end >
+                    <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
+                        <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
+                    </MenuButton>
                     <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
                         <Image src={require('../assets/images/menu.svg')} width={3} round />
                     </MenuButton>
@@ -166,21 +134,17 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
 
-const NameBlock = styled.div`
-${Flex};
-font-size: 1vw;
-margin: 0 0.5vw 0 0.5vw;
+const Circle = styled(Flex)`
+width: 2.5vw;
+height: 2.5vw;
+background-color: ${props => props.any_money ? mvConsts.colors.accept : mvConsts.colors.background.support};
+border-radius: 2.5vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    font-size: 6vw;
-    margin: 0 2vw 0 2vw;
+    
 }`
 
-const Wrapper = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const Wrapper = styled(Flex)`
 flex-direction: row;
-transition: 0.2s
 width: 100vw;
 height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -191,12 +155,7 @@ height: 100vh;
     height: 85vh;
 }`
 
-const Menu = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const Menu = styled(Flex)`
 width: 6vw;
 height: 100vh;
 background-color: ${mvConsts.colors.background.primary};
@@ -210,8 +169,7 @@ z-index: 2;
     justify-content: space-around
 }`
 
-const MenuItemImage = styled.img`
-transition: 0.2s;
+const MenuItemImage = styled.img`;
 width: 3vw;
 height: 3vw;
 padding: 1.5vw;
@@ -223,12 +181,7 @@ display: ${props => props.only_mobile ? `none` : `block`}
     display: block;
 }`
 
-const Workspace = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const Workspace = styled(Flex)`
 width: 94vw;
 height: 100vh;
 background-color: ${mvConsts.colors.background.secondary};
@@ -241,12 +194,7 @@ overflow; hidden;
     height: 85vh;
 }`
 
-const Header = styled.div`
-display: flex
-justify-content: center
-align-items: flex-end
-flex-direction: column
-transition: 0.2s;
+const Header = styled(Flex)`
 width: 94vw;
 height: 8vh;
 padding: 0 2vw 0 0;
@@ -254,24 +202,14 @@ padding: 0 2vw 0 0;
     display: none;
 }`
 
-const Space = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s;
+const Space = styled(Flex)`
 width: 94vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
 }`
 
-const MenuButton = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const MenuButton = styled(Flex)`
 width: 3.5vw;
 height: 3.5vw;
 border-radius: 0.5vw;

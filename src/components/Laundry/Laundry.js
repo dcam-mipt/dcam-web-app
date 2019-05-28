@@ -73,7 +73,6 @@ let Laundry = (props) => {
                 <BookPopUp {...props} selectedBook={selectedBook} />
             </PopUp>
             <Wrapper>
-                <Flex only_mobile > {header} </Flex>
                 <Calendar mobileCalendar={mobileCalendar} >
                     <Flex only_desktop > {header} </Flex>
                     {
@@ -146,6 +145,7 @@ let Laundry = (props) => {
                         })
                     }
                 </Schedule>
+                <Flex extra={`position: fixed; bottom: 6vh;`} only_mobile > {header} </Flex>
             </Wrapper>
         </GlobalWrapper >
     )
@@ -371,7 +371,7 @@ flex-direction: row
 transition: 0.2s
 width: 60vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    background-color : white;
+    background-color: white;
     height: 8vh;
     width: 100vw;
 }`

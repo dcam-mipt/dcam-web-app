@@ -24,7 +24,7 @@ const Input = styled.input`
     opacity: ${props => +props.visible};
     transition: visibility 0.2s, opaicty 0.2s, height 0.2s; 
     ::placeholder {
-        color: ${mvConsts.colors.text.support};
+        color: ${props => props.color ? props.color : mvConsts.colors.text.support};
     }
     @media (min-width: 320px) and (max-width: 480px) {
         width: ${props => props.short ? 27 : 68}vw;
