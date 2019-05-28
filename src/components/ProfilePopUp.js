@@ -8,6 +8,7 @@ import mvConsts from '../constants/mvConsts'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Input from './Input'
+import CardPopUp from './CardPopUp';
 
 let get_ser_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -20,31 +21,32 @@ let get_ser_status = (timestamp) => {
 }
 
 let main = (props) => {
-    let { signOut, user } = props
-    return (
-        <BarWrapper>
-            <Bar row >
-                <Image src={require(`../assets/images/home.svg`)} width={2} />
-                <Text size={1.5} >Профиль</Text>
-            </Bar>
-            <Bar row >
-                <Image src={user && user.avatar} width={3} round />
-                <NameWrapper>
-                    <Flex row>
-                        <Text size={1} >{user && user.username.split(`@`)[0]}</Text>
-                        <Text size={1} color={mvConsts.colors.text.support} >@{user && user.username.split(`@`)[1]}</Text>
-                    </Flex>
-                    <Text color={mvConsts.colors.text.support} >{user && get_ser_status(user.last_seen)}</Text>
-                </NameWrapper>
-            </Bar>
-            {/* <Bar>
-                <Text color={mvConsts.colors.text.support} >telegram бот ещё не взаимнодейтсовал с этим аккаунтом</Text>
-            </Bar> */}
-            <Bar row >
-                <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
-            </Bar>
-        </BarWrapper>
-    )
+    let { user, balance, signOut } = props
+    return <BarWrapper>
+        <Bar row >
+            <Image src={require(`../assets/images/home.svg`)} width={2} />
+            <Text size={1.5} >Профиль</Text>
+        </Bar>
+        <Bar row >
+            <Image src={user && user.avatar} width={3} round />
+            <NameWrapper>
+                <Flex row>
+                    <Text size={1} >{user && user.username.split(`@`)[0]}</Text>
+                    <Text size={1} color={mvConsts.colors.text.support} >@{user && user.username.split(`@`)[1]}</Text>
+                </Flex>
+                <Text color={mvConsts.colors.text.support} >{user && get_ser_status(user.last_seen)}</Text>
+            </NameWrapper>
+        </Bar>
+        {/* <Bar>
+            <Text color={mvConsts.colors.text.support} >telegram бот ещё не взаимнодейтсовал с этим аккаунтом</Text>
+        </Bar> */}
+        <Bar only_mobile >
+            <CardPopUp />
+        </Bar>
+        <Bar row >
+            <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
+        </Bar>
+    </BarWrapper>
 }
 
 let mapStateToProps = (state) => {

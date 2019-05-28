@@ -11,7 +11,7 @@ import mvConsts from '../../constants/mvConsts';
 import BookPopUp from './BookPopUp'
 import BucketPopUp from './BucketPopUp'
 import ReservationsPopUp from './ReservationsPopUp'
-import { Flex, Image, Extra, PopUp } from '../styled-templates'
+import { Flex, Image, Text, PopUp } from '../styled-templates'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -39,12 +39,6 @@ let Laundry = (props) => {
     useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
-    useEffect(() => {
-        // if (props.laundry.length) {
-        //     setSelectedBook(props.laundry[0])
-        //     setBookVisible(true)
-        // }
-    })
     let header = (
         <CalendarHeader>
             <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
@@ -174,18 +168,20 @@ let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`
 let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
     let percentage = booked / (machines_number * 12)
     let color = percentage > (2 / 3) ? mvConsts.colors.WARM_ORANGE : percentage < (1 / 3) ? mvConsts.colors.accept : mvConsts.colors.yellow
-    let bold_style = `font-family: Bold; font-size: 6vw;`
+    let is_week_end = moment(start_of_day).isoWeekday() > 5
     let mobile_cell = () => {
         return (
-            <Flex row>
-                <Extra row extra={`width: 40vw; color: ${moment(start_of_day).isoWeekday() > 5 ? mvConsts.colors.WARM_ORANGE : null};`} >
-                    <Extra>{days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}</Extra>
-                    <Extra extra={`${bold_style}; margin-left: 2vw;`} > {moment(start_of_day).format(`DD.MM`)}</Extra>
-                </Extra>
-                <Flex row >
-                    <Extra extra={`width: 20vw;`}>Свободно:</Extra>
-                    <Extra extra={`margin-left: 4vw; color: ${color}; ${bold_style}`} >{machines_number * 12 - booked}</Extra>
+            <Flex extra={``} row>
+                <Flex extra={`width: 30vw;`} row >
+                    <Text size={1} color={is_week_end ? mvConsts.colors.WARM_ORANGE : null} >
+                        {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
+                    </Text>
                 </Flex>
+                <Flex extra={`width: 40vw;`} row >
+                    <Text extra={`margin-right: 2vw;`} >Свободно:</Text>
+                    <Text color={color} >{machines_number * 12 - booked}</Text>
+                </Flex>
+                <Flex extra={`width: 5vw;`} ><Image src={require(`../../assets/images/arrow.svg`)} width={1.5} /></Flex>
             </Flex>
         )
     }
@@ -254,7 +250,7 @@ height: 92vh;
     width: 100vw;
     max-height: 92vh;
     overflow: scroll;
-    padding-bottom: 8vh;
+    padding: 1vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
@@ -273,7 +269,7 @@ height: 92vh;
     width: 100vw;
     max-height: ${13 * 14}vw;
     overflow: scroll;
-    padding-bottom: 16vh;
+    padding: 1vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
@@ -336,10 +332,11 @@ border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index 
 border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
 border-bottom-right-radius: ${props => +(props.week_index === 3 && props.day_index === 6) * 1}vw;
 ${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
-border: 0.${props => 1 + +(props.is_selected_day || props.is_today) }vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
+border: 0.${props => 1 + +(props.is_selected_day || props.is_today)}vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
+    height: 20vw;
     padding: 2vw;
     margin: 1vw;
     border-radius: 4vw;

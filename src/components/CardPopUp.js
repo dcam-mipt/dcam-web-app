@@ -90,7 +90,12 @@ align-items: flex-start;
     margin-left: 1vw;
 }
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    width: ${4.2 * card_width}vw;
+    height: ${4.2 * card_width / 86 * 54}vw;
+    border-radius: ${4.2 * card_width / 20}vw;
+    > * {
+        margin-left: 5vw;
+    }
 }`
 
 /*eslint-enable no-unused-vars*/

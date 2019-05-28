@@ -82,7 +82,7 @@ let Main = (props) => {
                 <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
             </Menu>
             <Workspace>
-                <Header row end >
+                <Header row extra={`justify-content: flex-end;`} >
                     <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
                         <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
                     </MenuButton>

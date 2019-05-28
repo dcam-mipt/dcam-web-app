@@ -38,7 +38,7 @@ let main = (props) => {
                     })
                 }
             </Bar>
-            <Bar clear row start extra={`width: 100%;`} onClick={() => { setSelectedSlots([]) }} >
+            <Bar clear row extra={`width: 100%;`} onClick={() => { setSelectedSlots([]) }} >
                 <ClearButton>
                     <Image src={require(`../../assets/images/trash.svg`)} width={1.5} />
                 </ClearButton>
