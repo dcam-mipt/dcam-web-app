@@ -1,5 +1,6 @@
 /*eslint-disable no-unused-vars*/
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+import mvConsts from '../constants/mvConsts'
 
 export const Image = styled.img`
 width: ${props => props.width}vw;
@@ -8,6 +9,7 @@ transition: 0.2s
 border-radius: ${props => props.round && props.width}vw
 visibility: ${props => props.src ? `visible` : `hidden`}
 cursor: ${props => props.pointer ? `pointer` : `null`}
+${props => props.extra};
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.width * 5}vw;
     height: ${props => props.width * 5}vw;
@@ -59,4 +61,21 @@ color: ${props => props.color ? props.color : null};
 @media (min-width: 320px) and (max-width: 480px) {
     font-size: ${props => (props.size ? props.size : 0.8) * 5}vw;
 }`
+
+export const Bar = styled(Flex)`
+width: 100%;
+justify-content: flex-start;
+${props => props.clear ? null : `border-bottom: 0.15vw dashed ${mvConsts.colors.background.secondary};`}
+padding: 1vw 0 1vw 0;
+@media (min-width: 320px) and (max-width: 480px) {
+    ${props => props.clear ? null : `border-bottom: 0.75vw dashed ${mvConsts.colors.background.secondary};`}
+    padding: 5vw 0 5vw 0;
+}`
+
+const rotate = keyframes`
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+`;
+
+export const Rotor = styled.div`animation: ${rotate} 2s linear infinite; padding: -2vw;`
 /*eslint-enable no-unused-vars*/

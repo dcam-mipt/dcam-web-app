@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
-import { Flex, Image, Extra, Text } from '../styled-templates'
+import { Flex, Image, Extra, Text, Bar } from '../styled-templates'
 import moment from 'moment'
 import Button from '../Button'
 import axios from 'axios'
@@ -14,12 +14,12 @@ let main = (props) => {
     let { selectedSlots, setSelectedSlots, selectSlot, days_of_week_full } = props
     let cost = selectedSlots.length * 25
     return (
-        <Flex extra={` > * { &:first-child { margin-top: 0; } } `} >
-            <Header row >
+        <Flex extra={` > * { &:first-child { padding-top: 0; }; &:last-child { padding-bottom: 0; } } `} >
+            <Bar row >
                 <Image src={require(`../../assets/images/shopping-bag.svg`)} width={2} />
                 <Text size={1.5} >Корзина</Text>
-            </Header>
-            <Header>
+            </Bar>
+            <Bar>
                 {
                     selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                         return (
@@ -37,8 +37,8 @@ let main = (props) => {
                         )
                     })
                 }
-            </Header>
-            <Flex pointer row start extra={`width: 100%;`} onClick={() => { setSelectedSlots([]) }} >
+            </Bar>
+            <Bar clear row start extra={`width: 100%;`} onClick={() => { setSelectedSlots([]) }} >
                 <ClearButton>
                     <Image src={require(`../../assets/images/trash.svg`)} width={1.5} />
                 </ClearButton>
@@ -57,7 +57,7 @@ let main = (props) => {
                 }} >
                     Купить ({cost}р)
                 </Button>
-            </Flex>
+            </Bar>
         </Flex>
     )
 }
@@ -83,18 +83,6 @@ background-color: ${mvConsts.colors.WARM_ORANGE};
     width: 12.8vw;
     height: 12.8vw;
     border-radius: 2.5vw;
-}`
-
-const Header = styled(Flex)`
-width: 100%;
-justify-content: flex-start;
-border-bottom: 0.15vw dashed ${mvConsts.colors.background.secondary};
-margin-bottom: 0.5vw;
-padding-bottom: 1vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    border-bottom: 0.75vw dashed ${mvConsts.colors.background.secondary};
-    margin-bottom: 2.5vw;
-    padding-bottom: 5vw;
 }`
 
 const MarginWrapper = styled(Flex)`

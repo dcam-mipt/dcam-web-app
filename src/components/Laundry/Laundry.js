@@ -67,7 +67,7 @@ let Laundry = (props) => {
                 <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
             </PopUp>
             <PopUp ref={reservationsRef} visible={reservationsVisible} >
-                <ReservationsPopUp {...props} my_reservations={my_reservations} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
+                <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
             </PopUp>
             <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
                 <BookPopUp {...props} selectedBook={selectedBook} />
@@ -324,12 +324,10 @@ transition: 0.2s
     flex-direction: column;
 }`
 
-const Day = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const Day = styled(Flex)`
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
 width: 8.5vw;
 height: 8.5vw;
 background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? `white` : props.is_weekend ? `#e0e0e0` : `#d6d6d6`};
@@ -338,7 +336,7 @@ border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index 
 border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
 border-bottom-right-radius: ${props => +(props.week_index === 3 && props.day_index === 6) * 1}vw;
 ${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
-border: 0.1vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
+border: 0.${props => 1 + +(props.is_selected_day || props.is_today) }vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
 cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
@@ -371,7 +369,7 @@ justify-content: flex-end
 align-items: center
 flex-direction: row
 transition: 0.2s
-width: 61vw;
+width: 60vw;
 @media (min-width: 320px) and (max-width: 480px) {
     background-color : white;
     height: 8vh;

@@ -4,13 +4,11 @@
 	 viewBox="0 0 1000.2 1000.2" style="enable-background:new 0 0 1000.2 1000.2;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;stroke:#FFFFFF;stroke-width:0.25;stroke-miterlimit:10;stroke-opacity:0;}
-	.st1{fill:none;stroke:#000000;stroke-width:40;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:#DD352E;}
+	.st2{fill:#B02721;}
 </style>
 <title>cros</title>
 <rect id="frame" x="0.1" y="0.1" class="st0" width="1000" height="1000"/>
-<g>
-	<line class="st1" x1="170" y1="500" x2="830" y2="500"/>
-	<line class="st1" x1="594.3" y1="735.7" x2="830" y2="500"/>
-	<line class="st1" x1="594.3" y1="264.3" x2="830" y2="500"/>
-</g>
+<path class="st1" d="M261.3,150c-36.4,0-66,29.5-66,66v634l233.3-155.6L662,850V227.8c0-42.8,35-77.8,77.8-77.8H261.3z"/>
+<path class="st2" d="M738.6,150.1c-42.2,0.6-76.6,35.3-76.6,77.7v220.4h142.6V216.6C804.6,180,775.1,150.4,738.6,150.1z"/>
 </svg>

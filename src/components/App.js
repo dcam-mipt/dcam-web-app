@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Main from './Main'
 import Entry from './Entry'
-import axios from 'axios'
+import { Flex, Image, Text, Rotor } from './styled-templates'
 
 let GoogleWrapper = (props) => {
     let [init, setInit] = useState(false)
@@ -22,17 +22,15 @@ let GoogleWrapper = (props) => {
 let LoadingPage = (props) => {
     return (
         <LoadingPageWrapper>
-            loading
+            <Flex>
+                <Rotor><Image src={require(`../assets/images/menu.svg`)} width={5} /></Rotor>
+                <Text>Подключаем почту</Text>
+            </Flex>
         </LoadingPageWrapper>
     )
 }
 
-const LoadingPageWrapper = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const LoadingPageWrapper = styled(Flex)`
 width: 100vw;
 height: 100vh;
 background-color: white;

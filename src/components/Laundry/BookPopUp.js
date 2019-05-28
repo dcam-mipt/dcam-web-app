@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Flex, Image, Extra, PopUp, Text } from '../styled-templates'
+import { Flex, Image, Extra, Bar, Text, Rotor } from '../styled-templates'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
@@ -22,10 +22,12 @@ let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`
 
 let main = (props) => {
     let [owner_data, setOwnerData] = useState(undefined)
+    let [loading, setLoading] = useState(false)
     useEffect(() => {
         if (props.selectedBook && !owner_data) {
+            setLoading(true)
             axios.get(`http://dcam.pro/api/users/get_user/${props.selectedBook.user_id}`)
-                .then((d) => { setOwnerData(d.data); })
+                .then((d) => { setOwnerData(d.data); setLoading(false) })
                 .catch((d) => { console.log(d) })
         }
         if (!props.selectedBook) {
@@ -35,41 +37,49 @@ let main = (props) => {
     return (
         <Flex>
             {
-                (owner_data && props.selectedBook) && <Flex>
-                    <Header>
-                        <Image src={owner_data.avatar} width={3} round />
-                        <NameWrapper>
-                            <Text size={1} >{owner_data.username.split(`@`)[0]}</Text>
-                            <Text color={mvConsts.colors.text.support} >{get_ser_status(owner_data.last_seen)}</Text>
-                        </NameWrapper>
-                        <ImageWrapper><Image width={3} /></ImageWrapper>
-                    </Header>
-                    <Extra extra={`width: 100%; `} row >
-                        <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
-                        <Half>
-                            <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
-                            <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
-                        </Half>
-                    </Extra>
-                    <Extra extra={`width: 100%; `} row >
-                        <Half><Text color={mvConsts.colors.text.support} >Машина</Text></Half>
-                        <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
-                    </Extra>
-                    {
-                        (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
-                        <Extra extra={`width: 100%; `} row >
-                            <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
-                            <Half><Image
-                                pointer
-                                src={require(`../../assets/images/money.svg`)}
-                                width={2}
-                                onClick={() => {
-                                    axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); })
-                                }}
-                            /></Half>
-                        </Extra>
-                    }
-                </Flex>
+                loading
+                    ? <Rotor><Image extra={``} src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
+                    : (owner_data && props.selectedBook) && <Flex extra={` > * { &:first-child { padding-top: 0; }; &:last-child { padding-bottom: 0; } } `} >
+                        <Bar row >
+                            <Image src={require(`../../assets/images/bookmark.svg`)} width={2} />
+                            <Text size={1.5} >Запись в стиралку</Text>
+                        </Bar>
+                        <Bar row >
+                            <Image src={owner_data.avatar} width={3} round />
+                            <NameWrapper>
+                                <Text size={1} >{owner_data.username.split(`@`)[0]}</Text>
+                                <Text color={mvConsts.colors.text.support} >{get_ser_status(owner_data.last_seen)}</Text>
+                            </NameWrapper>
+                            <ImageWrapper><Image width={3} /></ImageWrapper>
+                        </Bar>
+                        <Bar clear >
+                            <Extra extra={`width: 100%; `} row >
+                                <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                                <Half>
+                                    <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
+                                    <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
+                                </Half>
+                            </Extra>
+                            <Extra extra={`width: 100%; `} row >
+                                <Half><Text color={mvConsts.colors.text.support} >Машина</Text></Half>
+                                <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
+                            </Extra>
+                            {
+                                (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
+                                <Extra extra={`width: 100%; `} row >
+                                    <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
+                                    <Half><Image
+                                        pointer
+                                        src={require(`../../assets/images/money.svg`)}
+                                        width={2}
+                                        onClick={() => {
+                                            axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); })
+                                        }}
+                                    /></Half>
+                                </Extra>
+                            }
+                        </Bar>
+                    </Flex>
             }
         </Flex>
     )
@@ -108,18 +118,6 @@ width: 7vw;
 align-items: flex-end;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 35vw;
-}`
-const Header = styled(Flex)`
-width: 100%;
-flex-direction: row;
-justify-content: flex-start;
-border-bottom: 0.15vw dashed ${mvConsts.colors.background.secondary};
-margin-bottom: 0.5vw;
-padding-bottom: 1vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    border-bottom: 0.75vw dashed ${mvConsts.colors.background.secondary};
-    margin-bottom: 2.5vw;
-    padding-bottom: 5vw;
 }`
 
 const MachineCircle = styled.div`

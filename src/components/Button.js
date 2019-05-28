@@ -29,7 +29,7 @@ height: ${props => +props.visible}vw;
 padding: ${props => +props.visible}vw;
 border-radius: 0.5vw;
 background-color: ${props => props.shaped ? `transparent` : props.disabled ? mvConsts.colors.background.support : props.backgroundColor ? props.backgroundColor : mvConsts.colors.yellow};
-margin: ${props => +props.visible / 4}vw;
+margin: ${props => +props.visible / 6}vw;
 color: ${props => props.shaped ? props.backgroundColor : `white`};
 font-size: 0.8vw;
 cursor: ${props => props.disabled ? null : `pointer`};
