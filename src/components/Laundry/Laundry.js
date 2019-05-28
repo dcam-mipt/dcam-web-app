@@ -273,7 +273,7 @@ height: 92vh;
     width: 100vw;
     max-height: ${13 * 14}vw;
     overflow: scroll;
-    padding-bottom: 8vh;
+    padding-bottom: 16vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
