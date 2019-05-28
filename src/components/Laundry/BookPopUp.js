@@ -73,7 +73,9 @@ let main = (props) => {
                                         src={require(`../../assets/images/money.svg`)}
                                         width={2}
                                         onClick={() => {
-                                            axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); })
+                                            axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => {
+                                                // document.location.reload();
+                                            })
                                         }}
                                     /></Half>
                                 </Extra>

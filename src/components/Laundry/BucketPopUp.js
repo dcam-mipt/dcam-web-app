@@ -24,7 +24,7 @@ let main = (props) => {
                     selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                         return (
                             <BucketRow key={index} >
-                                <Flex start extra={`width: 35%;`} >
+                                <Flex extra={`width: 35%; align-items: flex-start;`} >
                                     <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
                                     <Text size={1.2} >{moment(i.timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
@@ -49,7 +49,10 @@ let main = (props) => {
                             .then((d) => {
                                 a.shift()
                                 setSelectedSlots(a)
-                                a.length ? deal() : document.location.reload();
+                                a.length
+                                ? deal()
+                                // : document.location.reload();
+                                : console.log();
                             })
                             .catch((d) => { console.log(d); reject(d) })
                     })

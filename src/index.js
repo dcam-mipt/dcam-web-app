@@ -9,13 +9,6 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { reducer } from './redux/reducers'
 
-import io from 'socket.io-client';
-// const socket = io('http://dcam.pro', { path: '/test' });
-// setInterval(() => { socket.emit('chat message', `hello world`) }, 1000)
-// socket.on('chat message', function (msg) {
-//     console.log(msg);
-// });
-
 const store = createStore(reducer);
 
 // Sentry.init({

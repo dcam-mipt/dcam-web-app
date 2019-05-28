@@ -16,6 +16,8 @@ import GoogleAPI from '../API/GoogleAPI'
 import { Flex, Image, Text, PopUp } from './styled-templates'
 import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
+import io from 'socket.io-client';
+const socket = io('http://dcam.pro:3000');
 
 let screens = [
     {
@@ -68,6 +70,18 @@ let Main = (props) => {
         axios.get(`http://dcam.pro/api/auth/sign_out`)
             .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
+    })
+    useEffect(() => {
+        socket.on('laundry update', function (msg) {
+            axios.get(`http://dcam.pro/api/laundry/get`)
+                .then((d) => { props.setLaundry(d.data) })
+                .catch((d) => { console.log(d) })
+        })
+        socket.on('balance update', function (msg) {
+            axios.get(`http://dcam.pro/api/balance/get_my_balance`)
+                .then((d) => { props.setBalance(+d.data) })
+                .catch((d) => { console.log(d) })
+        })
     })
     return (
         <Wrapper>
