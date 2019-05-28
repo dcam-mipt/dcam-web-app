@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState } from 'react'
-import { Flex, Image, Text, Bar, BarWrapper } from './styled-templates'
+import { Flex, Image, Text, Bar, BarWrapper, PopUp } from './styled-templates'
 import moment from 'moment'
 import Button from './Button'
 import axios from 'axios'
@@ -9,6 +9,8 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Input from './Input'
 import CardPopUp from './CardPopUp';
+import TelegramAuthPopUp from './TelegramAuthPopUp';
+import useComponentVisible from './useComponentVisible'
 
 let get_ser_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -22,7 +24,11 @@ let get_ser_status = (timestamp) => {
 
 let main = (props) => {
     let { user, balance, signOut } = props
+    let [verificationRef, verificationVisible, setVerificationVisible] = useComponentVisible(true);
     return <BarWrapper>
+        <PopUp top={3} right={4.5} ref={verificationRef} visible={verificationVisible} >
+            <TelegramAuthPopUp/>
+        </PopUp>
         <Bar row >
             <Image src={require(`../assets/images/home.svg`)} width={2} />
             <Text size={1.5} >Профиль</Text>
