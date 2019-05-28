@@ -16,7 +16,7 @@ let main = (props) => {
     return (
         <Flex extra={` > * { &:first-child { margin-top: 0; } } `} >
             <Header row >
-                <Image src={require(`../../assets/images/shopping-bag.svg`)} width={1.5} />
+                <Image src={require(`../../assets/images/shopping-bag.svg`)} width={2} />
                 <Text size={1.5} >Корзина</Text>
             </Header>
             <Header>
@@ -24,14 +24,14 @@ let main = (props) => {
                     selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                         return (
                             <BucketRow key={index} >
-                                <Flex start extra={`width: 40%;`} >
+                                <Flex start extra={`width: 35%;`} >
                                     <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
                                     <Text size={1.2} >{moment(i.timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
-                                <Flex extra={`width:20%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
-                                <Flex extra={`width: 40%;`} row pointer onClick={() => { selectSlot(i) }} >
-                                    <MarginWrapper><Image src={require(`../../assets/images/cros_black.svg`)} width={1} pointer /></MarginWrapper>
+                                <Flex extra={`width:30%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
+                                <Flex extra={`width: 35%;`} row pointer onClick={() => { selectSlot(i) }} >
                                     <Text>удалить</Text>
+                                    <MarginWrapper><Image src={require(`../../assets/images/cros_black.svg`)} width={1} pointer /></MarginWrapper>
                                 </Flex>
                             </BucketRow>
                         )
@@ -64,7 +64,6 @@ let main = (props) => {
 
 let mapStateToProps = (state) => {
     return {
-        is_admin: state.user.is_admin,
         balance: state.user.balance,
     }
 }
@@ -81,7 +80,9 @@ height: 3vw;
 border-radius: 0.5vw;
 background-color: ${mvConsts.colors.WARM_ORANGE};
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    width: 12.8vw;
+    height: 12.8vw;
+    border-radius: 2.5vw;
 }`
 
 const Header = styled(Flex)`
@@ -111,16 +112,10 @@ margin-top: 1vw;
     border-radius: 5vw;
 }`
 
-const MachineCircle = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const MachineCircle = styled(Flex)`
 width: 2vw;
 height: 2vw;
 border-radius: 2vw;
-font-size: 0.8vw;
 background-color: ${mvConsts.colors.accept};
 color: white;
 margin: 0 1vw 0 1vw;

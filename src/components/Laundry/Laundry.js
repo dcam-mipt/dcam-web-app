@@ -67,7 +67,7 @@ let Laundry = (props) => {
                 <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
             </PopUp>
             <PopUp ref={reservationsRef} visible={reservationsVisible} >
-                <ReservationsPopUp {...props} days_of_week_full={days_of_week_full} my_reservations={my_reservations} setSelectedDay={setSelectedDay} />
+                <ReservationsPopUp {...props} my_reservations={my_reservations} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
             </PopUp>
             <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
                 <BookPopUp {...props} selectedBook={selectedBook} />
