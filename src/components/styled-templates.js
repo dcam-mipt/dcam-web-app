@@ -16,12 +16,13 @@ cursor: ${props => props.pointer ? `pointer` : `null`}
 
 export const Flex = styled.div`
 display: ${props => props.only_mobile ? `none` : `flex`}
-justify-content: center
-align-items: center
+justify-content: ${props => props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
+align-items: ${props => !props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
 flex-direction: ${props => props.row ? `row` : `column`}
 transition: 0.2s
 ${props => props.extra}
 font-size: 1vw;
+cursor: ${props => props.pointer ? `pointer` : `null`}
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
     font-size: 4vw;
@@ -43,7 +44,7 @@ top: ${props => (props.top ? props.top : 0) + (props.visible ? 0 : 2) + 1}vw;
 right: 1vw;
 visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
-padding: 1.5vw;
+padding: 1.8vw;
 @media (min-width: 320px) and (max-width: 480px) {
     padding-top: 5vw;
     width: 100vw;

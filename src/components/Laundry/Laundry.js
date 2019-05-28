@@ -64,7 +64,7 @@ let Laundry = (props) => {
     return (
         <GlobalWrapper>
             <PopUp ref={bucketRef} visible={bucketVisible} >
-                <BucketPopUp {...props} selectedSlots={selectedSlots} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
             </PopUp>
             <PopUp ref={reservationsRef} visible={reservationsVisible} >
                 <ReservationsPopUp {...props} days_of_week_full={days_of_week_full} my_reservations={my_reservations} setSelectedDay={setSelectedDay} />
@@ -130,7 +130,7 @@ let Laundry = (props) => {
                                                     index={machine_index}
                                                     width={props.machines.length}
                                                     key={machine_index}
-                                                    onClick={() => { !is_book ? !is_before && selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) }}
+                                                    onClick={() => { if (!is_before) { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) } }}
                                                     is_selected={selectedSlots.filter((i, index) => compareObjects(i, slot_data)).length}
                                                     is_book={is_book}
                                                     is_my_book={is_my_book}

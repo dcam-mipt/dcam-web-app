@@ -11,13 +11,12 @@ let get_ser_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
         return `онлайн`
     }
-    if (+moment() - +timestamp < 24 * 36000) {
+    if (+moment() - +timestamp < 24 * 3600000) {
         return `сегодня в ${moment(+timestamp).format(`HH:mm`)}`
     }
-    if (+moment() - +timestamp < 24 * 36000) {
-        return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
-    }
+    return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
 }
+
 
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 
@@ -37,41 +36,39 @@ let main = (props) => {
         <Flex>
             {
                 (owner_data && props.selectedBook) && <Flex>
-                    <NameRow>
+                    <Header>
                         <Image src={owner_data.avatar} width={3} round />
                         <NameWrapper>
                             <Text size={1} >{owner_data.username.split(`@`)[0]}</Text>
                             <Text color={mvConsts.colors.text.support} >{get_ser_status(owner_data.last_seen)}</Text>
                         </NameWrapper>
                         <ImageWrapper><Image width={3} /></ImageWrapper>
-                    </NameRow>
-                    <Extra extra={`width: 100%;`} >
-                        <Extra extra={`width: 100%; `} row >
-                            <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
-                            <Half>
-                                <Text color={mvConsts.colors.text.support} >{moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
-                                <Text size={1.4} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
-                            </Half>
-                        </Extra>
-                        <Extra extra={`width: 100%; `} row >
-                            <Half><Text color={mvConsts.colors.text.support} >Машинка</Text></Half>
-                            <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
-                        </Extra>
-                        {
-                            (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
-                            <Extra extra={`width: 100%; `} row >
-                                <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
-                                <Half><Image
-                                    pointer
-                                    src={require(`../../assets/images/money.svg`)}
-                                    width={2}
-                                    onClick={() => {
-                                        axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); })
-                                    }}
-                                /></Half>
-                            </Extra>
-                        }
+                    </Header>
+                    <Extra extra={`width: 100%; `} row >
+                        <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                        <Half>
+                            <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
+                            <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
+                        </Half>
                     </Extra>
+                    <Extra extra={`width: 100%; `} row >
+                        <Half><Text color={mvConsts.colors.text.support} >Машина</Text></Half>
+                        <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
+                    </Extra>
+                    {
+                        (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
+                        <Extra extra={`width: 100%; `} row >
+                            <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
+                            <Half><Image
+                                pointer
+                                src={require(`../../assets/images/money.svg`)}
+                                width={2}
+                                onClick={() => {
+                                    axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => { document.location.reload(); })
+                                }}
+                            /></Half>
+                        </Extra>
+                    }
                 </Flex>
             }
         </Flex>
@@ -112,16 +109,17 @@ align-items: flex-end;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 35vw;
 }`
-
-const NameRow = styled(Flex)`
+const Header = styled(Flex)`
+width: 100%;
 flex-direction: row;
+justify-content: flex-start;
 border-bottom: 0.15vw dashed ${mvConsts.colors.background.secondary};
 margin-bottom: 0.5vw;
-padding-bottom: 0.5vw;
+padding-bottom: 1vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    border-bottom: 0.5vw dashed ${mvConsts.colors.background.secondary};
+    border-bottom: 0.75vw dashed ${mvConsts.colors.background.secondary};
     margin-bottom: 2.5vw;
-    padding-bottom: 2.5vw;
+    padding-bottom: 5vw;
 }`
 
 const MachineCircle = styled.div`

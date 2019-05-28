@@ -5,6 +5,16 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
+let get_ser_status = (timestamp) => {
+    if (+moment() - +timestamp < 5 * 6000) {
+        return `онлайн`
+    }
+    if (+moment() - +timestamp < 24 * 3600000) {
+        return `сегодня в ${moment(+timestamp).format(`HH:mm`)}`
+    }
+    return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
+}
+
 let AdminTools = (props) => {
     let [users, setUsers] = useState([])
     useEffect(() => {
@@ -22,7 +32,7 @@ let AdminTools = (props) => {
                             <Avatar src={user.avatar} />
                             <div>
                                 <div>{user.username.split(`@`)[0]}</div>
-                                <UserStatus>{moment() - user.last_seen < 5000 * 3600 ? `онлайн` : moment(user.last_seen).format(`DD.MM.YY HH:mm`)}</UserStatus>
+                                <UserStatus>{get_ser_status(user.last_seen)}</UserStatus>
                             </div>
                         </User>)
                     }
