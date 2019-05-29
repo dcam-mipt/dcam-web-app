@@ -40,77 +40,75 @@ let main = (props) => {
                 props.setUserInfo({ ...user, ...d.data })
             })
     }
-    return <Flex extra={`display: block; width: 100vw; max-height: 92vh; overflow: scroll; padding: 1vh 0 16vh 0;`} >
-        <BarWrapper>
-            <Bar row >
-                <Image src={require(`../assets/images/home.svg`)} width={2} />
-                <Text size={1.5} >Профиль</Text>
-            </Bar>
-            <Bar row >
-                <Image src={user && user.avatar} width={3} round />
-                <NameWrapper>
-                    <Flex row>
-                        <Text size={1} >{user && user.username.split(`@`)[0]}</Text>
-                        <Text size={1} color={mvConsts.colors.text.support} >@{user && user.username.split(`@`)[1]}</Text>
-                    </Flex>
-                    <Text color={mvConsts.colors.text.support} >{user && get_ser_status(user.last_seen)}</Text>
-                </NameWrapper>
-            </Bar>
-            {
-                loading
-                    ? `loading...`
-                    : user && user.telegram
-                        ? < Bar row >
+    return <BarWrapper>
+        <Bar row >
+            <Image src={require(`../assets/images/home.svg`)} width={2} />
+            <Text size={1.5} >Профиль</Text>
+        </Bar>
+        <Bar row >
+            <Image src={user && user.avatar} width={3} round />
+            <NameWrapper>
+                <Flex row>
+                    <Text size={1} >{user && user.username.split(`@`)[0]}</Text>
+                    <Text size={1} color={mvConsts.colors.text.support} >@{user && user.username.split(`@`)[1]}</Text>
+                </Flex>
+                <Text color={mvConsts.colors.text.support} >{user && get_ser_status(user.last_seen)}</Text>
+            </NameWrapper>
+        </Bar>
+        {
+            loading
+                ? `loading...`
+                : user && user.telegram
+                    ? < Bar row >
+                        <Image src={require(`../assets/images/telegram.svg`)} width={3} round />
+                        <NameWrapper>
+                            <Text size={1} >@{user.telegram.username}</Text>
+                            <Text color={mvConsts.colors.text.support} pointer onClick={() => {
+                                axios.get(`http://dcam.pro/api/auth/forget_my_telegram`).then(() => { load_my_info() })
+                            }} >забыть этот аккаунт</Text>
+                        </NameWrapper>
+                    </Bar>
+                    : entries
+                        ? <Bar>
+                            <Text>Введите код от бота</Text>
+                            <Flex row>
+                                {
+                                    new Array(5).fill(0).map((item, index) => <LilInput
+                                        key={index}
+                                        id={`pass_${index}`}
+                                        maxLength={1}
+                                        onChange={(e) => {
+                                            if (isNaN(e.target.value)) {
+                                                document.getElementById(`pass_${index}`).value = ``
+                                            } else {
+                                                if (index < 4) {
+                                                    document.getElementById(`pass_${index + 1}`).focus()
+                                                } else {
+                                                    setLoading(true)
+                                                    let string = new Array(5).fill(0).map((i, index) => document.getElementById(`pass_${index}`).value).join(``)
+                                                    axios.get(`http://dcam.pro/api/auth/check_verificatoin_pass/${string}`).then((d) => { load_my_info() })
+                                                }
+                                            }
+                                        }}
+                                    />)
+                                }
+                            </Flex>
+                        </Bar>
+                        : <Bar row >
                             <Image src={require(`../assets/images/telegram.svg`)} width={3} round />
                             <NameWrapper>
-                                <Text size={1} >@{user.telegram.username}</Text>
-                                <Text color={mvConsts.colors.text.support} pointer onClick={() => {
-                                    axios.get(`http://dcam.pro/api/auth/forget_my_telegram`).then(() => { load_my_info() })
-                                }} >забыть этот аккаунт</Text>
+                                <Text size={1} >@dcam_mipt_bot</Text>
+                                <Text color={mvConsts.colors.text.support} >найдите бота в telegram</Text>
                             </NameWrapper>
                         </Bar>
-                        : entries
-                            ? <Bar>
-                                <Text>Введите код от бота</Text>
-                                <Flex row>
-                                    {
-                                        new Array(5).fill(0).map((item, index) => <LilInput
-                                            key={index}
-                                            id={`pass_${index}`}
-                                            maxLength={1}
-                                            onChange={(e) => {
-                                                if (isNaN(e.target.value)) {
-                                                    document.getElementById(`pass_${index}`).value = ``
-                                                } else {
-                                                    if (index < 4) {
-                                                        document.getElementById(`pass_${index + 1}`).focus()
-                                                    } else {
-                                                        setLoading(true)
-                                                        let string = new Array(5).fill(0).map((i, index) => document.getElementById(`pass_${index}`).value).join(``)
-                                                        axios.get(`http://dcam.pro/api/auth/check_verificatoin_pass/${string}`).then((d) => { load_my_info() })
-                                                    }
-                                                }
-                                            }}
-                                        />)
-                                    }
-                                </Flex>
-                            </Bar>
-                            : <Bar row >
-                                <Image src={require(`../assets/images/telegram.svg`)} width={3} round />
-                                <NameWrapper>
-                                    <Text size={1} >@dcam_mipt_bot</Text>
-                                    <Text color={mvConsts.colors.text.support} >найдите бота в telegram</Text>
-                                </NameWrapper>
-                            </Bar>
-            }
-            <Bar only_mobile >
-                <CardPopUp />
-            </Bar>
-            <Bar row >
-                <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
-            </Bar>
-        </BarWrapper >
-    </Flex>
+        }
+        <Bar only_mobile >
+            <CardPopUp />
+        </Bar>
+        <Bar row >
+            <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
+        </Bar>
+    </BarWrapper >
 }
 
 let mapStateToProps = (state) => {
