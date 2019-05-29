@@ -34,6 +34,11 @@ let screens = [
     },
 ]
 
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }) })
+let get_machines = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/machines/get`).then((d) => { resolve(d) }) })
+let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }) })
+let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }) })
+
 let Main = (props) => {
     useEffect(() => { document.title = `dcam.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
     useEffect(() => {
@@ -42,25 +47,13 @@ let Main = (props) => {
             .then((d) => {
                 props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
                 axios.post(`http://dcam.pro/api/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
-                    .catch((d) => { console.log(d) })
-                axios.get(`http://dcam.pro/api/machines/get`)
-                    .then((d) => { props.setMachines(d.data) })
-                    .catch((d) => { console.log(d) })
-                axios.get(`http://dcam.pro/api/laundry/get`)
-                    .then((d) => { props.setLaundry(d.data) })
-                    .catch((d) => { console.log(d) })
-                axios.get(`http://dcam.pro/api/roles/get_my_roles/`)
-                    .then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
-                    .catch((d) => { console.log(d) })
-                axios.get(`http://dcam.pro/api/balance/get_my_balance`)
-                    .then((d) => { props.setBalance(+d.data) })
-                    .catch((d) => { console.log(d) })
+
+                get_machines().then((d) => { props.setMachines(d.data) })
+                get_laundry().then((d) => { props.setLaundry(d.data) })
+                get_my_roles().then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
+                get_my_balance().then((d) => { props.setBalance(+d.data) })
             })
-            .catch((d) => {
-                signOut()
-                    .then((d) => { console.log(d) })
-                    .catch((d) => { console.log(d) })
-            })
+            .catch((d) => { signOut() })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     })
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
@@ -72,16 +65,8 @@ let Main = (props) => {
             .catch((d) => { console.log(d); reject(d) })
     })
     useEffect(() => {
-        socket.on('laundry update', function (msg) {
-            axios.get(`http://dcam.pro/api/laundry/get`)
-                .then((d) => { props.setLaundry(d.data) })
-                .catch((d) => { console.log(d) })
-        })
-        socket.on('balance update', function (msg) {
-            axios.get(`http://dcam.pro/api/balance/get_my_balance`)
-                .then((d) => { props.setBalance(+d.data) })
-                .catch((d) => { console.log(d) })
-        })
+        socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
+        socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
     })
     return (
         <Wrapper>

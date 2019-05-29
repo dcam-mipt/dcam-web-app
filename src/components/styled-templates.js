@@ -82,7 +82,8 @@ export const BarWrapper = styled(Flex)`
         padding-bottom: 0;
         border: 0;
     }
-} `
+}
+`
 
 const rotate = keyframes`
 from { transform: rotate(0deg); }
