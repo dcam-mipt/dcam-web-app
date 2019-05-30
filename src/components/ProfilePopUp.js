@@ -134,7 +134,6 @@ align-items: flex-start;
 }`
 
 const LilInput = styled.input`
-display: flex;
 text-align: center;
 width: 2vw;
 height: 2vw;
@@ -145,7 +144,14 @@ border-radius: 0.2vw;
 font-size: 1vw;
 margin: 0.2vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    width: 10vw;
+    height: 10vw;
+    background-color: ${mvConsts.colors.background.secondary};
+    border: none;
+    outline: none;
+    border-radius: 1vw;
+    font-size: 5vw;
+    margin: 1vw;
 }`
 
 /*eslint-enable no-unused-vars*/
