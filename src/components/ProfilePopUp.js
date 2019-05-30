@@ -98,7 +98,7 @@ let main = (props) => {
                         : <Bar row >
                             <Image src={require(`../assets/images/telegram.svg`)} width={3} round />
                             <NameWrapper>
-                                <Text size={1} >@dcam_mipt_bot</Text>
+                                <Text size={1} pointer onClick={() => { window.open(`https://t.me/dcam_mipt_bot`) }} >@dcam_mipt_bot</Text>
                                 <Text color={mvConsts.colors.text.support} >найдите бота в telegram</Text>
                             </NameWrapper>
                         </Bar>

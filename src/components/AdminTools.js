@@ -26,17 +26,15 @@ let AdminTools = (props) => {
     return (
         <GlobalWrapper>
             <Block width={30} >
-                <div style={{ display: `flex` }} >
-                    {
-                        users.map((user, user_index) => <User key={user_index} >
-                            <Avatar src={user.avatar} />
-                            <div>
-                                <div>{user.username.split(`@`)[0]}</div>
-                                <UserStatus>{get_ser_status(user.last_seen)}</UserStatus>
-                            </div>
-                        </User>)
-                    }
-                </div>
+                {
+                    users.map((user, user_index) => <User key={user_index} >
+                        <Avatar src={user.avatar} />
+                        <div>
+                            <div>{user.username.split(`@`)[0]}</div>
+                            <UserStatus>{get_ser_status(user.last_seen)}</UserStatus>
+                        </div>
+                    </User>)
+                }
             </Block>
             <Block width={30} >
 

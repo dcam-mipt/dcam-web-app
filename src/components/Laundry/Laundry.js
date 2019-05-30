@@ -146,7 +146,7 @@ let Laundry = (props) => {
                             <Flex extra={`position: fixed; bottom: 6vh;`} only_mobile > {header} </Flex>
                         </Wrapper>
                     </Flex>
-                    : <Circles loading={props.laundry.length < 1} />
+                    : <Circles rotate={props.laundry.length < 1} />
             }
         </GlobalWrapper >
     )
