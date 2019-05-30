@@ -166,8 +166,6 @@ z-index: 2;
     position: fixed;
     flex-direction: row
     justify-content: space-around;
-    border-top: 1px solid ${mvConsts.colors.background.support};
-    // box-shadow: 0 0 5vh rgba(0, 0, 0, 0.2);
 }`
 
 const MenuItemImage = styled.img`;

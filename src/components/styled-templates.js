@@ -30,8 +30,6 @@ cursor: ${props => props.pointer ? `pointer` : `null`}
     font-size: 4vw;
 }`
 
-export let Extra = styled(Flex)`${props => props.extra};`
-
 export const PopUp = styled(Flex)`
 display: flex;
 align-items: center;
@@ -94,5 +92,5 @@ from { transform: rotate(0deg); }
 to { transform: rotate(360deg); }
 `;
 
-export const Rotor = styled.div`animation: ${rotate} 2s linear infinite; padding: -2vw;`
+export const Rotor = styled.div`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
 /*eslint-enable no-unused-vars*/

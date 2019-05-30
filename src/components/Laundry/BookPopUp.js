@@ -53,20 +53,20 @@ let main = (props) => {
                             <ImageWrapper><Image width={3} /></ImageWrapper>
                         </Bar>
                         <Bar clear >
-                            <Extra extra={`width: 100%; `} row >
+                            <Flex extra={`width: 100%; `} row >
                                 <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
                                 <Half>
                                     <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
                                     <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
                                 </Half>
-                            </Extra>
-                            <Extra extra={`width: 100%; `} row >
+                            </Flex>
+                            <Flex extra={`width: 100%; `} row >
                                 <Half><Text color={mvConsts.colors.text.support} >Машина</Text></Half>
                                 <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
-                            </Extra>
+                            </Flex>
                             {
                                 (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
-                                <Extra extra={`width: 100%; `} row >
+                                <Flex extra={`width: 100%; `} row >
                                     <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
                                     <Half><Image
                                         pointer
@@ -78,7 +78,7 @@ let main = (props) => {
                                             })
                                         }}
                                     /></Half>
-                                </Extra>
+                                </Flex>
                             }
                         </Bar>
                     </BarWrapper>

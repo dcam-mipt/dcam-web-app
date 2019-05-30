@@ -12,6 +12,7 @@ import BookPopUp from './BookPopUp'
 import BucketPopUp from './BucketPopUp'
 import ReservationsPopUp from './ReservationsPopUp'
 import { Flex, Image, Text, PopUp } from '../styled-templates'
+import Circles from '../Circles'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -57,90 +58,96 @@ let Laundry = (props) => {
     )
     return (
         <GlobalWrapper>
-            <PopUp ref={bucketRef} visible={bucketVisible} >
-                <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
-            </PopUp>
-            <PopUp ref={reservationsRef} visible={reservationsVisible} >
-                <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
-            </PopUp>
-            <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
-                <BookPopUp {...props} selectedBook={selectedBook} />
-            </PopUp>
-            <Wrapper>
-                <Calendar mobileCalendar={mobileCalendar} >
-                    <Flex only_desktop > {header} </Flex>
-                    {
-                        new Array(4).fill(0).map((week, week_index) => {
-                            return (
-                                <WeekRow key={week_index} >
-                                    {
-                                        new Array(7).fill(0).map((day, day_index) => {
-                                            let start_of_day = +moment().startOf(`isoWeek`).add(week_index, `week`).add(day_index, `day`)
-                                            let is_before = start_of_day < +moment().startOf(`day`)
-                                            return (mobileCalendar ? !is_before : true) && <Day
-                                                key={day_index}
-                                                day_index={day_index}
-                                                week_index={week_index}
-                                                onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
-                                                is_selected_day={selectedDay === +moment(start_of_day).startOf(`day`)}
-                                                is_today={+moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)}
-                                                is_before={is_before}
-                                                is_weekend={+moment(start_of_day).isoWeekday() > 5}
-                                            >
-                                                {dayCell(start_of_day, props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length, props.machines.length)}
-                                            </Day>
-                                        })
-                                    }
-                                </WeekRow>
-                            )
-                        })
-                    }
-                </Calendar>
-                <Schedule mobileCalendar={mobileCalendar} >
-                    {
-                        <TwoHourRow>
-                            <TimeNode />
-                            {props.machines.map((i, index) => <Machine index={index} key={index} width={props.machines.length} >{index + 1}</Machine>)}
-                        </TwoHourRow>
-                    }
-                    {
-                        new Array(12).fill(0).map((i, index) => {
-                            let timestamp = +moment(selectedDay).add(index * 2, `hour`)
-                            return (
-                                <TwoHourRow key={index} >
-                                    <TimeNode>
-                                        {moment(selectedDay).startOf(`day`).add(index * 2, `hour`).format(`HH:mm`)}
-                                    </TimeNode>
-                                    {
-                                        props.machines.map((machine, machine_index) => {
-                                            let slot_data = { machine_id: machine.objectId, timestamp: timestamp }
-                                            let is_book = props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
-                                            let book = is_book && props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId)[0]
-                                            let is_my_book = my_reservations.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
-                                            let is_before = slot_data.timestamp < +moment().add(-2, `hour`)
-                                            return (
-                                                <Machine
-                                                    index={machine_index}
-                                                    width={props.machines.length}
-                                                    key={machine_index}
-                                                    onClick={() => { if (!is_before) { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) } }}
-                                                    is_selected={selectedSlots.filter((i, index) => compareObjects(i, slot_data)).length}
-                                                    is_book={is_book}
-                                                    is_my_book={is_my_book}
-                                                    is_before={is_before}
-                                                >
-                                                    {is_book ? book.email.split(`@`)[0] : `-`}
-                                                </Machine>
-                                            )
-                                        })
-                                    }
-                                </TwoHourRow>
-                            )
-                        })
-                    }
-                </Schedule>
-                <Flex extra={`position: fixed; bottom: 6vh;`} only_mobile > {header} </Flex>
-            </Wrapper>
+            {
+                props.laundry.length
+                    ? <Flex>
+                        <PopUp ref={bucketRef} visible={bucketVisible} >
+                            <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                        </PopUp>
+                        <PopUp ref={reservationsRef} visible={reservationsVisible} >
+                            <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
+                        </PopUp>
+                        <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
+                            <BookPopUp {...props} selectedBook={selectedBook} />
+                        </PopUp>
+                        <Wrapper>
+                            <Calendar mobileCalendar={mobileCalendar} >
+                                <Flex only_desktop > {header} </Flex>
+                                {
+                                    new Array(4).fill(0).map((week, week_index) => {
+                                        return (
+                                            <WeekRow key={week_index} >
+                                                {
+                                                    new Array(7).fill(0).map((day, day_index) => {
+                                                        let start_of_day = +moment().startOf(`isoWeek`).add(week_index, `week`).add(day_index, `day`)
+                                                        let is_before = start_of_day < +moment().startOf(`day`)
+                                                        return (mobileCalendar ? !is_before : true) && <Day
+                                                            key={day_index}
+                                                            day_index={day_index}
+                                                            week_index={week_index}
+                                                            onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
+                                                            is_selected_day={selectedDay === +moment(start_of_day).startOf(`day`)}
+                                                            is_today={+moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)}
+                                                            is_before={is_before}
+                                                            is_weekend={+moment(start_of_day).isoWeekday() > 5}
+                                                        >
+                                                            {dayCell(start_of_day, props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length, props.machines.length)}
+                                                        </Day>
+                                                    })
+                                                }
+                                            </WeekRow>
+                                        )
+                                    })
+                                }
+                            </Calendar>
+                            <Schedule mobileCalendar={mobileCalendar} >
+                                {
+                                    <TwoHourRow>
+                                        <TimeNode />
+                                        {props.machines.map((i, index) => <Machine index={index} key={index} width={props.machines.length} >{index + 1}</Machine>)}
+                                    </TwoHourRow>
+                                }
+                                {
+                                    new Array(12).fill(0).map((i, index) => {
+                                        let timestamp = +moment(selectedDay).add(index * 2, `hour`)
+                                        return (
+                                            <TwoHourRow key={index} >
+                                                <TimeNode>
+                                                    {moment(selectedDay).startOf(`day`).add(index * 2, `hour`).format(`HH:mm`)}
+                                                </TimeNode>
+                                                {
+                                                    props.machines.map((machine, machine_index) => {
+                                                        let slot_data = { machine_id: machine.objectId, timestamp: timestamp }
+                                                        let is_book = props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
+                                                        let book = is_book && props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId)[0]
+                                                        let is_my_book = my_reservations.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
+                                                        let is_before = slot_data.timestamp < +moment().add(-2, `hour`)
+                                                        return (
+                                                            <Machine
+                                                                index={machine_index}
+                                                                width={props.machines.length}
+                                                                key={machine_index}
+                                                                onClick={() => { if (!is_before) { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) } }}
+                                                                is_selected={selectedSlots.filter((i, index) => compareObjects(i, slot_data)).length}
+                                                                is_book={is_book}
+                                                                is_my_book={is_my_book}
+                                                                is_before={is_before}
+                                                            >
+                                                                {is_book ? book.email.split(`@`)[0] : `-`}
+                                                            </Machine>
+                                                        )
+                                                    })
+                                                }
+                                            </TwoHourRow>
+                                        )
+                                    })
+                                }
+                            </Schedule>
+                            <Flex extra={`position: fixed; bottom: 6vh;`} only_mobile > {header} </Flex>
+                        </Wrapper>
+                    </Flex>
+                    : <Circles loading={props.laundry.length < 1} />
+            }
         </GlobalWrapper >
     )
 }
