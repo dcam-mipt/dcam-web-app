@@ -105,8 +105,6 @@ let main = (props) => {
         }
         <Bar only_mobile >
             <CardPopUp />
-            <CardPopUp />
-            <CardPopUp />
         </Bar>
         <Bar row >
             <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
