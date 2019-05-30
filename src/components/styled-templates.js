@@ -49,12 +49,11 @@ opacity: ${props => +props.visible};
 padding: 1.8vw;
 @media (min-width: 320px) and (max-width: 480px) {
     padding-top: 5vw;
-    padding-top: 6vh;
     width: 100vw;
     top: 0;
     right: 0;
     display: block;
-    height: 92%;
+    height: 90%;
     overflow: scroll;
     transition: 0s;
 }`
