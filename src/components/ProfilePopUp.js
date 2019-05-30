@@ -77,6 +77,7 @@ let main = (props) => {
                                         key={index}
                                         id={`pass_${index}`}
                                         maxLength={1}
+                                        pattern={`[0-9]*`}
                                         onChange={(e) => {
                                             if (isNaN(e.target.value)) {
                                                 document.getElementById(`pass_${index}`).value = ``
@@ -103,6 +104,8 @@ let main = (props) => {
                         </Bar>
         }
         <Bar only_mobile >
+            <CardPopUp />
+            <CardPopUp />
             <CardPopUp />
         </Bar>
         <Bar row >
