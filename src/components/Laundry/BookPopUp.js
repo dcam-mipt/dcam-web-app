@@ -21,6 +21,7 @@ let get_ser_status = (timestamp) => {
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 
 let main = (props) => {
+    let { setBookVisible } = props
     let [owner_data, setOwnerData] = useState(undefined)
     let [loading, setLoading] = useState(false)
     useEffect(() => {
@@ -67,15 +68,14 @@ let main = (props) => {
                             {
                                 (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={mvConsts.colors.text.support} >Продать</Text></Half>
+                                    <Half><Text color={mvConsts.colors.text.support} >{props.selectedBook.timestamp > +moment().tz(`Europe/Moscow`) ? `Продать` : `Удалить`}</Text></Half>
                                     <Half><Image
                                         pointer
                                         src={require(`../../assets/images/money.svg`)}
                                         width={2}
-                                        onClick={() => {
-                                            axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`).then(() => {
-                                                // document.location.reload();
-                                            })
+                                        onClick={async () => {
+                                            await axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
+                                            setBookVisible(false)
                                         }}
                                     /></Half>
                                 </Flex>

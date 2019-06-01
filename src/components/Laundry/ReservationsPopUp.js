@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 
 let main = (props) => {
-    let { my_reservations, setSelectedDay, setSelectedBook, setBookVisible, setReservationsVisible  } = props
+    let { my_reservations, setSelectedDay, setSelectedBook, setBookVisible, setReservationsVisible } = props
     return (
         <BarWrapper>
             <Bar row >
@@ -28,10 +28,8 @@ let main = (props) => {
                                     <Text size={1.2} >{moment(i.timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
                                 <Flex extra={`width:30%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
-                                <Flex extra={`width: 35%;`} row pointer onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${i.objectId}`).then(() => {
-                                    // document.location.reload();
-                                }) }} >
-                                    <Text>Продать</Text>
+                                <Flex extra={`width: 35%;`} row pointer onClick={() => { axios.get(`http://dcam.pro/api/laundry/unbook/${i.objectId}`) }} >
+                                    <Text>{i.timestamp > +moment().tz(`Europe/Moscow`) ? `Продать` : `Удалить`}</Text>
                                     <MarginWrapper><Image src={require(`../../assets/images/money.svg`)} width={1.5} /></MarginWrapper>
                                 </Flex>
                                 <MarginWrapper><Image src={require(`../../assets/images/arrow.svg`)} pointer width={1.5} onClick={() => {

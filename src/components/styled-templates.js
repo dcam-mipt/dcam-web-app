@@ -1,6 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import styled, { keyframes } from 'styled-components'
-import mvConsts from '../constants/mvConsts'
+import mvConsts, { darkTheme, dayTheme } from '../constants/mvConsts'
+import { connect } from 'react-redux'
 
 export const Image = styled.img`
 width: ${props => props.width}vw;
@@ -30,6 +31,9 @@ cursor: ${props => props.pointer ? `pointer` : `null`}
     font-size: 4vw;
 }`
 
+// Flex.defaultProps = { ...darkTheme }
+Flex.defaultProps = { ...dayTheme }
+
 export const PopUp = styled(Flex)`
 display: flex;
 align-items: center;
@@ -37,7 +41,7 @@ justify-content: center;
 flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
-background-color: white;
+background-color: ${props => props.background.primary};
 z-index: 2;
 position: fixed;
 top: ${props => (props.top ? props.top : 0) + (props.visible ? 0 : 2) + 1}vw;
@@ -58,7 +62,7 @@ padding: 1.8vw;
 
 export const Text = styled(Flex)`
 font-size: ${props => props.size ? props.size : 0.8}vw;
-color: ${props => props.color ? props.color : null};
+color: ${props => props.color ? props.color : props.text.primary};
 font-family: ${props => props.bold ? `Bold` : `Regular`};
 @media (min-width: 320px) and (max-width: 480px) {
     font-size: ${props => (props.size ? props.size : 0.8) * 5}vw;
@@ -67,10 +71,10 @@ font-family: ${props => props.bold ? `Bold` : `Regular`};
 export const Bar = styled(Flex)`
 width: 100%;
 justify-content: flex-start;
-${props => props.clear ? null : `border-bottom: 0.15vw dashed ${mvConsts.colors.background.secondary};`}
+${props => props.clear ? null : `border-bottom: 0.15vw dashed ${props.background.support};`}
 padding: 1vw 0 1vw 0;
 @media (min-width: 320px) and (max-width: 480px) {
-    ${props => props.clear ? null : `border-bottom: 0.75vw dashed ${mvConsts.colors.background.secondary};`}
+    ${props => props.clear ? null : `border-bottom: 0.75vw dashed ${props.background.support};`}
     padding: 5vw 0 5vw 0;
     width: 85vw;
 }`

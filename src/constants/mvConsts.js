@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import * as Sentry from '@sentry/browser';
-let dayTheme = {
+export let dayTheme = {
     yellow: "#FFCC00",
     accept: "#2DC76D",
     purple: `#7540EE`,
@@ -19,7 +19,7 @@ let dayTheme = {
     }
 }
 
-let darkTheme = {
+export let darkTheme = {
     yellow: "#FFCC00",
     accept: "#2DC76D",
     purple: `#7540EE`,
@@ -38,10 +38,14 @@ let darkTheme = {
     }
 }
 
+let colors = dayTheme
+
+export let changeTheme = (theme) => { colors = theme }
+
 export default {
     mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d}; transition: 0; }`,
     error: (d) => { Sentry.captureException(d); console.log(d) },
-    colors: dayTheme,
+    colors: colors,
     weekDays: {
         short: [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`],
         full: [`воскресенье`, `понедельник`, `вторник`, `среда`, `четверг`, `пятница`, `суббота`]

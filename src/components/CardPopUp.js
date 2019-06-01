@@ -33,7 +33,7 @@ let main = (props) => {
                             placeholder={`Сумма`}
                             short
                             number
-                            onChange={(d) => { !isNaN(d.target.value) && setValue(d.target.value) }}
+                            onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 5) && setValue(Math.round(d.target.value * 100) / 100) }}
                             value={value}
                         />
                         <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">

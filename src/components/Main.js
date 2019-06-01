@@ -34,10 +34,10 @@ let screens = [
     },
 ]
 
-let get_laundry = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }) })
-let get_machines = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/machines/get`).then((d) => { resolve(d) }) })
-let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }) })
-let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }) })
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_machines = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Main = (props) => {
     useEffect(() => { document.title = `dcam.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
@@ -136,7 +136,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Main)
 const Circle = styled(Flex)`
 width: 2.5vw;
 height: 2.5vw;
-background-color: ${props => props.any_money ? mvConsts.colors.accept : mvConsts.colors.background.support};
+background-color: ${props => props.any_money ? mvConsts.colors.accept : props.background.support};
 border-radius: 2.5vw;
 @media (min-width: 320px) and (max-width: 480px) {
     
@@ -157,7 +157,7 @@ height: 100vh;
 const Menu = styled(Flex)`
 width: 6vw;
 height: 100vh;
-background-color: ${mvConsts.colors.background.primary};
+background-color: ${props => props.background.primary};
 z-index: 2;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
@@ -183,7 +183,7 @@ display: ${props => props.only_mobile ? `none` : `block`}
 const Workspace = styled(Flex)`
 width: 94vw;
 height: 100vh;
-background-color: ${mvConsts.colors.background.secondary};
+background-color: ${props => props.background.secondary};
 overflow; hidden;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
@@ -212,8 +212,8 @@ const MenuButton = styled(Flex)`
 width: 3.5vw;
 height: 3.5vw;
 border-radius: 0.5vw;
-background-color: ${props => props.selected && `white`};
-&:hover { background-color: white; }
+background-color: ${props => props.selected && props.background.primary};
+&:hover { background-color: ${props => props.background.primary}; }
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`

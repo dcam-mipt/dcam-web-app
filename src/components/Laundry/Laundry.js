@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import userActions from '../../redux/actions/UserActions'
 import axios from 'axios'
 import styled from 'styled-components'
-import moment, { weekdays } from 'moment'
+import moment from 'moment-timezone'
 import Button from '../Button'
 import useComponentVisible from '../useComponentVisible'
 import mvConsts from '../../constants/mvConsts';
@@ -67,7 +67,7 @@ let Laundry = (props) => {
                         <PopUp ref={reservationsRef} visible={reservationsVisible} >
                             <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                         </PopUp>
-                        <PopUp ref={bookRef} visible={bookVisible && selectedBook} >
+                        <PopUp ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
                             <BookPopUp {...props} selectedBook={selectedBook} />
                         </PopUp>
                         <Wrapper>
@@ -304,7 +304,7 @@ transition: 0.2s
 width: ${props => 20 / props.width}vw;
 height: 3vw;
 cursor: pointer;
-background-color: ${props => props.is_before ? `none` : props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : `lightgrey`};
+background-color: ${props => props.is_before ? `none` : props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : mvConsts.colors.background.support};
 color: white;
 font-size: 0.8vw;
 margin: 0 0.08vw 0 0;

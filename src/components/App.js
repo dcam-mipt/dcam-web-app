@@ -6,6 +6,9 @@ import { connect } from 'react-redux'
 import Main from './Main'
 import Entry from './Entry'
 import { Flex, Image, Text, Rotor } from './styled-templates'
+import mvConsts from '../constants/mvConsts'
+
+let theme = mvConsts.colors
 
 let GoogleWrapper = (props) => {
     let [init, setInit] = useState(false)
@@ -33,7 +36,7 @@ let LoadingPage = (props) => {
 const LoadingPageWrapper = styled(Flex)`
 width: 100vw;
 height: 100vh;
-background-color: white;
+background-color: ${props => props.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`
