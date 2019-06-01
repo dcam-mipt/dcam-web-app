@@ -2,6 +2,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
+import {Flex} from './styled-templates'
 
 let Button = (props) => {
     return (
@@ -18,7 +19,7 @@ let Button = (props) => {
 
 export default Button
 
-const Wrapper = styled.div`
+const Wrapper = styled(Flex)`
 display: ${props => props.only_mobile ? `none` : `flex`}
 justify-content: center
 align-items: center

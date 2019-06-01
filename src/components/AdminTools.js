@@ -9,8 +9,10 @@ import Input from './Input'
 import Button from './Button'
 import mvConsts from '../constants/mvConsts'
 import TransactionsList from './TransactionsList'
+import io from 'socket.io-client';
+const socket = io('http://dcam.pro:3000');
 
-let get_ser_status = (timestamp) => {
+let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
         return `онлайн`
     }
@@ -20,45 +22,61 @@ let get_ser_status = (timestamp) => {
     return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
 }
 
+let get_users = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_transactions = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+
+let loading_rotor = <Rotor><Image src={require(`../assets/images/menu.svg`)} width={2} /></Rotor>
+
 let AdminTools = (props) => {
-    let [users, setUsers] = useState([])
+    let [users_list, set_users_list] = useState([])
     let [users_transactions, set_users_transactions] = useState([])
-    let [search, setSearch] = useState(``)
+    let [search, set_search] = useState(``)
     let [selected_user, set_selected_user] = useState(null)
     let [new_balance, set_new_balance] = useState(``)
+    let [loading, set_loading] = useState(false)
     let money_delta = selected_user ? +new_balance - selected_user.money : 0
+    let update_everything = async () => {
+        set_loading(true)
+        let new_users_list = (await get_users()).data
+        set_users_list(new_users_list)
+        if (selected_user) {
+            set_new_balance(``)
+            set_selected_user(new_users_list.filter(i => i.objectId === selected_user.objectId)[0])
+        }
+        set_users_transactions((await get_transactions()).data)
+        set_loading(false)
+    }
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
-        !users.length && axios.get(`http://dcam.pro/api/users/get_users_list`)
-            .then((d) => { setUsers(d.data) })
-            .catch((d) => { console.log(d) })
-        !users_transactions.length && axios.get(`http://dcam.pro/api/transactions/get_all_transactions`)
-            .then((d) => { set_users_transactions(d.data) })
-            .catch((d) => { console.log(d) })
+        !users_list.length && get_users().then((d) => { set_users_list(d.data) })
+        !users_transactions.length && get_transactions().then((d) => { set_users_transactions(d.data) })
     })
+    socket.on('Transactions', async (msg) => { await update_everything() })
     return (
         <GlobalWrapper>
-            <Flex extra={`height: 89vh; background-color: white; padding: 1vw 1vw 0 1vw; margin-left: 1vw; border-radius: 0.5vw;`} >
-                <Input placeholder={`Поиск`} onChange={(e) => { setSearch(e.target.value) }} />
-                <Flex extra={`height: calc(91vh - 3.5vw); display: block; overflow: auto;`} >
-                    <Flex>
+            <UsersWrapper user_is_selected={selected_user !== null} >
+                <Flex only_mobile extra={`height: 3vh;`} />
+                <Input placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
+                <Block subtrahend={3.5} >
+                    <Flex extra={`width: 100%; height: 92%; justify-content: flex-start;`} >
                         {
-                            users.length ? users.filter(i => i === `` || i.username.split(`@`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
+                            users_list.length ? users_list.filter(i => i === `` || i.username.split(`@`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
                                 return (
-                                    <Flex extra={`background-color: ${selected_user && selected_user.objectId === user.objectId ? mvConsts.colors.background.secondary : `transparent`}; padding: 0.5vw; border-radius: 0.5vw; transition: 0s; &:hover { background-color: ${mvConsts.colors.background.secondary} };`} pointer key={user_index} row onClick={() => { set_selected_user(selected_user && selected_user.objectId === user.objectId ? null : user) }} >
+                                    <User is_selected_user={selected_user && selected_user.objectId === user.objectId} pointer key={user_index} row onClick={() => { set_new_balance(``); set_selected_user(selected_user && selected_user.objectId === user.objectId ? null : user) }} >
                                         <Image src={user.avatar} width={3} round />
                                         <NameWrapper>
                                             <Text size={1} >{user.username.split(`@`)[0]}</Text>
-                                            <Text color={mvConsts.colors.text.support} >{get_ser_status(user.last_seen)}</Text>
+                                            <Text color={mvConsts.colors.text.support} >{get_user_status(user.last_seen)}</Text>
                                         </NameWrapper>
-                                    </Flex>
+                                    </User>
                                 )
                             }) : <Flex extra={`height: 80vh;`} ><Rotor><Image src={require(`../assets/images/menu.svg`)} width={2} /></Rotor></Flex>
                         }
                     </Flex>
-                </Flex>
-            </Flex>
-            <Flex extra={`height: 91vh; width: 26vw; margin-left: 1vw; justify-content: flex-start;`} >
+                </Block>
+            </UsersWrapper>
+            <TransactionsWrapper user_is_selected={selected_user !== null} >
+                <Flex only_mobile extra={`height: 3vh;`} />
                 {
                     selected_user ? <Flex>
                         <Card>
@@ -80,29 +98,32 @@ let AdminTools = (props) => {
                                 />
                                 <Button
                                     disabled={+new_balance === selected_user.money || new_balance === ``}
-                                    backgroundColor={mvConsts.colors.accept}
+                                    backgroundColor={loading ? mvConsts.colors.background.support : mvConsts.colors.accept}
                                     onClick={async () => {
                                         try {
+                                            set_loading(true)
                                             await axios.get(`http://dcam.pro/api/balance/edit/${selected_user.objectId}/${money_delta}`)
+                                            await update_everything()
                                         } catch (error) {
                                             console.log(error);
                                         }
                                     }}
                                 >
-                                    Присвоить
-                        </Button>
+                                    {loading ? loading_rotor : `Присвоить`}
+                                </Button>
                             </Flex>
                         </Card>
-                    </Flex> : <Text color={mvConsts.colors.text.support} >выберите пользователя</Text>
+                    </Flex> : <Text extra={`padding: 0.5vw;`} color={mvConsts.colors.text.support} >выберите пользователя</Text>
                 }
-                <Flex extra={`height: calc(91vh - ${(card_width / 86 * 54) * (selected_user ? 1 : 0)}vw); display: block; overflow: auto;`} >
+                <Button only_mobile backgroundColor={mvConsts.colors.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
+                <Block only_desktop subtrahend={(card_width / 86 * 54) * (selected_user ? 1 : 0)} >
                     <TransactionsList transactions={selected_user ? users_transactions.filter(i => i.from === selected_user.objectId || i.to === selected_user.objectId) : users_transactions} />
-                </Flex>
-            </Flex>
-            <Flex extra={`width: 25vw;`} >
+                </Block>
+            </TransactionsWrapper>
+            <Flex only_desktop extra={`width: 25vw;`} >
                 <Text>events</Text>
             </Flex>
-            <Flex extra={`width: 30vw;`} >
+            <Flex only_desktop extra={`width: 30vw;`} >
                 <Text>machines</Text>
             </Flex>
         </GlobalWrapper>
@@ -122,24 +143,71 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AdminTools)
 
+const User = styled(Flex)`
+background-color: ${props => props.is_selected_user ? props.background.secondary : `transparent`};
+padding: 0.5vw;
+border-radius: 0.5vw;
+transition: 0s;
+&:hover { background-color: ${props => props.background.secondary} };
+@media (min-width: 320px) and (max-width: 480px) {
+    padding: 2.5vw;
+    border-radius: 2.5vw;
+}`
+
+const Block = styled(Flex)`
+height: calc(91vh - ${props => props.subtrahend}vw);
+display: block;
+overflow: auto;
+@media (min-width: 320px) and (max-width: 480px) {
+    height: calc(91vh - ${props => props.subtrahend * 5}vw);
+}`
+
+const TransactionsWrapper = styled(Flex)`
+height: 91vh;
+width: 26vw;
+margin-left: 1vw;
+justify-content: flex-start;
+@media (min-width: 320px) and (max-width: 480px) {
+    display: ${props => props.user_is_selected ? `flex` : `none`}
+    width: 100vw;
+    height: 100vh;
+    margin-left: 0;
+}`
+
+const UsersWrapper = styled(Flex)`
+height: 89vh;
+background-color: ${props => props.background.primary};
+padding: 1vw 1vw 0 1vw;
+margin-left: 1vw;
+border-radius: 0.5vw;
+justify-content: flex-start;
+@media (min-width: 320px) and (max-width: 480px) {
+    display: ${props => props.user_is_selected ? `none` : `flex`}
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin-left: 0;
+    border-radius: 0vw;
+}`
+
 const NameWrapper = styled(Flex)`
-                padding-left: 1vw;
-                align-items: flex-start;
-                width: 12vw;
+padding-left: 1vw;
+align-items: flex-start;
+width: 12vw;
 @media (min-width: 320px) and (max-width: 480px) {
-                    padding - left: 5vw;
-            }`
+    padding-left: 5vw;
+    width: 60vw;
+}`
+
 const GlobalWrapper = styled(Flex)`
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-direction: row;
-            transition: 0.2s;
-            width: 94vw;
-            height: 92vh;
+flex-direction: row;
+width: 94vw;
+height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
-                    flex - direction: column;
-            }`
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+}`
 
 let card_width = 86 * 0.27
 const Card = styled(Flex)`
@@ -151,13 +219,13 @@ justify-content: space-around;
 align-items: flex-start;
 > * {
     margin-left: 1vw;
-            }
+}
 @media (min-width: 320px) and (max-width: 480px) {
-    width: ${4.2 * card_width}vw;
-    height: ${4.2 * card_width / 86 * 54}vw;
-    border-radius: ${4.2 * card_width / 20}vw;
-    > * {
-        margin-left: 5vw;
-    }
+width: ${4.2 * card_width}vw;
+height: ${4.2 * card_width / 86 * 54}vw;
+border-radius: ${4.2 * card_width / 20}vw;
+> * {
+    margin-left: 5vw;
+}
 }`
 /*eslint-enable no-unused-vars*/

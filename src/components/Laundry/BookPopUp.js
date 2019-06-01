@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
 import { connect } from 'react-redux'
 
-let get_ser_status = (timestamp) => {
+let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
         return `онлайн`
     }
@@ -49,7 +49,7 @@ let main = (props) => {
                             <Image src={owner_data.avatar} width={3} round />
                             <NameWrapper>
                                 <Text size={1} >{owner_data.username.split(`@`)[0]}</Text>
-                                <Text color={mvConsts.colors.text.support} >{get_ser_status(owner_data.last_seen)}</Text>
+                                <Text color={mvConsts.colors.text.support} >{get_user_status(owner_data.last_seen)}</Text>
                             </NameWrapper>
                             <ImageWrapper><Image width={3} /></ImageWrapper>
                         </Bar>

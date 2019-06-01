@@ -40,6 +40,14 @@ let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dc
 let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Main = (props) => {
+    let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
+    let [cardRef, cardVisible, setCardVisible] = useComponentVisible(false);
+    let signOut = () => new Promise((resolve, reject) => {
+        props.setToken(undefined);
+        axios.get(`http://dcam.pro/api/auth/sign_out`)
+            .then((d) => { resolve(d); })
+            .catch((d) => { console.log(d); reject(d) })
+    })
     useEffect(() => { document.title = `dcam.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
@@ -56,18 +64,8 @@ let Main = (props) => {
             .catch((d) => { signOut() })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     })
-    let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
-    let [cardRef, cardVisible, setCardVisible] = useComponentVisible(false);
-    let signOut = () => new Promise((resolve, reject) => {
-        props.setToken(undefined);
-        axios.get(`http://dcam.pro/api/auth/sign_out`)
-            .then((d) => { resolve(d); })
-            .catch((d) => { console.log(d); reject(d) })
-    })
-    useEffect(() => {
-        socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
-        socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
-    })
+    socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
+    socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
     return (
         <Wrapper>
             <PopUp top={3} ref={profileRef} visible={profileVisible} >

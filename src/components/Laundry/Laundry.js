@@ -68,7 +68,7 @@ let Laundry = (props) => {
                             <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                         </PopUp>
                         <PopUp ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
-                            <BookPopUp {...props} selectedBook={selectedBook} />
+                            <BookPopUp {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
                         </PopUp>
                         <Wrapper>
                             <Calendar mobileCalendar={mobileCalendar} >

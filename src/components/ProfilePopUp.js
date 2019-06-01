@@ -14,7 +14,7 @@ import Switch from './Switch';
 import userActions from '../redux/actions/UserActions'
 const socket = io('http://dcam.pro:3000');
 
-let get_ser_status = (timestamp) => {
+let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
         return `онлайн`
     }
@@ -52,7 +52,7 @@ let main = (props) => {
                     <Text size={1} >{user && user.username.split(`@`)[0]}</Text>
                     <Text size={1} color={mvConsts.colors.text.support} >@{user && user.username.split(`@`)[1]}</Text>
                 </Flex>
-                <Text color={mvConsts.colors.text.support} >{user && get_ser_status(user.last_seen)}</Text>
+                <Text color={mvConsts.colors.text.support} >{user && get_user_status(user.last_seen)}</Text>
             </NameWrapper>
         </Bar>
         {

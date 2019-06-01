@@ -3,7 +3,7 @@ import types from '../ActionTypes.js'
 import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
-    main_screen: mvConsts.screens.admin,
+    main_screen: mvConsts.screens.laundry,
 };
 
 export default (state = initialState, action) => {
