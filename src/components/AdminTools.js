@@ -161,6 +161,7 @@ display: block;
 overflow: auto;
 @media (min-width: 320px) and (max-width: 480px) {
     height: calc(91vh - ${props => props.subtrahend * 5}vw);
+    overflow: scroll;
 }`
 
 const TransactionsWrapper = styled(Flex)`
