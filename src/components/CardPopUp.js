@@ -33,6 +33,7 @@ let main = (props) => {
                             placeholder={`Сумма`}
                             short
                             number
+                            pattern={`[0-9]*`}
                             onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 5) && setValue(Math.round(d.target.value * 100) / 100) }}
                             value={value}
                         />

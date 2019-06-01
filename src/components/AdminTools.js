@@ -93,6 +93,7 @@ let AdminTools = (props) => {
                                     placeholder={`Сумма`}
                                     short
                                     number
+                                    pattern={`[0-9]*`}
                                     onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 10) && set_new_balance(Math.round(d.target.value * 100) / 100) }}
                                     value={new_balance}
                                 />
