@@ -30,7 +30,7 @@ let main = (props) => {
     let [loading, setLoading] = useState(false)
     useEffect(() => {
         let check_entries = () => axios.get(`http://dcam.pro/api/auth/get_my_entries`).then((d) => { setEntries(d.data) })
-        check_entries()
+        setTimeout(() => { check_entries() }, 0)
         socket.on('Verifications', (msg) => { msg === (user && user.username) && check_entries() })
     })
     let load_my_info = () => {

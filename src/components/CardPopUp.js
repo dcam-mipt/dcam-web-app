@@ -44,7 +44,7 @@ let main = (props) => {
                             <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
                             <input type="hidden" name="sum" value={+value} data-type="number" />
                             <input type="hidden" name="paymentType" value="AC" />
-                            <input id={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
+                            <input className={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
                             <Button
                                 disabled={value < 2}
                                 backgroundColor={mvConsts.colors.accept}
@@ -52,7 +52,7 @@ let main = (props) => {
                                     axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}`)
                                         .then((d) => {
                                             setOrderId(d.data)
-                                            document.getElementById(`yandex_money_button`).click()
+                                            document.getElementsByClassName(`yandex_money_button`)[1].click()
                                         })
                                 }}
                             >
