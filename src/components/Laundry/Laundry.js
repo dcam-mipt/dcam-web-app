@@ -49,7 +49,7 @@ let Laundry = (props) => {
                 Мои стирки
             </Button>
             <Button backgroundColor={mvConsts.colors.lightblue} disabled={!selectedSlots.length} onClick={() => { setBucketVisible(!bucketVisible) }} >
-                Корзина
+                Корзина {selectedSlots.length && `(${selectedSlots.length})`}
             </Button>
             <Button backgroundColor={mvConsts.colors.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
                 {mobileCalendar ? `Расписание` : moment(+selectedDay).format(`DD.MM`)}
