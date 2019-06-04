@@ -340,7 +340,7 @@ border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_inde
 border-bottom-right-radius: ${props => +(props.week_index === 3 && props.day_index === 6) * 1}vw;
 ${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
 border: 0.${props => 1 + +(props.is_selected_day || props.is_today)}vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
-cursor: pointer;
+cursor: ${props => !props.is_before ? `default` : `pointer`};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
     height: 20vw;
