@@ -19,7 +19,7 @@ let initClient = () => new Promise((resolve, reject) => {
             setSigninStatus();
             resolve(d)
         })
-        .catch((d) => { reject(d) })
+        .catch((d) => { console.log(`initClient error`); reject(d) })
 })
 
 let initGoogle = () => new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ let init = () => new Promise((resolve, reject) => {
                 .then((d) => { resolve(d) })
                 .catch((d) => { reject(d) })
         })
-        .catch((d) => { reject(d) })
+        .catch((d) => { console.log(`only init error`); reject(d) })
 })
 
 let signIn = () => new Promise((resolve, reject) => {

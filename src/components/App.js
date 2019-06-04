@@ -16,7 +16,7 @@ let GoogleWrapper = (props) => {
         GoogleAPI.init()
             .then((d) => { setInit(true) })
             .catch((d) => {
-                console.log(`google initialization error`)
+                console.log(`google initialization error`, d)
             })
     })
     return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
