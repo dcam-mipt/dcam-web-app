@@ -16,9 +16,9 @@ let main = (props) => {
                     </DateWrapper>
                     <Flex row>
                         <Image src={require(`../assets/images/${transaction.status === `done` ? `done` : `clock`}.svg`)} width={2} />
-                        <TextWrapper width={7} ><Text size={1} >{transaction.from_username}</Text></TextWrapper>
+                        <TextWrapper width={7} ><Text size={1} >{transaction.from_username.split(`@`)[0].split(`.`)[0]}</Text></TextWrapper>
                         <Image src={require(`../assets/images/arrow.svg`)} width={2} />
-                        <TextWrapper width={7} ><Text size={1} >{transaction.to_username}</Text></TextWrapper>
+                        <TextWrapper width={7} ><Text size={1} >{transaction.to_username.split(`@`)[0].split(`.`)[0]}</Text></TextWrapper>
                         <TextWrapper width={3} ><Text size={1} color={transaction.requested >= 0 ? mvConsts.colors.accept : mvConsts.colors.WARM_ORANGE} >{transaction.requested >= 0 && `+`}{transaction.requested}</Text></TextWrapper>
                     </Flex>
                 </TransactionWrapper>

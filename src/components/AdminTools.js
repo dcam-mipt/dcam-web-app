@@ -60,12 +60,12 @@ let AdminTools = (props) => {
                 <Block subtrahend={3.5} >
                     <Flex extra={`width: 100%; height: 92%; justify-content: flex-start;`} >
                         {
-                            users_list.length ? users_list.filter(i => i === `` || i.username.split(`@`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
+                            users_list.length ? users_list.filter(i => i === `` || i.username.split(`@`)[0].split(`.`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
                                 return (
                                     <User is_selected_user={selected_user && selected_user.objectId === user.objectId} pointer key={user_index} row onClick={() => { set_new_balance(``); set_selected_user(selected_user && selected_user.objectId === user.objectId ? null : user) }} >
                                         <Image src={user.avatar} width={3} round />
                                         <NameWrapper>
-                                            <Text size={1} >{user.username.split(`@`)[0]}</Text>
+                                            <Text size={1} >{user.username.split(`@`)[0].split(`.`)[0]}</Text>
                                             <Text color={mvConsts.colors.text.support} >{get_user_status(user.last_seen)}</Text>
                                         </NameWrapper>
                                     </User>

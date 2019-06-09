@@ -48,7 +48,7 @@ let main = (props) => {
                         <Bar row >
                             <Image src={owner_data.avatar} width={3} round />
                             <NameWrapper>
-                                <Text size={1} >{owner_data.username.split(`@`)[0]}</Text>
+                                <Text size={1} >{owner_data.username.split(`@`)[0].split(`.`)[0]}</Text>
                                 <Text color={mvConsts.colors.text.support} >{get_user_status(owner_data.last_seen)}</Text>
                             </NameWrapper>
                             <ImageWrapper><Image width={3} /></ImageWrapper>

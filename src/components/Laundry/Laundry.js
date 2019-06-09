@@ -133,7 +133,7 @@ let Laundry = (props) => {
                                                                 is_my_book={is_my_book}
                                                                 is_before={is_before}
                                                             >
-                                                                {is_book ? book.email.split(`@`)[0] : `-`}
+                                                                {is_book ? book.email.split(`@`)[0].split(`.`)[0] : `-`}
                                                             </Machine>
                                                         )
                                                     })
