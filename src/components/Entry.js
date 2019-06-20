@@ -22,7 +22,7 @@ let Entry = (props) => {
     return (
         <Wrapper>
             <Left>
-
+                
             </Left>
             <Right>
                 <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu.svg`)} width={3} /></Flex>
