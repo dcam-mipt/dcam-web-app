@@ -32,7 +32,6 @@ let Entry = (props) => {
                     <MarginWrapper>
                         <Button backgroundColor={mvConsts.colors.purple} onClick={() => { signIn() }} >Авторизация</Button>
                     </MarginWrapper>
-                    <Text pointer >У меня нет почты @phystech.edu</Text>
                 </Flex>
             </Right>
         </Wrapper>
