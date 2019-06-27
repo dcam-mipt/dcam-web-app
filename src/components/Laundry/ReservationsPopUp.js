@@ -1,8 +1,8 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
-import { Flex, Image, Text, Bar, BarWrapper } from '../styled-templates'
+import { Flex, Image, Text, Bar, BarWrapper } from '../UIKit/styled-templates'
 import moment from 'moment'
-import Button from '../Button'
+import Button from '../UIKit/Button'
 import axios from 'axios'
 import mvConsts from '../../constants/mvConsts'
 import styled from 'styled-components'

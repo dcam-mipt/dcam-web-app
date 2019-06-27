@@ -6,8 +6,8 @@ import userActions from '../redux/actions/UserActions'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
-import Button from './Button'
-import { Flex, Text, Image } from './styled-templates'
+import Button from './UIKit/Button'
+import { Flex, Text, Image } from './UIKit/styled-templates'
 
 let Entry = (props) => {
     let signIn = () => new Promise((resolve, reject) => {

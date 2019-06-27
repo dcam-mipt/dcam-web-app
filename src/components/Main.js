@@ -10,10 +10,10 @@ import Laundry from './Laundry/Laundry'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
-import useComponentVisible from './useComponentVisible'
-import AdminTools from './AdminTools';
+import useComponentVisible from './UIKit/useComponentVisible'
+import AdminTools from './AdminTools/AdminTools';
 import GoogleAPI from '../API/GoogleAPI'
-import { Flex, Image, Text, PopUp } from './styled-templates'
+import { Flex, Image, Text, PopUp } from './UIKit/styled-templates'
 import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';

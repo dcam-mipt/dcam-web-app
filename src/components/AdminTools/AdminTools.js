@@ -4,11 +4,12 @@ import styled from 'styled-components'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { Flex, Image, Bar, Text, Rotor } from './styled-templates'
-import Input from './Input'
-import Button from './Button'
-import mvConsts from '../constants/mvConsts'
+import { Flex, Image, Bar, Text, Rotor } from '../UIKit/styled-templates'
+import Input from '../UIKit/Input'
+import Button from '../UIKit/Button'
+import mvConsts from '../../constants/mvConsts'
 import TransactionsList from './TransactionsList'
+import NotificationsList from './NotificationsList'
 import io from 'socket.io-client';
 const socket = io('http://dcam.pro:3000');
 
@@ -25,7 +26,7 @@ let get_user_status = (timestamp) => {
 let get_users = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 let get_transactions = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
-let loading_rotor = <Rotor><Image src={require(`../assets/images/menu.svg`)} width={2} /></Rotor>
+let loading_rotor = <Rotor><Image src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
 
 let AdminTools = (props) => {
     let [users_list, set_users_list] = useState([])
@@ -35,7 +36,7 @@ let AdminTools = (props) => {
     let [new_balance, set_new_balance] = useState(``)
     let [loading, set_loading] = useState(false)
     let money_delta = selected_user ? +new_balance - selected_user.money : 0
-    let update_everything = async () => {
+    let update_transactions = async () => {
         set_loading(true)
         let new_users_list = (await get_users()).data
         set_users_list(new_users_list)
@@ -51,7 +52,7 @@ let AdminTools = (props) => {
         !users_list.length && get_users().then((d) => { set_users_list(d.data) })
         !users_transactions.length && get_transactions().then((d) => { set_users_transactions(d.data) })
     })
-    socket.on('Transactions', async (msg) => { await update_everything() })
+    socket.on('Transactions', async (msg) => { await update_transactions() })
     return (
         <GlobalWrapper>
             <UsersWrapper user_is_selected={selected_user !== null} >
@@ -70,7 +71,7 @@ let AdminTools = (props) => {
                                         </NameWrapper>
                                     </User>
                                 )
-                            }) : <Flex extra={`height: 80vh;`} ><Rotor><Image src={require(`../assets/images/menu.svg`)} width={2} /></Rotor></Flex>
+                            }) : <Flex extra={`height: 80vh;`} ><Rotor><Image src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor></Flex>
                         }
                     </Flex>
                 </Block>
@@ -104,7 +105,7 @@ let AdminTools = (props) => {
                                         try {
                                             set_loading(true)
                                             await axios.get(`http://dcam.pro/api/balance/edit/${selected_user.objectId}/${money_delta}`)
-                                            await update_everything()
+                                            await update_transactions()
                                         } catch (error) {
                                             console.log(error);
                                         }
@@ -114,15 +115,15 @@ let AdminTools = (props) => {
                                 </Button>
                             </Flex>
                         </Card>
-                    </Flex> : <Text extra={`padding: 0.5vw;`} color={mvConsts.colors.text.support} >выберите пользователя</Text>
+                    </Flex> : null
                 }
                 <Button only_mobile backgroundColor={mvConsts.colors.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
                 <Block only_desktop subtrahend={(card_width / 86 * 54) * (selected_user ? 1 : 0)} >
                     <TransactionsList transactions={selected_user ? users_transactions.filter(i => i.from === selected_user.objectId || i.to === selected_user.objectId) : users_transactions} />
                 </Block>
             </TransactionsWrapper>
-            <Flex only_desktop extra={`width: 25vw;`} >
-                <Text>events</Text>
+            <Flex only_desktop extra={`width: 25vw; `} >
+                <NotificationsList user_id={selected_user ? selected_user.objectId : undefined} />
             </Flex>
             <Flex only_desktop extra={`width: 30vw;`} >
                 <Text>machines</Text>

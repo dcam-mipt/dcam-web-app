@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import styled, { keyframes } from 'styled-components'
-import mvConsts, { darkTheme, dayTheme } from '../constants/mvConsts'
+import mvConsts, { darkTheme, dayTheme } from '../../constants/mvConsts'
 import { connect } from 'react-redux'
 
 export const Image = styled.img`

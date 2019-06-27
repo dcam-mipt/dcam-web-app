@@ -5,14 +5,14 @@ import userActions from '../../redux/actions/UserActions'
 import axios from 'axios'
 import styled from 'styled-components'
 import moment from 'moment-timezone'
-import Button from '../Button'
-import useComponentVisible from '../useComponentVisible'
+import Button from '../UIKit/Button'
+import useComponentVisible from '../UIKit/useComponentVisible'
 import mvConsts from '../../constants/mvConsts';
 import BookPopUp from './BookPopUp'
 import BucketPopUp from './BucketPopUp'
 import ReservationsPopUp from './ReservationsPopUp'
-import { Flex, Image, Text, PopUp } from '../styled-templates'
-import Circles from '../Circles'
+import { Flex, Image, Text, PopUp } from '../UIKit/styled-templates'
+import Circles from '../UIKit/Circles'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 

@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Flex, Image, Extra, Bar, Text, Rotor, BarWrapper } from '../styled-templates'
+import { Flex, Image, Extra, Bar, Text, Rotor, BarWrapper } from '../UIKit/styled-templates'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Main from './Main'
 import Entry from './Entry'
-import { Flex, Image, Text, Rotor } from './styled-templates'
+import { Flex, Image, Text, Rotor } from './UIKit/styled-templates'
 import mvConsts from '../constants/mvConsts'
 
 let theme = mvConsts.colors

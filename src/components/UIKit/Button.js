@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
 import styled from 'styled-components'
-import mvConsts from '../constants/mvConsts'
+import mvConsts from '../../constants/mvConsts'
 import {Flex} from './styled-templates'
 
 let Button = (props) => {

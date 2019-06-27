@@ -1,16 +1,16 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
-import { Flex, Image, Text, Bar, BarWrapper, PopUp } from './styled-templates'
+import { Flex, Image, Text, Bar, BarWrapper, PopUp } from './UIKit/styled-templates'
 import moment from 'moment'
-import Button from './Button'
+import Button from './UIKit/Button'
 import axios from 'axios'
 import mvConsts from '../constants/mvConsts'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import Input from './Input'
+import Input from './UIKit/Input'
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
-import Switch from './Switch';
+import Switch from './UIKit/Switch';
 import userActions from '../redux/actions/UserActions'
 const socket = io('http://dcam.pro:3000');
 

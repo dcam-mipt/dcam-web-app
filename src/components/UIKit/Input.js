@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
 import styled from 'styled-components'
-import mvConsts from '../constants/mvConsts'
+import mvConsts from '../../constants/mvConsts'
 
 let Button = (props) => <Input visible={props.visible === undefined ? true : props.visible} {...props} />
 
