@@ -40,6 +40,7 @@ let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dc
 let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Main = (props) => {
+    let [axios_is_ready, set_axios_is_ready] = useState(false)
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
     let [cardRef, cardVisible, setCardVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
@@ -51,6 +52,7 @@ let Main = (props) => {
     useEffect(() => { document.title = `dcam.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
+        set_axios_is_ready(true)
         axios.get(`http://dcam.pro/api/user/get_my_info`)
             .then((d) => {
                 props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
@@ -66,33 +68,37 @@ let Main = (props) => {
     }, [])
     socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
     socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
-    return (
-        <Wrapper>
-            <PopUp top={3} ref={profileRef} visible={profileVisible} >
-                <ProfilePopUp signOut={signOut} />
-            </PopUp>
-            <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
-                <CardPopUp />
-            </PopUp>
-            <Menu>
-                {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
-                <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
-            </Menu>
-            <Workspace>
-                <Header row extra={`justify-content: flex-end;`} >
-                    <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
-                        <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
-                    </MenuButton>
-                    <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
-                        <Image src={require('../assets/images/menu.svg')} width={3} round />
-                    </MenuButton>
-                </Header>
-                <Space>
-                    {screens.filter(i => i.name === props.main_screen)[0].component}
-                </Space>
-            </Workspace>
-        </Wrapper>
-    )
+    if (axios_is_ready) {
+        return (
+            <Wrapper>
+                <PopUp top={3} ref={profileRef} visible={profileVisible} >
+                    <ProfilePopUp signOut={signOut} />
+                </PopUp>
+                <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
+                    <CardPopUp />
+                </PopUp>
+                <Menu>
+                    {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
+                    <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
+                </Menu>
+                <Workspace>
+                    <Header row extra={`justify-content: flex-end;`} >
+                        <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
+                            <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
+                        </MenuButton>
+                        <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
+                            <Image src={require('../assets/images/menu.svg')} width={3} round />
+                        </MenuButton>
+                    </Header>
+                    <Space>
+                        {screens.filter(i => i.name === props.main_screen)[0].component}
+                    </Space>
+                </Workspace>
+            </Wrapper>
+        )
+    } else {
+        return null
+    }
 }
 
 let mapStateToProps = (state) => {

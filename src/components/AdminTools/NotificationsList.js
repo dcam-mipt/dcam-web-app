@@ -19,7 +19,8 @@ let main = (props) => {
     return (
         <Block>
             {
-                users_notifications.filter(i => props.user_id ? props.user_id === i.user_id : true).sort((a, b) => b.delivery_timestamp - a.delivery_timestamp).map((item, index) => {
+                // users_notifications.filter(i => props.user_id ? props.user_id === i.user_id : true).sort((a, b) => b.delivery_timestamp - a.delivery_timestamp).map((item, index) => {
+                users_notifications.filter(i => props.user_id ? props.user_id === i.user_id : true).sort((a, b) => +moment(b.createdAt) - +moment(a.createdAt)).map((item, index) => {
                     return (
                         <Flex extra={`padding: 1vw; border-radius: 0.5vw; background-color: ${mvConsts.colors.background.primary}; align-items: flex-start; margin-bottom: 0.5vw; width: 20vw;`} key={index} >
                             <Flex row >
