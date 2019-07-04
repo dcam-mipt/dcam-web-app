@@ -36,7 +36,7 @@ let Laundry = (props) => {
     let [reservationsRef, reservationsVisible, setReservationsVisible] = useComponentVisible(false);
     let [selectedBook, setSelectedBook] = useState(undefined)
     let [bookRef, bookVisible, setBookVisible] = useComponentVisible(false);
-    let my_reservations = props.user ? props.laundry.filter(i => i.user_id === props.user.objectId && i.timestamp > +moment().add(-2, `hour`)) : []
+    let my_reservations = props.user && props.laundry ? props.laundry.filter(i => i.user_id === props.user.objectId && i.timestamp > +moment().add(-2, `hour`)) : []
     useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
@@ -59,7 +59,7 @@ let Laundry = (props) => {
     return (
         <GlobalWrapper>
             {
-                props.laundry.length
+                props.laundry
                     ? <Flex>
                         <PopUp ref={bucketRef} visible={bucketVisible} >
                             <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
@@ -146,7 +146,7 @@ let Laundry = (props) => {
                             <Flex extra={`position: fixed; bottom: 6vh;`} only_mobile > {header} </Flex>
                         </Wrapper>
                     </Flex>
-                    : <Circles rotate={props.laundry.length < 1} />
+                    : <Circles rotate />
             }
         </GlobalWrapper >
     )

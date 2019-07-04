@@ -3,7 +3,7 @@ import types from '../ActionTypes.js'
 import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
-    laundry: [],
+    laundry: null,
 };
 
 export default (state = initialState, action) => {

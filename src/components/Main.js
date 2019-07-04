@@ -63,7 +63,7 @@ let Main = (props) => {
             })
             .catch((d) => { signOut() })
         return () => { axios.defaults.headers.common.Authorization = undefined }
-    })
+    }, [])
     socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
     socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
     return (
