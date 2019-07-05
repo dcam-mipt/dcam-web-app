@@ -17,6 +17,7 @@ import { Flex, Image, Text, PopUp } from './UIKit/styled-templates'
 import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
+import NotificationsPopUp from './NotificationsPopUp';
 const socket = io('http://dcam.pro:3000');
 
 let screens = [
@@ -38,11 +39,13 @@ let get_laundry = () => new Promise((resolve, reject) => { axios.get(`http://dca
 let get_machines = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let match_notifications = async () => { await axios.get(`http://dcam.pro/api/notifications/match_as_checked`) }
 
 let Main = (props) => {
     let [axios_is_ready, set_axios_is_ready] = useState(false)
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
     let [cardRef, cardVisible, setCardVisible] = useComponentVisible(false);
+    let [notificationsRef, notificationsVisible, setNotificationsVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
         props.setToken(undefined);
         axios.get(`http://dcam.pro/api/auth/sign_out`)
@@ -74,15 +77,22 @@ let Main = (props) => {
                 <PopUp top={3} ref={profileRef} visible={profileVisible} >
                     <ProfilePopUp signOut={signOut} />
                 </PopUp>
+                <PopUp top={3} right={8} ref={notificationsRef} visible={notificationsVisible} >
+                    <NotificationsPopUp />
+                </PopUp>
                 <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
                     <CardPopUp />
                 </PopUp>
                 <Menu>
                     {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
+                    {/* <MenuItemImage only_mobile onClick={() => { setNotificationsVisible(!notificationsVisible) }} src={require(`../assets/images/notifications.svg`)} /> */}
                     <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                 </Menu>
                 <Workspace>
                     <Header row extra={`justify-content: flex-end;`} >
+                        <MenuButton selected={notificationsVisible} onClick={() => { setNotificationsVisible(!notificationsVisible); match_notifications(); }} >
+                            <Image src={require(`../assets/images/notifications.svg`)} width={2.5} />
+                        </MenuButton>
                         <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
                             <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
                         </MenuButton>

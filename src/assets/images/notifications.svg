@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="main" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1000.2 1000.2" style="enable-background:new 0 0 1000.2 1000.2;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#FFFFFF;stroke-width:0.25;stroke-miterlimit:10;stroke-opacity:0;}
+	.st1{fill:#3A60A1;}
+</style>
+<title>admin</title>
+<rect id="frame" x="0.1" y="0.1" class="st0" width="1000" height="1000"/>
+<g>
+	<g id="notifications">
+		<path class="st1" d="M500,850c38.5,0,70-31.5,70-70H430C430,818.5,461.5,850,500,850z M727.5,640V447.5
+			c0-108.5-73.5-196-175-220.5v-24.5c0-28-24.5-52.5-52.5-52.5s-52.5,24.5-52.5,52.5V227c-101.5,24.5-175,112-175,220.5V640l-70,70
+			v35h595v-35L727.5,640z"/>
+	</g>
+</g>
+</svg>

@@ -23,8 +23,8 @@ let get_user_status = (timestamp) => {
     return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
 }
 
-let get_users = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_transactions = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_users = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d.data ? d.data : []) }) })
+let get_transactions = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d.data ? d.data : []) }) })
 
 let loading_rotor = <Rotor><Image src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
 
@@ -38,20 +38,20 @@ let AdminTools = (props) => {
     let money_delta = selected_user ? +new_balance - selected_user.money : 0
     let update_transactions = async () => {
         set_loading(true)
-        let new_users_list = (await get_users()).data
+        let new_users_list = (await get_users())
         set_users_list(new_users_list)
         if (selected_user) {
             set_new_balance(``)
             set_selected_user(new_users_list.filter(i => i.objectId === selected_user.objectId)[0])
         }
-        set_users_transactions((await get_transactions()).data)
+        set_users_transactions((await get_transactions()))
         set_loading(false)
     }
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
-        !users_list.length && get_users().then((d) => { set_users_list(d.data) })
-        !users_transactions.length && get_transactions().then((d) => { set_users_transactions(d.data) })
-    })
+        !users_list.length && get_users().then((d) => { set_users_list(d) })
+        !users_transactions.length && get_transactions().then(d => set_users_transactions(d))
+    }, [])
     socket.on('Transactions', async (msg) => { await update_transactions() })
     return (
         <GlobalWrapper>
@@ -155,11 +155,11 @@ transition: 0s;
 }`
 
 const Block = styled(Flex)`
-height: calc(91vh - ${props => props.subtrahend}vw);
+max-height: calc(91vh - ${props => props.subtrahend}vw);
 display: block;
-overflow: auto;
+overflow: scroll;
 @media (min-width: 320px) and (max-width: 480px) {
-    height: calc(91vh - ${props => props.subtrahend * 5}vw);
+    max-height: calc(91vh - ${props => props.subtrahend * 5}vw);
 }`
 
 const TransactionsWrapper = styled(Flex)`
