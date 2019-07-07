@@ -65,7 +65,7 @@ let AdminTools = (props) => {
                                 <User is_selected_user={selected_user && selected_user.objectId === user.objectId} pointer key={user_index} row onClick={() => { set_new_balance(``); set_selected_user(selected_user && selected_user.objectId === user.objectId ? null : user) }} >
                                     <Image src={user.avatar} width={3} round />
                                     <NameWrapper>
-                                        <Text size={1} >{user.username.split(`@`)[0].split(`.`)[0]}</Text>
+                                        <Text size={0.8} >{user.username.split(`@`)[0]  }</Text>
                                         <Text color={mvConsts.colors.text.support} >{get_user_status(user.last_seen)}</Text>
                                     </NameWrapper>
                                 </User>
