@@ -42,7 +42,7 @@ flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
 background-color: ${props => props.background.primary};
-z-index: 2;
+z-index: ${props => props.visible ? 2 : 0};
 position: fixed;
 top: ${props => (props.top ? props.top : 0) + (props.visible ? 0 : 2) + 1}vw;
 right: ${props => props.right ? props.right : 1}vw;
@@ -50,6 +50,7 @@ visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
 padding: 1.8vw;
 @media (min-width: 320px) and (max-width: 480px) {
+    display: ${props => props.visible ? `flex` : `none`};
     padding-top: 5vw;
     width: 100vw;
     top: 0;
