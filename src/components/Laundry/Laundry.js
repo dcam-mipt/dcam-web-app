@@ -28,6 +28,8 @@ let useSlots = (initialIsVisible) => {
     return [selectedSlots, setSlots, setSelectedSlots];
 }
 
+let cutter = (s) => s.length > 11 ? s.substring(0, 8) + `...` : s
+
 let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
     let [mobileCalendar, setMobileCalendar] = useState(false)
@@ -133,7 +135,7 @@ let Laundry = (props) => {
                                                                 is_my_book={is_my_book}
                                                                 is_before={is_before}
                                                             >
-                                                                {is_book ? book.email.split(`@`)[0].split(`.`)[0] : `-`}
+                                                                {cutter(is_book ? book.email.split(`@`)[0].split(`.`)[0] : `-`)}
                                                             </Machine>
                                                         )
                                                     })
