@@ -43,7 +43,7 @@ let main = (props) => {
                             value={value}
                         />
                         <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
-                            <input type="hidden" name="receiver" value={wallets.kubrakov} />
+                            <input type="hidden" name="receiver" value={wallets.beldii} />
                             <input type="hidden" name="label" value={order_id} />
                             <input type="hidden" name="quickpay-form" value="donate" />
                             <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
