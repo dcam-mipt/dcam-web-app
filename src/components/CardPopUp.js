@@ -9,6 +9,11 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Input from './UIKit/Input'
 
+let wallets = {
+    beldii: 410018436058863,
+    kubrakov: 410019854138095,
+}
+
 let main = (props) => {
     let [value, setValue] = useState(``)
     let [order_id, setOrderId] = useState(0)
@@ -38,7 +43,7 @@ let main = (props) => {
                             value={value}
                         />
                         <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
-                            <input type="hidden" name="receiver" value="410018436058863" />
+                            <input type="hidden" name="receiver" value={wallets.kubrakov} />
                             <input type="hidden" name="label" value={order_id} />
                             <input type="hidden" name="quickpay-form" value="donate" />
                             <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
