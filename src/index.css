@@ -34,3 +34,50 @@ input {
   src: url('./assets/fonts/manrope-regular.ttf');
   font-style: normal;
 }
+
+.money_button {
+  width: 3vw;
+  height: 3vw;
+  cursor: pointer;
+  border-radius: 0.5vw;
+  border: none;
+  margin-top: 0.3vw;
+  transition: 0.2s;
+}
+
+.money_button.yandex {
+  background: url('https://avatars.mds.yandex.net/get-pdb/1889030/f9ce64ef-f0cb-41d9-b651-7be193dc4a62/orig');
+  background-position: center;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.money_button.qiwi {
+  background: url('https://corp.qiwi.com/dam/jcr:fbce4856-723e-44a2-a54f-e7b164785f01/qiwi_sign_rgb.png');
+  background-position: center;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 1);
+  margin: 0 0 0 0.3vw;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .money_button {
+    width: 13vw;
+    height: 13vw;
+    border-radius: 2.5vw;
+    margin-top: 1.5vw;
+  }
+  .money_button.qiwi {
+    margin: 0 0 0 0.8vw;
+  }
+}
+
+.active {
+  opacity: 1;
+}
+
+.unactive {
+  opacity: 0.5;
+}

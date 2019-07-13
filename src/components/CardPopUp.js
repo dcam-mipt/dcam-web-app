@@ -14,6 +14,11 @@ let wallets = {
     kubrakov: 410019854138095,
 }
 
+let images = {
+    yandex: `https://avatars.mds.yandex.net/get-pdb/1889030/f9ce64ef-f0cb-41d9-b651-7be193dc4a62/orig`,
+    qiwi: `https://corp.qiwi.com/dam/jcr:fbce4856-723e-44a2-a54f-e7b164785f01/qiwi_sign_rgb.png`,
+}
+
 let main = (props) => {
     let [value, setValue] = useState(``)
     let [order_id, setOrderId] = useState(0)
@@ -49,21 +54,19 @@ let main = (props) => {
                             <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
                             <input type="hidden" name="sum" value={+value} data-type="number" />
                             <input type="hidden" name="paymentType" value="AC" />
-                            <input className={"yandex_money_button"} type="submit" value={`Далее`} style={{ display: `none` }} />
-                            <Button
-                                disabled={value < 2}
-                                backgroundColor={mvConsts.colors.accept}
-                                onClick={() => {
-                                    axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}`)
-                                        .then((d) => {
-                                            setOrderId(d.data)
-                                            document.getElementsByClassName(`yandex_money_button`)[1].click()
-                                        })
-                                }}
-                            >
-                                Пополнить
-                        </Button>
+                            <input className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onClick={async () => {
+                                if (value >= 2) {
+                                    let order_id = Math.random().toString().split(`.`)[1].substring(0, 10)
+                                    setOrderId(order_id)
+                                    try {
+                                        await axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}/${order_id}`)
+                                    } catch (error) {
+                                        console.log(error);
+                                    }
+                                }
+                            }} />
                         </form>
+                        <input className={`money_button qiwi unactive`} type={value < 2 ? `button` : `submit`} value={``} />
                     </Flex>
                 </Card>
             </Bar>
