@@ -52,20 +52,32 @@ let main = (props) => {
                             <input type="hidden" name="label" value={order_id} />
                             <input type="hidden" name="quickpay-form" value="donate" />
                             <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
-                            <input type="hidden" name="sum" value={+value} data-type="number" />
+                            <input type="hidden" name="sum" value={+value} datatype="number" />
                             <input type="hidden" name="paymentType" value="AC" />
-                            <input className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onMouseDown={async () => {
-                                if (value >= 2) {
-                                    let order_id = Math.random().toString(36).split(`.`)[1].substring(0, 10)
-                                    setOrderId(order_id)
-                                    try {
-                                        await axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}/${order_id}`)
-                                    } catch (error) {
-                                        console.log(error);
-                                    }
-                                }
+                            <input style={{ display: `none` }} id={`yandex`} className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onClick={async () => {
+                                // if (value >= 2) {
+                                //     let order_id = Math.random().toString(36).split(`.`)[1].substring(0, 10)
+                                //     setOrderId(order_id)
+                                //     try {
+                                //         await axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}/${order_id}`)
+                                //     } catch (error) {
+                                //         console.log(error);
+                                //     }
+                                // }
                             }} />
                         </form>
+                        <div className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onClick={async () => {
+                            if (value >= 2) {
+                                let order_id = Math.random().toString(36).split(`.`)[1].substring(0, 10)
+                                setOrderId(order_id)
+                                try {
+                                    await axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}/${order_id}`)
+                                    document.getElementById(`yandex`).click()
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            }
+                        }} />
                         <input className={`money_button qiwi unactive`} type={value < 2 ? `button` : `submit`} value={``} />
                     </Flex>
                 </Card>
