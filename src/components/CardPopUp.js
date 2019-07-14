@@ -54,7 +54,7 @@ let main = (props) => {
                             <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
                             <input type="hidden" name="sum" value={+value} data-type="number" />
                             <input type="hidden" name="paymentType" value="AC" />
-                            <input className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onClick={async () => {
+                            <input className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onMouseDown={async () => {
                                 if (value >= 2) {
                                     let order_id = Math.random().toString(36).split(`.`)[1].substring(0, 10)
                                     setOrderId(order_id)
