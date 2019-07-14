@@ -56,7 +56,7 @@ let main = (props) => {
                             <input type="hidden" name="paymentType" value="AC" />
                             <input className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onClick={async () => {
                                 if (value >= 2) {
-                                    let order_id = Math.random().toString().split(`.`)[1].substring(0, 10)
+                                    let order_id = Math.random().toString(36).split(`.`)[1].substring(0, 10)
                                     setOrderId(order_id)
                                     try {
                                         await axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}/${order_id}`)
