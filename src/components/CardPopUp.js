@@ -50,9 +50,9 @@ let main = (props) => {
                         {
                             user && <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
                                 <input type="hidden" name="receiver" value={wallets.beldii} />
-                                <input type="hidden" name="label" value={user.objectId} />
+                                <input type="hidden" name="label" value={`${user.objectId} ${Math.random().toString(36).split(`.`)[1].substr(0, 10)}`} />
                                 <input type="hidden" name="quickpay-form" value="donate" />
-                                <input type="hidden" name="targets" value={`dcam.laundry ${Math.random().toString(36).split(`.`)[1].substr(0, 10)}`} />
+                                <input type="hidden" name="targets" value={`dcam.laundry`} />
                                 <input type="hidden" name="sum" value={+value} datatype="number" />
                                 <input type="hidden" name="paymentType" value="AC" />
                                 <input style={{ display: `flex` }} id={`yandex`} className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} />

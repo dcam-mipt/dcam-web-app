@@ -41,7 +41,6 @@ input {
   cursor: pointer;
   border-radius: 0.5vw;
   border: none;
-  margin-top: 0.3vw;
   transition: 0.2s;
 }
 
@@ -67,10 +66,9 @@ input {
     width: 13vw;
     height: 13vw;
     border-radius: 2.5vw;
-    margin-top: 1.5vw;
   }
   .money_button.qiwi {
-    margin: 0 0 0 0.8vw;
+    margin: 0 0 0 0.6vw;
   }
 }
 
