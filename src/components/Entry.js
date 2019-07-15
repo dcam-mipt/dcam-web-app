@@ -22,7 +22,16 @@ let Entry = (props) => {
     return (
         <Wrapper>
             <Left>
-                
+                <Flex extra={`width: 100%; height: 100%; align-items: flex-start; justify-content: flex-end;`} >
+                    <Flex row extra={`margin-left: 1vw;`} >
+                        <Text extra={`margin-right: 0.5vw;`} >Это open source проект, вот наш</Text>
+                        <Text ><a href="https://github.com/dcam-mipt" target="_blank">GitHub.</a></Text>
+                    </Flex>
+                    <Flex row extra={`margin: 0 0 1vw 1vw;`} >
+                        <Text extra={`margin-right: 0.5vw;`} >Если у Вас возникли проблемы при работе с сайтом - пишите</Text>
+                        <Text ><a href="https://vk.com/mityabeldii" target="_blank">eму.</a></Text>
+                    </Flex>
+                </Flex>
             </Left>
             <Right>
                 <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu.svg`)} width={3} /></Flex>
