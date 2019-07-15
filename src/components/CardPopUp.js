@@ -47,35 +47,17 @@ let main = (props) => {
                             onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 5) && setValue(Math.round(d.target.value * 100) / 100) }}
                             value={value}
                         />
-                        <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
-                            <input type="hidden" name="receiver" value={wallets.beldii} />
-                            <input type="hidden" name="label" value={order_id} />
-                            <input type="hidden" name="quickpay-form" value="donate" />
-                            <input type="hidden" name="targets" value={`Идентификатор транзакции: ${order_id}`} />
-                            <input type="hidden" name="sum" value={+value} datatype="number" />
-                            <input type="hidden" name="paymentType" value="AC" />
-                            <input style={{ display: `none` }} id={`yandex`} className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} onClick={async () => {
-                                // if (value >= 2) {
-                                //     let order_id = Math.random().toString(36).split(`.`)[1].substring(0, 10)
-                                //     setOrderId(order_id)
-                                //     try {
-                                //         await axios.get(`http://dcam.pro/api/transactions/start_yandex/${+value}/${order_id}`)
-                                //     } catch (error) {
-                                //         console.log(error);
-                                //     }
-                                // }
-                            }} />
-                        </form>
-                        <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
-                            <input type="hidden" name="receiver" value="41001xxxxxxxxxxxx" />
-                            <input type="hidden" name="formcomment" value="Проект «Железный человек»: реактор холодного ядерного синтеза" />
-                            <input type="hidden" name="short-dest" value="Проект «Железный человек»: реактор холодного ядерного синтеза" />
-                            <input type="hidden" name="label" value="$order_id" />
-                            <input type="hidden" name="quickpay-form" value="donate" />
-                            <input type="hidden" name="targets" value="транзакция {order_id}" />
-                            <input type="hidden" name="sum" value={+value} data-type="number" />
-                            <input type="submit" value="Перевести" />
-                        </form>
+                        {
+                            user && <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
+                                <input type="hidden" name="receiver" value={wallets.beldii} />
+                                <input type="hidden" name="label" value={user.objectId} />
+                                <input type="hidden" name="quickpay-form" value="donate" />
+                                <input type="hidden" name="targets" value={`dcam.laundry`} />
+                                <input type="hidden" name="sum" value={+value} datatype="number" />
+                                <input type="hidden" name="paymentType" value="AC" />
+                                <input style={{ display: `flex` }} id={`yandex`} className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} />
+                            </form>
+                        }
                         <input className={`money_button qiwi unactive`} type={value < 2 ? `button` : `submit`} value={``} />
                     </Flex>
                 </Card>

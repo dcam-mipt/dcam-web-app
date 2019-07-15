@@ -77,9 +77,9 @@ let Main = (props) => {
                 <PopUp top={3} ref={profileRef} visible={profileVisible} >
                     <ProfilePopUp signOut={signOut} />
                 </PopUp>
-                <PopUp top={3} right={8} ref={notificationsRef} visible={notificationsVisible} >
+                {/* <PopUp top={3} right={8} ref={notificationsRef} visible={notificationsVisible} >
                     <NotificationsPopUp />
-                </PopUp>
+                </PopUp> */}
                 <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
                     <CardPopUp />
                 </PopUp>
@@ -90,9 +90,9 @@ let Main = (props) => {
                 </Menu>
                 <Workspace>
                     <Header row extra={`justify-content: flex-end;`} >
-                        <MenuButton selected={notificationsVisible} onClick={() => { setNotificationsVisible(!notificationsVisible); match_notifications(); }} >
+                        {/* <MenuButton selected={notificationsVisible} onClick={() => { setNotificationsVisible(!notificationsVisible); match_notifications(); }} >
                             <Image src={require(`../assets/images/notifications.svg`)} width={2.5} />
-                        </MenuButton>
+                        </MenuButton> */}
                         <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
                             <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
                         </MenuButton>
