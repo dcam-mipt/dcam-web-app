@@ -7,6 +7,7 @@ import Main from './Main'
 import Entry from './Entry'
 import { Flex, Image, Text, Rotor } from './UIKit/styled-templates'
 import mvConsts from '../constants/mvConsts'
+import moment from 'moment'
 
 let theme = mvConsts.colors
 
@@ -19,7 +20,18 @@ let GoogleWrapper = (props) => {
                 console.log(`google initialization error`, d)
             })
     })
-    return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
+    // return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
+    return <Sorry/>
+}
+
+let Sorry = () => {
+    return (
+        <Flex extra={`width: 100vw; height: 100vh; background-color: ${mvConsts.colors.purple}`} >
+            <Text size={2} >😞</Text>
+            <Text color={`white`} size={1.2} > Извините, сайт временно находится на обслуживании, зайдите утречком ещё раз.</Text>
+            <Text color={`white`} bold extra={`margin-top: 2vh;`} >{moment().startOf(`day`).format(`DD.MM.YY`)}</Text>
+        </Flex>
+    )
 }
 
 let LoadingPage = (props) => {
