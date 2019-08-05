@@ -64,6 +64,7 @@ export default {
     screens: {
         laundry: "LAUNDRY",
         admin: "ADMIN",
+        event_spaces: "EVENT_SPACES",
     },
 }
 /*eslint-enable no-unused-vars*/

@@ -7,6 +7,7 @@ import uiActions from '../redux/actions/UiActions'
 import machinesActions from '../redux/actions/MachinesActions'
 import laundryActions from '../redux/actions/LaundryActions'
 import Laundry from './Laundry/Laundry'
+import EventSpaces from './EventSpaces/EventSpaces'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
@@ -18,6 +19,7 @@ import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import NotificationsPopUp from './NotificationsPopUp';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 const socket = io('http://dcam.pro:3000');
 
 let screens = [
@@ -26,12 +28,21 @@ let screens = [
         name: mvConsts.screens.laundry,
         admin: false,
         component: <Laundry />,
+        path: `/`,
+    },
+    {
+        image: require('../assets/images/event_spaces.svg'),
+        name: mvConsts.screens.event_spaces,
+        admin: true,
+        component: <EventSpaces />,
+        path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
     },
     {
         image: require('../assets/images/admin.svg'),
         name: mvConsts.screens.admin,
         admin: true,
         component: <AdminTools />,
+        path: `/${mvConsts.screens.admin.toLocaleLowerCase()}`,
     },
 ]
 
@@ -74,36 +85,35 @@ let Main = (props) => {
     if (axios_is_ready) {
         return (
             <Wrapper>
-                <PopUp top={3} ref={profileRef} visible={profileVisible} >
-                    <ProfilePopUp signOut={signOut} />
-                </PopUp>
-                {/* <PopUp top={3} right={8} ref={notificationsRef} visible={notificationsVisible} >
-                    <NotificationsPopUp />
-                </PopUp> */}
-                <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
-                    <CardPopUp />
-                </PopUp>
-                <Menu>
-                    {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} key={index} />)}
-                    {/* <MenuItemImage only_mobile onClick={() => { setNotificationsVisible(!notificationsVisible) }} src={require(`../assets/images/notifications.svg`)} /> */}
-                    <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
-                </Menu>
-                <Workspace>
-                    <Header row extra={`justify-content: flex-end;`} >
-                        {/* <MenuButton selected={notificationsVisible} onClick={() => { setNotificationsVisible(!notificationsVisible); match_notifications(); }} >
-                            <Image src={require(`../assets/images/notifications.svg`)} width={2.5} />
-                        </MenuButton> */}
-                        <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
-                            <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
-                        </MenuButton>
-                        <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
-                            <Image src={require('../assets/images/menu.svg')} width={3} round />
-                        </MenuButton>
-                    </Header>
-                    <Space>
-                        {screens.filter(i => i.name === props.main_screen)[0].component}
-                    </Space>
-                </Workspace>
+                <Router>
+                    <PopUp top={3} ref={profileRef} visible={profileVisible} >
+                        <ProfilePopUp signOut={signOut} />
+                    </PopUp>
+                    <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
+                        <CardPopUp />
+                    </PopUp>
+                    <Menu>
+                        {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
+                        <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
+                    </Menu>
+                    <Workspace>
+                        <Header row extra={`justify-content: flex-end;`} >
+                            <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
+                                <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
+                            </MenuButton>
+                            <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
+                                <Image src={require('../assets/images/menu.svg')} width={3} round />
+                            </MenuButton>
+                        </Header>
+                        <Space>
+                            <Switch>
+                                {
+                                    screens.map((item, index) => <Route key={index} exact path={item.path} component={() => item.component} />)
+                                }
+                            </Switch>
+                        </Space>
+                    </Workspace>
+                </Router>
             </Wrapper>
         )
     } else {
