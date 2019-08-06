@@ -104,6 +104,9 @@ height: 84vh;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 92vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    height: 85vh;
 }`
 
 const Right = styled(Flex)`
@@ -115,6 +118,9 @@ height: 92vh;
     top: 0;
     width: 100vw;
     height: 94vh;
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    height: 85vh;
 }`
 
 export default main;
