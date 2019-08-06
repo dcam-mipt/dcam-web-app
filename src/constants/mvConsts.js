@@ -4,7 +4,7 @@ export let dayTheme = {
     yellow: "#FFCC00",
     accept: "#2DC76D",
     purple: `#7540EE`,
-    lightblue: "#3FB6DC",
+    lightblue: "#2F61D5",
     vk: "#3A60A1",
     WARM_ORANGE: `#FF7052`,
     background: {
@@ -63,8 +63,8 @@ export default {
     },
     screens: {
         laundry: "LAUNDRY",
-        admin: "ADMIN",
-        event_spaces: "EVENT_SPACES",
+        admin: "TOOLS",
+        event_spaces: "SPACES",
     },
 }
 /*eslint-enable no-unused-vars*/

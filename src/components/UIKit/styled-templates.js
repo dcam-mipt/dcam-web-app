@@ -53,7 +53,7 @@ padding: 1.8vw;
     display: ${props => props.visible ? `flex` : `none`};
     padding-top: 5vw;
     width: 100vw;
-    top: 0;
+    top: ${props => props.visible ? 0 : 100}vh;
     right: 0;
     display: block;
     height: 90%;

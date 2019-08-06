@@ -28,7 +28,7 @@ let screens = [
         name: mvConsts.screens.laundry,
         admin: false,
         component: <Laundry />,
-        path: `/`,
+        path: `/${mvConsts.screens.laundry.toLocaleLowerCase()}`,
     },
     {
         image: require('../assets/images/event_spaces.svg'),
