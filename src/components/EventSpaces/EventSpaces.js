@@ -72,7 +72,11 @@ flex-direction: row;
     padding: 3vw;
     margin-top: 1.5vw;
     border-radius: 5vw;
-}`
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    transform: scale(0.8);
+}
+`
 
 const SpaceTitle = styled(Flex)`
 font-size: ${props => props.selected ? 1 : 0}vw;
