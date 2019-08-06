@@ -58,8 +58,8 @@ padding: 0.2vw;
 border-radius: 2vw;
 background-color: ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
-    padding: 1vw;
-    border-radius: 10vw;  
+    padding: 0.8vw;
+    border-radius: 8vw;  
 }`
 
 const TopButton = styled(Flex)`
@@ -69,12 +69,9 @@ border-radius: 1vw;
 background-color: white;
 flex-direction: row;
 @media (min-width: 320px) and (max-width: 480px) {
-    padding: 3vw;
-    margin-top: 1.5vw;
+    padding: 2.5vw;
+    margin-top: 1vw;
     border-radius: 5vw;
-}
-@supports (-webkit-overflow-scrolling: touch) {
-    transform: scale(0.8);
 }
 `
 
@@ -87,10 +84,10 @@ background-color: ${props => props.selected ? mvConsts.colors.lightblue : mvCons
 color: white;
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
-    font-size: ${props => props.selected ? 5 : 0}vw;
-    padding: ${props => props.selected ? 2.5 : 0}vw;
-    margin-left: ${props => props.selected ? 2.5 : 0}vw;
-    border-radius: 5vw;
+    font-size: ${props => props.selected ? 4 : 0}vw;
+    padding: ${props => props.selected ? 2 : 0}vw;
+    margin-left: ${props => props.selected ? 2 : 0}vw;
+    border-radius: 4vw;
 }`
 
 const Top = styled(Flex)`
