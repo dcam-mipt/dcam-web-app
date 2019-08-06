@@ -19,7 +19,7 @@ let main = () => {
     let [calendar, set_calendar] = useState(false)
     let [mode, set_mode] = useState(0)
     return (
-        <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 85vh; }`} >
+        <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
             <Flex>
                 <Top row >
                     <Flex row extra={`margin-left: 1vw;`} >
@@ -106,7 +106,7 @@ height: 84vh;
     height: 92vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 75vh;
 }`
 
 const Right = styled(Flex)`
@@ -120,7 +120,7 @@ height: 92vh;
     height: 94vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 75vh;
 }`
 
 export default main;
