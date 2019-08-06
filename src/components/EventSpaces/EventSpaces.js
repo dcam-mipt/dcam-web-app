@@ -19,7 +19,7 @@ let main = () => {
     let [calendar, set_calendar] = useState(false)
     let [mode, set_mode] = useState(0)
     return (
-        <Flex row >
+        <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 85vh; }`} >
             <Flex>
                 <Top row >
                     <Flex row extra={`margin-left: 1vw;`} >
@@ -78,7 +78,7 @@ const SpaceTitle = styled(Flex)`
 font-size: ${props => props.selected ? 1 : 0}vw;
 padding: ${props => props.selected ? 0.5 : 0}vw;
 margin-left: ${props => props.selected ? 0.5 : 0}vw;
-border-radius: 1vw;
+border-radius: 2vw;
 background-color: ${props => props.selected ? mvConsts.colors.lightblue : mvConsts.colors.background.secondary};
 color: white;
 transition: 0.2s;
