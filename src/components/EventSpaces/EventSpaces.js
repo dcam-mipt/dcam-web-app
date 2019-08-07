@@ -18,6 +18,7 @@ let top_buttons = [
 let main = () => {
     let [calendar, set_calendar] = useState(false)
     let [mode, set_mode] = useState(0)
+    let [new_slot, set_new_slot] = useState(null)
     return (
         <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
             <Flex>
@@ -43,24 +44,33 @@ let main = () => {
                     </Flex>
                 </Top>
                 <Center>
-                    <div style={{
-                        width: `100vw`,
-                        height: `100vw`,
-                        overflow: `scroll`,
-                        whiteSpace: `nowrap`,
-                    }} >
+                    <Flex row >
                         {
-                            new Array(10).fill(0).map((item, index) => {
+                            mvConsts.weekDays.short.map((item, index) => {
                                 return (
-                                    <Inline key={index} >
-                                        <Flex extra={`width: 100vw; height: 100vw; background-color: red; margin: 2vw;`} >
-
+                                    <Flex key={index} extra={`width: 10.2vw; height: 80vh; `} >
+                                        <Cell>date</Cell>
+                                        <Flex extra={`position: relative; width: 10.2vw; height: 78vh; background-color: red;`} onClick={(e) => {
+                                            var rect = e.target.getBoundingClientRect();
+                                            var y = e.clientY - rect.top;
+                                            let slot_number = (y / rect.height * 24).toFixed(0)
+                                            set_new_slot(slot_number)
+                                        }} >
+                                            <Flex extra={`
+                                                display: ${new_slot === null ? `none` : `flex`};
+                                                position: absolute;
+                                                top: ${new_slot * 2.95}vh;
+                                                width: 10vw;
+                                                height: 2.95vh;
+                                                background-color: yellow;
+                                            `} >
+                                            </Flex>
                                         </Flex>
-                                    </Inline>
+                                    </Flex>
                                 )
                             })
                         }
-                    </div>
+                    </Flex>
                 </Center>
             </Flex>
             <Right visible={calendar} >
@@ -69,6 +79,15 @@ let main = () => {
         </Flex>
     )
 }
+
+const Cell = styled(Flex)`
+width: 10.2vw;
+height: 6vh;
+background-color: ${mvConsts.colors.background.support};
+border: 0.1vw solid ${mvConsts.colors.background.primary};
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
 
 const TopButtonImageWrapper = styled(Flex)`
 padding: 0.2vw;
@@ -139,22 +158,6 @@ height: 92vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 75vh;
-}`
-
-const Scroll = styled.div`
-display: inline-block;
-max-width: 100vw;
-overflow: scroll;
-white-space:nowrap;
-height: 22vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
-const Inline = styled(Flex)`
-display: inline-block;
-@media (min-width: 320px) and (max-width: 480px) {
-    
 }`
 
 export default main;
