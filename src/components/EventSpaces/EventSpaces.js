@@ -43,7 +43,24 @@ let main = () => {
                     </Flex>
                 </Top>
                 <Center>
+                    <div style={{
+                        width: `100vw`,
+                        height: `100vw`,
+                        overflow: `scroll`,
+                        whiteSpace: `nowrap`,
+                    }} >
+                        {
+                            new Array(10).fill(0).map((item, index) => {
+                                return (
+                                    <Inline key={index} >
+                                        <Flex extra={`width: 100vw; height: 100vw; background-color: red; margin: 2vw;`} >
 
+                                        </Flex>
+                                    </Inline>
+                                )
+                            })
+                        }
+                    </div>
                 </Center>
             </Flex>
             <Right visible={calendar} >
@@ -122,6 +139,22 @@ height: 92vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 75vh;
+}`
+
+const Scroll = styled.div`
+display: inline-block;
+max-width: 100vw;
+overflow: scroll;
+white-space:nowrap;
+height: 22vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const Inline = styled(Flex)`
+display: inline-block;
+@media (min-width: 320px) and (max-width: 480px) {
+    
 }`
 
 export default main;
