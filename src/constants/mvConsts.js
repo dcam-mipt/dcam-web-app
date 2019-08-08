@@ -1,5 +1,4 @@
 /*eslint-disable no-unused-vars*/
-import * as Sentry from '@sentry/browser';
 export let dayTheme = {
     yellow: "#FFCC00",
     accept: "#2DC76D",
@@ -44,13 +43,12 @@ export let changeTheme = (theme) => { colors = theme }
 
 export default {
     mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d}; transition: 0; }`,
-    error: (d) => { Sentry.captureException(d); console.log(d) },
     colors: colors,
     weekDays: {
-        short: [`ВС`, `ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`],
+        short: [`ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`, `ВС`],
         full: [`воскресенье`, `понедельник`, `вторник`, `среда`, `четверг`, `пятница`, `суббота`]
     },
-    month: [`Январь`, `Февраль`, `Март`, `Апрель`, `Май`, `Июнь`, `Июль`, `Август`, `Октябрь`, `Сентябрь`, `Ноябрь`, `Декабрь`,],
+    month: [`Январь`, `Февраль`, `Март`, `Апрель`, `Май`, `Июнь`, `Июль`, `Август`, `Сентябрь`, `Октябрь`, `Ноябрь`, `Декабрь`,],
     colors_: {
         SPACE_NAVY: `#25265E`,
         STEEL_GREY: `#868697`,
