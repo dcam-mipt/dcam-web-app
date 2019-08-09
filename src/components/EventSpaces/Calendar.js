@@ -5,16 +5,14 @@ import { Flex, Text, Image } from '../UIKit/styled-templates'
 import mvConsts from '../../constants/mvConsts';
 import moment from 'moment'
 
-let useCalendar = (onSelectDate) => {
-    let [selected_date, set_selected_date_] = useState(+moment().startOf(`day`))
-    let set_selected_date = (date) => { set_selected_date_(date); onSelectDate(date) }
-    return [selected_date, set_selected_date]
-}
-
 let main = (props) => {
-    let [selected_date, set_selected_date] = useCalendar((date) => { props.onSelectDate(date) })
+    let [selected_date, set_selected_date] = useState(+moment().startOf(`day`))
+    let set_selected_date_connected = (date) => {
+        set_selected_date(date)
+        if (props.onSelectDate !== undefined) { props.onSelectDate(date) }
+    }
     return (
-        <>
+        <Flex extra={`background-color: white; border-radius: 1vw; `} >
             <Flex row >
                 <Image onClick={() => { set_selected_date(+moment(selected_date).add(-1, `month`)) }} extra={`cursor: pointer; transform: rotate(180deg);`} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
                 <Flex extra={`width: 10vw;`} >
@@ -39,7 +37,7 @@ let main = (props) => {
                                                     border: 0.15vw solid ${is_selected ? mvConsts.colors.purple : is_today ? mvConsts.colors.accept : `transparent`};
                                                     border-radius: 0.5vw;
                                                     cursor: pointer;
-                                                `} onClick={() => { set_selected_date(date) }} >
+                                                `} onClick={() => { set_selected_date_connected(date) }} >
                                             <Text color={the_same_month ? `black` : mvConsts.colors.text.support} >
                                                 {moment(date).format(`D`)}
                                             </Text>
@@ -51,7 +49,7 @@ let main = (props) => {
                     )
                 })
             }
-        </>
+        </Flex>
     )
 }
 

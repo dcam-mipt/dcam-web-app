@@ -2,7 +2,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
-import {Flex} from './styled-templates'
+import { Flex, Text } from './styled-templates'
 
 let Button = (props) => {
     return (
@@ -12,7 +12,7 @@ let Button = (props) => {
             short={props.short === undefined ? true : props.short}
             onClick={() => { if (!props.disabled) { props.onClick && props.onClick() } }}
         >
-            {props.children ? props.children : `button`}
+            <Text color={`white`} bold >{props.children ? props.children : `button`}</Text>
         </Wrapper>
     )
 }

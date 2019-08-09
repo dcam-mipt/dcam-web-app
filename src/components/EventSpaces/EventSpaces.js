@@ -1,10 +1,13 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Image } from '../UIKit/styled-templates'
+import { Flex, Text, Image, PopUp } from '../UIKit/styled-templates'
+import Input from '../UIKit/Input'
+import Button from '../UIKit/Button'
 import mvConsts from '../../constants/mvConsts';
 import moment from 'moment'
 import Calendar from './Calendar'
+import useComponentVisible from '../UIKit/useComponentVisible'
 
 let top_buttons = [
     {
@@ -19,59 +22,174 @@ let top_buttons = [
 
 let main = () => {
     let [target, set_target] = useState(0)
-    let [selected_date, set_selected_date] = useState(+moment().startOf(`day`))
+    let [week_start, set_week_start] = useState(+moment().startOf(`isoWeek`))
+    let [weekSelectorRef, weekSelectorVisible, setWeekSelectorVisible] = useComponentVisible(false);
+    let [create_mode, set_create_mode] = useState(false)
     return (
         <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
             <Flex>
                 <Top row >
-                    {
-                        top_buttons.map((item, index) => {
-                            return (
-                                <TopButton key={index} onClick={() => { set_target(index) }} >
-                                    <TopButtonImageWrapper>
-                                        <Image src={item.image} width={2} />
-                                    </TopButtonImageWrapper>
-                                    <SpaceTitle selected={target === index} >
-                                        {item.title}
-                                    </SpaceTitle>
-                                </TopButton>
-                            )
-                        })
-                    }
-                </Top>
-                <Center>
-                    <WeekDaysWrapper>
+                    <Flex row >
                         {
-                            mvConsts.weekDays.short.map((day, day_index) => {
-                                let date = +moment(selected_date).startOf(`isoWeek`).add(day_index, `day`)
-                                let is_selected = date === selected_date
-                                let color = is_selected ? mvConsts.colors.text.support : mvConsts.colors.text.primary
+                            top_buttons.map((item, index) => {
                                 return (
-                                    <Flex key={day_index} >
-                                        <WeekDayTitle is_selected={is_selected} >
-                                            <Text color={color} >{day}</Text>
-                                            <Text color={color} size={2} >{moment(date).format(`DD`)}</Text>
-                                        </WeekDayTitle>
-                                    </Flex>
+                                    <TopButton key={index} onClick={() => { set_target(index) }} >
+                                        <TopButtonImageWrapper>
+                                            <Image src={item.image} width={2} />
+                                        </TopButtonImageWrapper>
+                                        <SpaceTitle selected={target === index} >
+                                            {item.title}
+                                        </SpaceTitle>
+                                    </TopButton>
                                 )
                             })
                         }
-                    </WeekDaysWrapper>
+                    </Flex>
+                    <WeekSelectorWrapper>
+                        <Image onClick={() => { set_week_start(+moment(week_start).add(-1, `week`)) }} extra={`transform: rotate(180deg);`} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
+                        <Text size={1} onClick={() => { setWeekSelectorVisible(true) }} extra={`width: 8vw; &:hover { box-shadow: 0 0 1vw rgba(0, 0, 0, 0.1); } `} >{moment(week_start).format(`DD.MM`)} - {moment(week_start).add(6 / 7, `week`).format(`DD.MM`)}</Text>
+                        <Image onClick={() => { set_week_start(+moment(week_start).add(1, `week`)) }} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
+                    </WeekSelectorWrapper>
+                    <PopUp top={7} right={26} ref={weekSelectorRef} visible={weekSelectorVisible} >
+                        <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); setWeekSelectorVisible(false) }} />
+                    </PopUp>
+                </Top>
+                <Center>
+                    <Flex extra={`align-items: flex-start;`} >
+                        <WeekDaysWrapper>
+                            {
+                                mvConsts.weekDays.short.map((day, day_index) => {
+                                    let date = +moment(week_start).add(day_index, `day`)
+                                    let is_today = date === +moment().startOf(`day`)
+                                    let color = is_today ? mvConsts.colors.text.secondary : mvConsts.colors.text.primary
+                                    return (
+                                        <Flex key={day_index} >
+                                            <WeekDayTitle is_today={is_today} >
+                                                <Text color={color} >{day}</Text>
+                                                <Text color={color} size={2} >{moment(date).format(`DD`)}</Text>
+                                            </WeekDayTitle>
+                                        </Flex>
+                                    )
+                                })
+                            }
+                        </WeekDaysWrapper>
+                        <Flex extra={`max-height: 36vw; height: 36vw; display: block; overflow-y: scroll;`} >
+                            <Flex row >
+                                {
+                                    mvConsts.weekDays.short.map((day, day_index) => {
+                                        return (
+                                            <Flex key={day_index} extra={`width: 9.5vw; position: relative;`} >
+                                                {
+                                                    // new Array(24).fill(0).map((item, index) => {
+                                                    //     let h = 3.5
+                                                    //     return (
+                                                    //         <Flex extra={`width: 9.2vw; height: ${h - 0.2}vw; border-radius: 0.2vw; background-color: ${mvConsts.colors.yellow}; position: absolute; top: ${h * index + 0.2}vw; `} >
+                                                    //             <Text color={`white`} >{index}</Text>
+                                                    //         </Flex>
+                                                    //     )
+                                                    // })
+                                                }
+                                            </Flex>
+                                        )
+                                    })
+                                }
+                                <Flex extra={`width: 3vw; position: relative;`} >
+                                    {
+                                        new Array(24).fill(0).map((item, index) => {
+                                            let h = 3.5
+                                            return (
+                                                <Flex extra={`position: absolute; top: ${h * index + 0.2}vw; `} >
+                                                    <Text color={mvConsts.colors.text.support} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text>
+                                                </Flex>
+                                            )
+                                        })
+                                    }
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                    </Flex>
                 </Center>
             </Flex>
             <Right visible={false} >
-                <Flex extra={`background-color: white; padding: 1vw; border-radius: 1vw; `} >
-                    <Calendar onSelectDate={(date) => { set_selected_date(date) }} />
-                </Flex>
+                {
+                    create_mode
+                        ? <>
+                            <Flex extra={`padding: 0.1vw; border-radius: 0.75vw; margin-bottom: 0.5vw; background-color: white;`} >
+                                <Input placeholder={`Название`} />
+                            </Flex>
+
+                            <Flex row extra={`padding: 1vw; width: 15.7vw; justify-content: space-between; border-radius: 0.75vw; margin-bottom: 0.5vw; background-color: white;`} >
+                                <Flex extra={`align-items: flex-start; &:hover { transform: scale(1.05) }; cursor: pointer; `} >
+                                    <Text size={0.75} color={mvConsts.colors.text.support} >{moment().format(`DD.MM.YY`)}</Text>
+                                    <Text size={1.5} >{moment().startOf(`hour`).format(`HH:mm`)}</Text>
+                                </Flex>
+                                <Flex>-</Flex>
+                                <Flex extra={`align-items: flex-start; &:hover { transform: scale(1.05) }; cursor: pointer; `} >
+                                    <Text size={0.75} color={mvConsts.colors.text.support} >{moment().format(`DD.MM.YY`)}</Text>
+                                    <Text size={1.5} >{moment().add(1, `hour`).startOf(`hour`).format(`HH:mm`)}</Text>
+                                </Flex>
+                            </Flex>
+
+                            <Button onClick={() => { set_create_mode(false) }} backgroundColor={mvConsts.colors.WARM_ORANGE} >
+                                Отмена
+                            </Button>
+                        </>
+                        : <>
+                            <AddButton onClick={() => { set_create_mode(true) }} >
+                                <Text bold color={`white`} >Добавить</Text>
+                            </AddButton>
+                            <Flex extra={`width: 100%; height: 100%;`} >
+                                <Image src={require(`../../assets/images/file.svg`)} width={10} />
+                            </Flex>
+                        </>
+                }
             </Right>
         </Flex>
     )
 }
 
+const AddButton = styled(Flex)`
+width: 10vw;
+height: 3vw;
+border-radius: 0.5vw;
+cursor: pointer;
+background-color: ${mvConsts.colors.lightblue};
+&:hover { transform: scale(1.05) rotate(2deg); };
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const WeekSelectorWrapper = styled(Flex)`
+flex-direction: row;
+background-color: white;
+border-radius: 0.5vw;
+margin-right: 3.25vw;
+> * {
+    padding: 0 1vw 0 1vw;
+    height: 3vw;
+    cursor: pointer;
+    border-radius: 0.5vw;
+    border-radius: 0.5vw;
+    &:first-child {
+        opacity: 0.2;
+        transform: rotate(180deg);
+        &:hover { opacity: 1; transform: rotate(180deg) scale(1.2); }
+        &:active { transform: rotate(180deg) scale(1.5); }
+    };
+    &:last-child {
+        opacity: 0.2;
+        &:hover { opacity: 1; transform: scale(1.2); }
+        &:active { transform: scale(1.5); }
+    }
+}
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
 const WeekDayTitle = styled(Flex)`
 width: 9.5vw;
 padding: 0.5vw 0 0.5vw 0;
-background-color: ${props => props.is_selected ? mvConsts.colors.background.support : mvConsts.colors.background.primary}; 
+background-color: ${props => props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.primary}; 
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: row;
     width: 98vw;
@@ -80,20 +198,29 @@ background-color: ${props => props.is_selected ? mvConsts.colors.background.supp
 
 const WeekDaysWrapper = styled(Flex)`
 flex-direction: row;
+background-color: rgba(0, 0, 0, 0.02);
+border-radius: 1vw;
 > * {
     &:first-child {
         > * {
-            border-top-left-radius: 1vw;
-            border-bottom-left-radius: 1vw;
-            @media (min-width: 320px) and (max-width: 480px) {
-                border-radius: 4vw;
+            &:first-child {
+                border-top-left-radius: 1vw;
+                border-bottom-left-radius: 1vw;
+                @media (min-width: 320px) and (max-width: 480px) {
+                    border-radius: 4vw;
+                }
             }
         }
     };
     &:last-child {
         > * {
-            border-top-right-radius: 1vw;
-            border-bottom-right-radius: 1vw;
+            &:first-child {
+                border-top-right-radius: 1vw;
+                border-bottom-right-radius: 1vw;
+            }
+            &:last-child {
+                border-bottom-right-radius: 1vw;
+            }
         }
     }
 }
@@ -105,15 +232,6 @@ flex-direction: row;
         }
     };
 }
-}`
-
-const Cell = styled(Flex)`
-width: 10.2vw;
-height: 6vh;
-background-color: ${mvConsts.colors.background.support};
-border: 0.1vw solid ${mvConsts.colors.background.primary};
-@media (min-width: 320px) and (max-width: 480px) {
-    
 }`
 
 const TopButtonImageWrapper = styled(Flex)`
@@ -154,17 +272,16 @@ transition: 0.2s;
 }`
 
 const Top = styled(Flex)`
-width: 69vw;
+width: 70vw;
 height: 8vh;
-justify-content: flex-start;
-padding-left: 2vw;
+justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     padding-top: 4vw;
 }`
 
 const Center = styled(Flex)`
-width: 69vw;
+width: 70vw;
 height: 84vh;
 justify-content: flex-start;
 padding-top: 0.5vw;
@@ -178,9 +295,10 @@ padding-top: 0.5vw;
 }`
 
 const Right = styled(Flex)`
-width: 25vw;
+width: 22vw;
 height: 92vh;
 justify-content: flex-start;
+align-items: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.visible ? `flex` : `none`};
     background-color: white;
