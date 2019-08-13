@@ -80,14 +80,14 @@ let main = () => {
                                         return (
                                             <Flex key={day_index} extra={`width: 9.5vw; position: relative;`} >
                                                 {
-                                                    // new Array(24).fill(0).map((item, index) => {
-                                                    //     let h = 3.5
-                                                    //     return (
-                                                    //         <Flex extra={`width: 9.2vw; height: ${h - 0.2}vw; border-radius: 0.2vw; background-color: ${mvConsts.colors.yellow}; position: absolute; top: ${h * index + 0.2}vw; `} >
-                                                    //             <Text color={`white`} >{index}</Text>
-                                                    //         </Flex>
-                                                    //     )
-                                                    // })
+                                                    new Array(24).fill(0).map((item, index) => {
+                                                        let h = 3.5
+                                                        return (
+                                                            <Flex extra={`width: 9.2vw; height: ${h - 0.2}vw; border-radius: 0.2vw; background: ${mvConsts.colors.yellow}; position: absolute; top: ${h * index + 0.2}vw; `} >
+                                                                <Text color={`white`} >{index}</Text>
+                                                            </Flex>
+                                                        )
+                                                    })
                                                 }
                                             </Flex>
                                         )
@@ -109,16 +109,54 @@ let main = () => {
                         </Flex>
                     </Flex>
                 </Center>
+
+                {/* <Flex extra={`width: 94vw; height: 84vh;`} >
+                    <Flex row extra={`padding-left: 5vw;`} >
+                        {
+                            new Array(24).fill(0).map((item, index) => {
+                                return (
+                                    <Flex key={index} extra={`width: 2.5vw; margin: 0.3vw;`}  >
+                                        <Text color={mvConsts.colors.text.support} >
+                                            {moment().startOf(`day`).add(index, `hour`).format(`HH`)}
+                                        </Text>
+                                    </Flex>
+                                )
+                            })
+                        }
+                    </Flex>
+                    <Flex>
+                        {
+                            mvConsts.weekDays.short.map((day, day_index) => {
+                                return (
+                                    <Flex row key={day_index} >
+                                        <Text extra={`width: 5vw;`} color={mvConsts.colors.text.support} >{`${moment().startOf(`isoWeek`).add(day_index, `day`).format(`DD.MM`)} - ${day.toLocaleLowerCase()}`}</Text>
+                                        {
+                                            new Array(24).fill(0).map((item, index) => {
+                                                return (
+                                                    <Flex key={index} extra={`width: 2.5vw; height: 2.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.background.support}; margin: 0.3vw;`}  >
+
+                                                    </Flex>
+                                                )
+                                            })
+                                        }
+                                    </Flex>
+                                )
+                            })
+                        }
+                    </Flex>
+                </Flex> */}
+
             </Flex>
+
             <Right visible={false} >
                 {
                     create_mode
                         ? <>
-                            <Flex extra={`padding: 0.1vw; border-radius: 0.75vw; margin-bottom: 0.5vw; background-color: white;`} >
+                            <Flex extra={`padding: 0.1vw; border-radius: 0.75vw; margin-bottom: 0.5vw; background: white;`} >
                                 <Input placeholder={`Название`} />
                             </Flex>
 
-                            <Flex row extra={`padding: 1vw; width: 15.7vw; justify-content: space-between; border-radius: 0.75vw; margin-bottom: 0.5vw; background-color: white;`} >
+                            <Flex row extra={`padding: 1vw; width: 15.7vw; justify-content: space-between; border-radius: 0.75vw; margin-bottom: 0.5vw; background: white;`} >
                                 <Flex extra={`align-items: flex-start; &:hover { transform: scale(1.05) }; cursor: pointer; `} >
                                     <Text size={0.75} color={mvConsts.colors.text.support} >{moment().format(`DD.MM.YY`)}</Text>
                                     <Text size={1.5} >{moment().startOf(`hour`).format(`HH:mm`)}</Text>
@@ -153,7 +191,7 @@ width: 10vw;
 height: 3vw;
 border-radius: 0.5vw;
 cursor: pointer;
-background-color: ${mvConsts.colors.lightblue};
+background: ${mvConsts.colors.lightblue};
 &:hover { transform: scale(1.05) rotate(2deg); };
 @media (min-width: 320px) and (max-width: 480px) {
     
@@ -161,7 +199,7 @@ background-color: ${mvConsts.colors.lightblue};
 
 const WeekSelectorWrapper = styled(Flex)`
 flex-direction: row;
-background-color: white;
+background: white;
 border-radius: 0.5vw;
 margin-right: 3.25vw;
 > * {
@@ -189,7 +227,7 @@ margin-right: 3.25vw;
 const WeekDayTitle = styled(Flex)`
 width: 9.5vw;
 padding: 0.5vw 0 0.5vw 0;
-background-color: ${props => props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.primary}; 
+background: ${props => props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.primary}; 
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: row;
     width: 98vw;
@@ -198,7 +236,7 @@ background-color: ${props => props.is_today ? mvConsts.colors.accept : mvConsts.
 
 const WeekDaysWrapper = styled(Flex)`
 flex-direction: row;
-background-color: rgba(0, 0, 0, 0.02);
+background: rgba(0, 0, 0, 0.02);
 border-radius: 1vw;
 > * {
     &:first-child {
@@ -237,7 +275,7 @@ border-radius: 1vw;
 const TopButtonImageWrapper = styled(Flex)`
 padding: 0.2vw;
 border-radius: 2vw;
-background-color: ${mvConsts.colors.background.secondary};
+background: ${mvConsts.colors.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     padding: 0.8vw;
     border-radius: 8vw;  
@@ -247,7 +285,7 @@ const TopButton = styled(Flex)`
 padding: 0.75vw;
 margin: 0.2vw;
 border-radius: 1vw;
-background-color: white;
+background: white;
 flex-direction: row;
 @media (min-width: 320px) and (max-width: 480px) {
     padding: 2.5vw;
@@ -261,7 +299,7 @@ font-size: ${props => props.selected ? 1 : 0}vw;
 padding: ${props => props.selected ? 0.5 : 0}vw;
 margin-left: ${props => props.selected ? 0.5 : 0}vw;
 border-radius: 2vw;
-background-color: ${props => props.selected ? mvConsts.colors.lightblue : mvConsts.colors.background.secondary};
+background: ${props => props.selected ? mvConsts.colors.lightblue : mvConsts.colors.background.secondary};
 color: white;
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -301,7 +339,7 @@ justify-content: flex-start;
 align-items: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.visible ? `flex` : `none`};
-    background-color: white;
+    background: white;
     position: fixed;
     top: 0;
     width: 100vw;
