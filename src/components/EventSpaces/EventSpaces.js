@@ -54,134 +54,31 @@ let main = () => {
                         <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); setWeekSelectorVisible(false) }} />
                     </PopUp>
                 </Top>
-                <Center>
-                    <Flex extra={`align-items: flex-start;`} >
-                        <WeekDaysWrapper>
-                            {
-                                mvConsts.weekDays.short.map((day, day_index) => {
-                                    let date = +moment(week_start).add(day_index, `day`)
-                                    let is_today = date === +moment().startOf(`day`)
-                                    let color = is_today ? mvConsts.colors.text.secondary : mvConsts.colors.text.primary
-                                    return (
-                                        <Flex key={day_index} >
-                                            <WeekDayTitle is_today={is_today} >
-                                                <Text color={color} >{day}</Text>
-                                                <Text color={color} size={2} >{moment(date).format(`DD`)}</Text>
-                                            </WeekDayTitle>
-                                        </Flex>
-                                    )
-                                })
-                            }
-                        </WeekDaysWrapper>
-                        <Flex extra={`max-height: 36vw; height: 36vw; display: block; overflow-y: scroll;`} >
-                            <Flex row >
-                                {
-                                    mvConsts.weekDays.short.map((day, day_index) => {
-                                        return (
-                                            <Flex key={day_index} extra={`width: 9.5vw; position: relative;`} >
-                                                {
-                                                    new Array(24).fill(0).map((item, index) => {
-                                                        let h = 3.5
-                                                        return (
-                                                            <Flex extra={`width: 9.2vw; height: ${h - 0.2}vw; border-radius: 0.2vw; background: ${mvConsts.colors.yellow}; position: absolute; top: ${h * index + 0.2}vw; `} >
-                                                                <Text color={`white`} >{index}</Text>
-                                                            </Flex>
-                                                        )
-                                                    })
-                                                }
-                                            </Flex>
-                                        )
-                                    })
-                                }
-                                <Flex extra={`width: 3vw; position: relative;`} >
-                                    {
-                                        new Array(24).fill(0).map((item, index) => {
-                                            let h = 3.5
-                                            return (
-                                                <Flex extra={`position: absolute; top: ${h * index + 0.2}vw; `} >
-                                                    <Text color={mvConsts.colors.text.support} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text>
-                                                </Flex>
-                                            )
-                                        })
-                                    }
-                                </Flex>
-                            </Flex>
-                        </Flex>
-                    </Flex>
-                </Center>
-
-                {/* <Flex extra={`width: 94vw; height: 84vh;`} >
-                    <Flex row extra={`padding-left: 5vw;`} >
-                        {
-                            new Array(24).fill(0).map((item, index) => {
-                                return (
-                                    <Flex key={index} extra={`width: 2.5vw; margin: 0.3vw;`}  >
-                                        <Text color={mvConsts.colors.text.support} >
-                                            {moment().startOf(`day`).add(index, `hour`).format(`HH`)}
-                                        </Text>
-                                    </Flex>
-                                )
-                            })
-                        }
-                    </Flex>
+                <Flex row extra={`height: 84vh;`} >
                     <Flex>
                         {
                             mvConsts.weekDays.short.map((day, day_index) => {
                                 return (
-                                    <Flex row key={day_index} >
-                                        <Text extra={`width: 5vw;`} color={mvConsts.colors.text.support} >{`${moment().startOf(`isoWeek`).add(day_index, `day`).format(`DD.MM`)} - ${day.toLocaleLowerCase()}`}</Text>
-                                        {
-                                            new Array(24).fill(0).map((item, index) => {
-                                                return (
-                                                    <Flex key={index} extra={`width: 2.5vw; height: 2.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.background.support}; margin: 0.3vw;`}  >
-
-                                                    </Flex>
-                                                )
-                                            })
-                                        }
+                                    <Flex key={day_index} extra={`width: 5vw; height: ${30 / 7}vw;`} >
+                                        <Text color={mvConsts.colors.text.support} >{day}</Text>
                                     </Flex>
                                 )
                             })
                         }
                     </Flex>
-                </Flex> */}
-
+                    <Flex extra={`width: 85vw; height: 30vw; border-radius: 1vw;`} >
+                        {
+                            mvConsts.weekDays.short.map((day, day_index) => {
+                                return (
+                                    <Flex key={day_index} extra={`width: 85vw; height: ${30 / 7}vw; background: ${mvConsts.colors.background.support}; border-bottom: 0.03vw solid ${mvConsts.colors.background.primary};`} >
+                                        
+                                    </Flex>
+                                )
+                            })
+                        }
+                    </Flex>
+                </Flex>
             </Flex>
-
-            <Right visible={false} >
-                {
-                    create_mode
-                        ? <>
-                            <Flex extra={`padding: 0.1vw; border-radius: 0.75vw; margin-bottom: 0.5vw; background: white;`} >
-                                <Input placeholder={`Название`} />
-                            </Flex>
-
-                            <Flex row extra={`padding: 1vw; width: 15.7vw; justify-content: space-between; border-radius: 0.75vw; margin-bottom: 0.5vw; background: white;`} >
-                                <Flex extra={`align-items: flex-start; &:hover { transform: scale(1.05) }; cursor: pointer; `} >
-                                    <Text size={0.75} color={mvConsts.colors.text.support} >{moment().format(`DD.MM.YY`)}</Text>
-                                    <Text size={1.5} >{moment().startOf(`hour`).format(`HH:mm`)}</Text>
-                                </Flex>
-                                <Flex>-</Flex>
-                                <Flex extra={`align-items: flex-start; &:hover { transform: scale(1.05) }; cursor: pointer; `} >
-                                    <Text size={0.75} color={mvConsts.colors.text.support} >{moment().format(`DD.MM.YY`)}</Text>
-                                    <Text size={1.5} >{moment().add(1, `hour`).startOf(`hour`).format(`HH:mm`)}</Text>
-                                </Flex>
-                            </Flex>
-
-                            <Button onClick={() => { set_create_mode(false) }} backgroundColor={mvConsts.colors.WARM_ORANGE} >
-                                Отмена
-                            </Button>
-                        </>
-                        : <>
-                            <AddButton onClick={() => { set_create_mode(true) }} >
-                                <Text bold color={`white`} >Добавить</Text>
-                            </AddButton>
-                            <Flex extra={`width: 100%; height: 100%;`} >
-                                <Image src={require(`../../assets/images/file.svg`)} width={10} />
-                            </Flex>
-                        </>
-                }
-            </Right>
         </Flex>
     )
 }
@@ -321,7 +218,7 @@ justify-content: space-between;
 const Center = styled(Flex)`
 width: 70vw;
 height: 84vh;
-justify-content: flex-start;
+// justify-content: flex-start;
 padding-top: 0.5vw;
 @media (min-width: 320px) and (max-width: 480px) {
     padding-top: 2.5vw;

@@ -19,7 +19,7 @@ import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import NotificationsPopUp from './NotificationsPopUp';
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 const socket = io('http://dcam.pro:3000');
 
 let screens = [
@@ -107,6 +107,7 @@ let Main = (props) => {
                         </Header>
                         <Space>
                             <Switch>
+                                <Route path="/" exact component={() => <Laundry />} />
                                 {
                                     screens.map((item, index) => <Route key={index} exact path={item.path} component={() => item.component} />)
                                 }
