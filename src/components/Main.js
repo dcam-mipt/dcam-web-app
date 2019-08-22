@@ -27,21 +27,21 @@ let screens = [
         image: require('../assets/images/laundry_selected.svg'),
         name: mvConsts.screens.laundry,
         admin: false,
-        component: <Laundry />,
+        component: Laundry,
         path: `/${mvConsts.screens.laundry.toLocaleLowerCase()}`,
     },
     {
         image: require('../assets/images/event_spaces.svg'),
         name: mvConsts.screens.event_spaces,
         admin: true,
-        component: <EventSpaces />,
+        component: EventSpaces,
         path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
     },
     {
         image: require('../assets/images/admin.svg'),
         name: mvConsts.screens.admin,
         admin: true,
-        component: <AdminTools />,
+        component: AdminTools,
         path: `/${mvConsts.screens.admin.toLocaleLowerCase()}`,
     },
 ]
@@ -109,7 +109,7 @@ let Main = (props) => {
                             <Switch>
                                 <Route path="/" exact component={() => <Laundry />} />
                                 {
-                                    screens.map((item, index) => <Route key={index} exact path={item.path} component={() => item.component} />)
+                                    screens.map((item, index) => <Route key={index} exact path={item.path} component={item.component} />)
                                 }
                             </Switch>
                         </Space>
