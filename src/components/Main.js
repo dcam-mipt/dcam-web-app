@@ -107,7 +107,7 @@ let Main = (props) => {
                         </Header>
                         <Space>
                             <Switch>
-                                <Route path="/" exact component={() => <Laundry />} />
+                                <Route path="/" exact component={Laundry} />
                                 {
                                     screens.map((item, index) => <Route key={index} exact path={item.path} component={item.component} />)
                                 }
