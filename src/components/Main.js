@@ -86,11 +86,11 @@ let Main = (props) => {
         return (
             <Wrapper>
                 <Router>
-                    <PopUp top={3} ref={profileRef} visible={profileVisible} >
-                        <ProfilePopUp signOut={signOut} />
-                    </PopUp>
-                    <PopUp top={3} right={4.5} ref={cardRef} visible={cardVisible} >
+                    <PopUp extra={`top: ${cardVisible ? 4 : 3}vw; right: 5vw;`} ref={cardRef} visible={cardVisible} >
                         <CardPopUp />
+                    </PopUp>
+                    <PopUp extra={`top: ${profileVisible ? 4 : 3}vw; right: 1vw;`} ref={profileRef} visible={profileVisible} >
+                        <ProfilePopUp signOut={signOut} />
                     </PopUp>
                     <Menu>
                         {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
@@ -238,6 +238,7 @@ width: 3.5vw;
 height: 3.5vw;
 border-radius: 0.5vw;
 background-color: ${props => props.selected && props.background.primary};
+margin-left: 0.5vw;
 &:hover { background-color: ${props => props.background.primary}; }
 @media (min-width: 320px) and (max-width: 480px) {
     

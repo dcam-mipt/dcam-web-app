@@ -1,5 +1,5 @@
 /*eslint-disable no-unused-vars*/
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Image, PopUp } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
@@ -8,97 +8,99 @@ import mvConsts from '../../constants/mvConsts';
 import moment from 'moment'
 import Calendar from './Calendar'
 import useComponentVisible from '../UIKit/useComponentVisible'
+import CreateEventPopUp from './CreateEventPopUp'
+import CreateSpacePopUp from './CreateTargetPopUp'
+import { connect } from 'react-redux'
+import axios from 'axios'
 
-let top_buttons = [
-    {
-        image: require(`../../assets/images/club.svg`),
-        title: `клуб`,
-    },
-    {
-        image: require(`../../assets/images/meetings_room.svg`),
-        title: `кдс`,
-    },
-]
+let get_targets = () => axios.get(`${mvConsts.api}/targets/get`).then(d => d.data).catch(e => e)
 
-let main = () => {
-    let [target, set_target] = useState(0)
+let EventTargets = (props) => {
+    let { is_admin } = props
+    let [selected_target, set_selected_target] = useState(0)
+    let [targets, set_targets] = useState([])
     let [week_start, set_week_start] = useState(+moment().startOf(`isoWeek`))
-    let [weekSelectorRef, weekSelectorVisible, setWeekSelectorVisible] = useComponentVisible(false);
-    let [create_mode, set_create_mode] = useState(false)
+    let [week_selector_ref, week_selector_visible, set_week_selector_visible] = useComponentVisible(false);
+    let [create_event_ref, create_event_visible, set_create_event_visible] = useComponentVisible(false);
+    let [create_target_ref, create_target_visible, set_create_target_visible] = useComponentVisible(false);
+    useEffect(() => { get_targets().then(d => { set_targets(d) }) }, [])
     return (
         <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
             <Flex>
                 <Top row >
                     <Flex row >
                         {
-                            top_buttons.map((item, index) => {
+                            targets.map((item, index) => {
+                                console.log(`http://dcam.pro:` + item.avatar.url.split(`:`)[2]);
                                 return (
-                                    <TopButton key={index} onClick={() => { set_target(index) }} >
+                                    <TopButton key={index} onClick={() => { set_selected_target(index) }} >
                                         <TopButtonImageWrapper>
-                                            <Image src={item.image} width={2} />
+                                            <Image src={`http://dcam.pro:1337` + item.avatar.url.split(`:1337`)[1]} width={2} />
                                         </TopButtonImageWrapper>
-                                        <SpaceTitle selected={target === index} >
-                                            {item.title}
+                                        <SpaceTitle selected={selected_target === index} >
+                                            {item.name}
                                         </SpaceTitle>
                                     </TopButton>
                                 )
                             })
                         }
+                        {
+                            is_admin && <TopButton onClick={() => { set_create_target_visible(true) }} >
+                                <TopButtonImageWrapper>
+                                    <Image src={require(`../../assets/images/plus.svg`)} width={2} />
+                                </TopButtonImageWrapper>
+                                <PopUp extra={`top: ${create_target_visible ? 4 : 3}vw; left: 0vw;`} ref={create_target_ref} visible={create_target_visible} >
+                                    <CreateSpacePopUp onCreate={() => { get_targets().then(d => { console.log(d); set_targets(d) }) }} />
+                                </PopUp>
+                            </TopButton>
+                        }
                     </Flex>
-                    <WeekSelectorWrapper>
-                        <Image onClick={() => { set_week_start(+moment(week_start).add(-1, `week`)) }} extra={`transform: rotate(180deg);`} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
-                        <Text size={1} onClick={() => { setWeekSelectorVisible(true) }} extra={`width: 8vw; &:hover { box-shadow: 0 0 1vw rgba(0, 0, 0, 0.1); } `} >{moment(week_start).format(`DD.MM`)} - {moment(week_start).add(6 / 7, `week`).format(`DD.MM`)}</Text>
-                        <Image onClick={() => { set_week_start(+moment(week_start).add(1, `week`)) }} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
-                    </WeekSelectorWrapper>
-                    <PopUp top={7} right={26} ref={weekSelectorRef} visible={weekSelectorVisible} >
-                        <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); setWeekSelectorVisible(false) }} />
-                    </PopUp>
+                    <Flex row >
+                        <WeekSelectorWrapper>
+                            <Image onClick={() => { set_week_start(+moment(week_start).add(-1, `week`)) }} extra={`transform: rotate(180deg);`} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
+                            <Text size={1} onClick={() => { set_week_selector_visible(true) }} extra={`width: 8vw; &:hover { box-shadow: 0 0 1vw rgba(0, 0, 0, 0.1); } `} >
+                                {moment(week_start).format(`DD.MM`)} - {moment(week_start).add(6 / 7, `week`).format(`DD.MM`)}
+                                <PopUp extra={`top: ${week_selector_visible ? 4 : 3}vw;`} ref={week_selector_ref} visible={week_selector_visible} >
+                                    <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); set_week_selector_visible(false) }} />
+                                </PopUp>
+                            </Text>
+                            <Image onClick={() => { set_week_start(+moment(week_start).add(1, `week`)) }} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
+                        </WeekSelectorWrapper>
+                        <Button backgroundColor={mvConsts.colors.accept} onClick={() => { set_create_event_visible(true) }} >
+                            Создать
+                            <PopUp extra={`top: ${create_event_visible ? 4 : 3}vw; right: 0vw;`} ref={create_event_ref} visible={create_event_visible} >
+                                <CreateEventPopUp />
+                            </PopUp>
+                        </Button>
+                    </Flex>
                 </Top>
                 <Flex row extra={`height: 84vh;`} >
-                    <Flex>
-                        {
-                            mvConsts.weekDays.short.map((day, day_index) => {
-                                return (
-                                    <Flex key={day_index} extra={`width: 5vw; height: ${30 / 7}vw;`} >
-                                        <Text color={mvConsts.colors.text.support} >{day}</Text>
-                                    </Flex>
-                                )
-                            })
-                        }
-                    </Flex>
-                    <Flex extra={`width: 85vw; height: 30vw; border-radius: 1vw;`} >
-                        {
-                            mvConsts.weekDays.short.map((day, day_index) => {
-                                return (
-                                    <Flex key={day_index} extra={`width: 85vw; height: ${30 / 7}vw; background: ${mvConsts.colors.background.support}; border-bottom: 0.03vw solid ${mvConsts.colors.background.primary};`} >
-                                        
-                                    </Flex>
-                                )
-                            })
-                        }
-                    </Flex>
+
                 </Flex>
             </Flex>
         </Flex>
     )
 }
 
-const AddButton = styled(Flex)`
-width: 10vw;
-height: 3vw;
-border-radius: 0.5vw;
-cursor: pointer;
-background: ${mvConsts.colors.lightblue};
-&:hover { transform: scale(1.05) rotate(2deg); };
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
+let mapStateToProps = (state) => {
+    return {
+        is_admin: state.user.is_admin,
+    }
+}
+let mapDispatchToProps = (dispatch) => {
+    return {
+        // setToken: (data) => {
+        //     return dispatch(userActions.setToken(data))
+        // }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(EventTargets)
 
 const WeekSelectorWrapper = styled(Flex)`
 flex-direction: row;
 background: white;
 border-radius: 0.5vw;
-margin-right: 3.25vw;
+margin: 0.25vw;
 > * {
     padding: 0 1vw 0 1vw;
     height: 3vw;
@@ -121,54 +123,6 @@ margin-right: 3.25vw;
     
 }`
 
-const WeekDayTitle = styled(Flex)`
-width: 9.5vw;
-padding: 0.5vw 0 0.5vw 0;
-background: ${props => props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.primary}; 
-@media (min-width: 320px) and (max-width: 480px) {
-    flex-direction: row;
-    width: 98vw;
-    padding: 2.5vw 0 2.5vw 0;
-}`
-
-const WeekDaysWrapper = styled(Flex)`
-flex-direction: row;
-background: rgba(0, 0, 0, 0.02);
-border-radius: 1vw;
-> * {
-    &:first-child {
-        > * {
-            &:first-child {
-                border-top-left-radius: 1vw;
-                border-bottom-left-radius: 1vw;
-                @media (min-width: 320px) and (max-width: 480px) {
-                    border-radius: 4vw;
-                }
-            }
-        }
-    };
-    &:last-child {
-        > * {
-            &:first-child {
-                border-top-right-radius: 1vw;
-                border-bottom-right-radius: 1vw;
-            }
-            &:last-child {
-                border-bottom-right-radius: 1vw;
-            }
-        }
-    }
-}
-@media (min-width: 320px) and (max-width: 480px) {
-> * { 
-    &:not(:first-child) {
-        > * {
-            display: none;
-        }
-    };
-}
-}`
-
 const TopButtonImageWrapper = styled(Flex)`
 padding: 0.2vw;
 border-radius: 2vw;
@@ -184,6 +138,7 @@ margin: 0.2vw;
 border-radius: 1vw;
 background: white;
 flex-direction: row;
+cursor: pointer;
 @media (min-width: 320px) and (max-width: 480px) {
     padding: 2.5vw;
     margin-top: 1vw;
@@ -207,7 +162,7 @@ transition: 0.2s;
 }`
 
 const Top = styled(Flex)`
-width: 70vw;
+width: 90vw;
 height: 8vh;
 justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -215,36 +170,4 @@ justify-content: space-between;
     padding-top: 4vw;
 }`
 
-const Center = styled(Flex)`
-width: 70vw;
-height: 84vh;
-// justify-content: flex-start;
-padding-top: 0.5vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    padding-top: 2.5vw;
-    width: 100vw;
-    height: 92vh;
-}
-@supports (-webkit-overflow-scrolling: touch) {
-    height: 75vh;
-}`
-
-const Right = styled(Flex)`
-width: 22vw;
-height: 92vh;
-justify-content: flex-start;
-align-items: flex-start;
-@media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.visible ? `flex` : `none`};
-    background: white;
-    position: fixed;
-    top: 0;
-    width: 100vw;
-    height: 94vh;
-}
-@supports (-webkit-overflow-scrolling: touch) {
-    height: 75vh;
-}`
-
-export default main;
 /*eslint-enable no-unused-vars*/

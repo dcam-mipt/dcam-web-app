@@ -11,19 +11,20 @@ let Button = (props) => {
             visible={props.visible === undefined ? true : props.visible}
             short={props.short === undefined ? true : props.short}
             onClick={() => { if (!props.disabled) { props.onClick && props.onClick() } }}
+            bold
         >
-            <Text color={`white`} bold >{props.children ? props.children : `button`}</Text>
+            {props.children ? props.children : `button`}
         </Wrapper>
     )
 }
 
 export default Button
 
-const Wrapper = styled(Flex)`
+const Wrapper = styled(Text)`
 display: ${props => props.only_mobile ? `none` : `flex`}
-justify-content: center
-align-items: center
-flex-direction: column
+justify-content: center;
+align-items: center;
+flex-direction: column;
 transition: 0.2s
 width: ${props => props.short ? 6.25 : 15}vw;
 height: ${props => +props.visible}vw;

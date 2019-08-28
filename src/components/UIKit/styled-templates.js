@@ -10,6 +10,7 @@ transition: 0.2s
 border-radius: ${props => props.round && props.width}vw
 visibility: ${props => props.src ? `visible` : `hidden`}
 cursor: ${props => props.pointer ? `pointer` : `null`}
+${props => props.round ? `object-fit: cover;` : null}
 ${props => props.extra};
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.width * 5}vw;
@@ -19,12 +20,16 @@ ${props => props.extra};
 
 export const Flex = styled.div`
 display: ${props => props.only_mobile ? `none` : `flex`}
+position: relative;
 justify-content: ${props => props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
 align-items: ${props => !props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
 flex-direction: ${props => props.row ? `row` : `column`}
 transition: 0.2s
 ${props => props.extra}
 font-size: 1vw;
+background-size: cover;
+background-repeat: no-repeat;
+background-position: 50% 50%;
 cursor: ${props => props.pointer ? `pointer` : `null`}
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
@@ -42,18 +47,17 @@ flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
 background-color: ${props => props.background.primary};
-z-index: ${props => props.visible ? 2 : 0};
-position: fixed;
-top: ${props => (props.top ? props.top : 0) + (props.visible ? 0 : 2) + 1}vw;
-right: ${props => props.right ? props.right : 1}vw;
+z-index: ${props => props.visible ? 3 : 0};
+position: absolute;
 visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
 padding: 1.8vw;
+box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.visible ? `flex` : `none`};
     padding-top: 5vw;
     width: 100vw;
-    top: ${props => props.visible ? 0 : 100}vh;
+    top: 0;
     right: 0;
     display: block;
     height: 90%;
@@ -66,7 +70,7 @@ font-size: ${props => props.size ? props.size : 0.8}vw;
 color: ${props => props.color ? props.color : props.text.primary};
 font-family: ${props => props.bold ? `Bold` : `Regular`};
 @media (min-width: 320px) and (max-width: 480px) {
-    font-size: ${props => (props.size ? props.size : 0.8) * 5}vw;
+    font-size: ${props => (props.size ? props.size : 0.8) * 4}vw;
 }`
 
 export const Bar = styled(Flex)`

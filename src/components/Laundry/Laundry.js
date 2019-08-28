@@ -49,9 +49,15 @@ let Laundry = (props) => {
             </Button>
             <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
                 Мои стирки
+                <PopUp extra={`top: ${reservationsVisible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible} >
+                    <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
+                </PopUp>
             </Button>
             <Button backgroundColor={mvConsts.colors.lightblue} disabled={!selectedSlots.length} onClick={() => { setBucketVisible(!bucketVisible) }} >
                 Корзина {selectedSlots.length && `(${selectedSlots.length})`}
+                <PopUp extra={`top: ${bucketVisible ? 3.5 : 2}vw; right: 0vw;`} ref={bucketRef} visible={bucketVisible} >
+                    <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                </PopUp>
             </Button>
             <Button backgroundColor={mvConsts.colors.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
                 {mobileCalendar ? `Расписание` : moment(+selectedDay).format(`DD.MM`)}
@@ -63,15 +69,6 @@ let Laundry = (props) => {
             {
                 props.laundry
                     ? <Flex>
-                        <PopUp ref={bucketRef} visible={bucketVisible} >
-                            <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
-                        </PopUp>
-                        <PopUp ref={reservationsRef} visible={reservationsVisible} >
-                            <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
-                        </PopUp>
-                        <PopUp ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
-                            <BookPopUp {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
-                        </PopUp>
                         <Wrapper>
                             <Calendar mobileCalendar={mobileCalendar} >
                                 <Flex only_desktop > {header} </Flex>
@@ -103,6 +100,9 @@ let Laundry = (props) => {
                                 }
                             </Calendar>
                             <Schedule mobileCalendar={mobileCalendar} >
+                                <PopUp extra={`top: ${bookVisible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
+                                    <BookPopUp {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
+                                </PopUp>
                                 {
                                     <TwoHourRow>
                                         <TimeNode />
