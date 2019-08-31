@@ -20,15 +20,15 @@ let GoogleWrapper = (props) => {
                 console.log(`google initialization error`, d)
             })
     })
-    // return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
-    return <Sorry/>
+    return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
+    // return <Sorry/>
 }
 
 let Sorry = () => {
     return (
         <Flex extra={`width: 100vw; height: 100vh; background-color: ${mvConsts.colors.purple}`} >
             {/* <Text size={2} >😞</Text> */}
-            <Text color={`white`} size={1.2} > Извините, сайт временно находится на обслуживании, зайдите позже ещё раз.</Text>
+            <Text color={`white`} size={1.2} > Извините, сайт временно находится на обслуживании, зайдите утречком ещё раз.</Text>
             <Text color={`white`} bold extra={`margin-top: 2vh;`} >{moment().startOf(`day`).format(`DD.MM.YY`)}</Text>
         </Flex>
     )
