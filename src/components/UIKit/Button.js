@@ -24,6 +24,7 @@ const Wrapper = styled(Text)`
 display: ${props => props.only_mobile ? `none` : `flex`}
 justify-content: center;
 align-items: center;
+position: relative;
 flex-direction: column;
 transition: 0.2s
 width: ${props => props.short ? 6.25 : 15}vw;

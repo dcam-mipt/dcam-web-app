@@ -17,6 +17,7 @@ let main = (props) => {
             <Bar row >
                 <Image src={require(`../../assets/images/ticket.svg`)} width={2} />
                 <Text size={1.5} >Мои Стирки</Text>
+                {/* <Text bold size={1.5} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >Мои Стирки</Text> */}
             </Bar>
             <Bar>
                 {

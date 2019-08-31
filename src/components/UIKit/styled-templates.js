@@ -20,7 +20,6 @@ ${props => props.extra};
 
 export const Flex = styled.div`
 display: ${props => props.only_mobile ? `none` : `flex`}
-position: relative;
 justify-content: ${props => props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
 align-items: ${props => !props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
 flex-direction: ${props => props.row ? `row` : `column`}
@@ -34,7 +33,8 @@ cursor: ${props => props.pointer ? `pointer` : `null`}
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
     font-size: 4vw;
-}`
+}
+`
 
 // Flex.defaultProps = { ...darkTheme }
 Flex.defaultProps = { ...dayTheme }
@@ -54,6 +54,7 @@ opacity: ${props => +props.visible};
 padding: 1.8vw;
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 @media (min-width: 320px) and (max-width: 480px) {
+    position: fixed;
     display: ${props => props.visible ? `flex` : `none`};
     padding-top: 5vw;
     width: 100vw;
