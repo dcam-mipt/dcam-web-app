@@ -29,7 +29,7 @@ let DatePicker = (props) => {
     let mm = +moment(date).format(`mm`)
     return (
         <Flex extra={`align-items: flex-start; width: 100%;`} >
-            <Text size={1} extra={`margin: 0.25vw;`} >Дата</Text>
+            {/* <Text size={1} extra={`margin: 0.25vw;`} >Дата</Text> */}
             <Flex row >
                 <Selector
                     array={new Array(moment(date).daysInMonth()).fill(0).map((a, b) => b + 1)}
@@ -52,7 +52,7 @@ let DatePicker = (props) => {
             </Flex>
             {
                 props.time && <>
-                    <Text size={1} extra={`margin: 0.25vw;`} >Время</Text>
+                    {/* <Text size={1} extra={`margin: 0.25vw;`} >Время</Text> */}
                     <Flex row >
                         <Selector
                             array={new Array(24).fill(0).map((a, b) => (b < 10 ? `0` : null) + b)}

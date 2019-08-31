@@ -14,16 +14,22 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 
 let get_targets = () => axios.get(`${mvConsts.api}/targets/get`).then(d => d.data).catch(e => e)
+let get_events = () => axios.get(`${mvConsts.api}/events/get`).then(d => d.data).catch(e => e)
 
 let EventTargets = (props) => {
     let { is_admin } = props
     let [selected_target, set_selected_target] = useState(0)
     let [targets, set_targets] = useState([])
+    let [events, set_events] = useState([])
     let [week_start, set_week_start] = useState(+moment().startOf(`isoWeek`))
     let [week_selector_ref, week_selector_visible, set_week_selector_visible] = useComponentVisible(false);
     let [create_event_ref, create_event_visible, set_create_event_visible] = useComponentVisible(false);
     let [create_target_ref, create_target_visible, set_create_target_visible] = useComponentVisible(false);
-    useEffect(() => { get_targets().then(d => { set_targets(d) }) }, [])
+    useEffect(() => {
+        get_targets().then(d => { set_targets(d) })
+        get_events().then(d => { set_events(d) })
+    }, [])
+    let target_id = targets[selected_target] && targets[selected_target].objectId
     return (
         <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
             <Flex>
@@ -31,7 +37,6 @@ let EventTargets = (props) => {
                     <Flex row >
                         {
                             targets.map((item, index) => {
-                                console.log(`http://dcam.pro:` + item.avatar.url.split(`:`)[2]);
                                 return (
                                     <TopButton key={index} onClick={() => { set_selected_target(index) }} >
                                         <TopButtonImageWrapper>
@@ -50,7 +55,7 @@ let EventTargets = (props) => {
                                     <Image src={require(`../../assets/images/plus.svg`)} width={2} />
                                 </TopButtonImageWrapper>
                                 <PopUp extra={`top: ${create_target_visible ? 4 : 3}vw; left: 0vw;`} ref={create_target_ref} visible={create_target_visible} >
-                                    <CreateSpacePopUp onCreate={() => { get_targets().then(d => { console.log(d); set_targets(d) }) }} />
+                                    <CreateSpacePopUp onCreate={() => { get_targets().then(d => { set_targets(d) }) }} />
                                 </PopUp>
                             </TopButton>
                         }
@@ -69,7 +74,7 @@ let EventTargets = (props) => {
                         <Button backgroundColor={mvConsts.colors.accept} onClick={() => { set_create_event_visible(true) }} >
                             Создать
                             <PopUp extra={`top: ${create_event_visible ? 4 : 3}vw; right: 0vw;`} ref={create_event_ref} visible={create_event_visible} >
-                                <CreateEventPopUp />
+                                <CreateEventPopUp target_id={target_id} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
                             </PopUp>
                         </Button>
                     </Flex>
