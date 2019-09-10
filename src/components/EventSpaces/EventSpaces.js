@@ -65,7 +65,7 @@ let EventTargets = (props) => {
                             <Image onClick={() => { set_week_start(+moment(week_start).add(-1, `week`)) }} extra={`transform: rotate(180deg);`} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
                             <Text size={1} onClick={() => { set_week_selector_visible(true) }} extra={`width: 8vw; &:hover { box-shadow: 0 0 1vw rgba(0, 0, 0, 0.1); } `} >
                                 {moment(week_start).format(`DD.MM`)} - {moment(week_start).add(6 / 7, `week`).format(`DD.MM`)}
-                                <PopUp extra={`top: ${week_selector_visible ? 4 : 3}vw;`} ref={week_selector_ref} visible={week_selector_visible} >
+                                <PopUp extra={`top: ${week_selector_visible ? 8 : 7}vw;`} ref={week_selector_ref} visible={week_selector_visible} >
                                     <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); set_week_selector_visible(false) }} />
                                 </PopUp>
                             </Text>
@@ -79,8 +79,26 @@ let EventTargets = (props) => {
                         </Button>
                     </Flex>
                 </Top>
-                <Flex row extra={`height: 84vh;`} >
+                <Flex extra={`height: 84vh;`} >
+                    <Flex row extra={`padding-left: 5vw;h`} >
+                        {
+                            new Array(24).fill(0).map((item, index) => {
+                                return ( <Text key={index} color={mvConsts.colors.text.support} extra={`width: 3.5vw;`} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text> )
+                            })
+                        }
+                    </Flex>
+                    {
+                        new Array(7).fill(0).map((item, index) => {
+                            return (
+                                <Flex row key={index} >
+                                    <Text color={mvConsts.colors.text.support} size={1} extra={`width: 5vw;`} >{moment(week_start).add(index, `day`).format(`DD.MM`)}, {mvConsts.weekDays.short[index].toLocaleUpperCase()}</Text>
+                                    <Flex extra={`width: 84vw; height: 3vw; margin: 0.25vw; background: ${mvConsts.colors.background.support}; border-radius: 0.5vw;`} >
 
+                                    </Flex>
+                                </Flex>
+                            )
+                        })
+                    }
                 </Flex>
             </Flex>
         </Flex>
@@ -138,6 +156,7 @@ background: ${mvConsts.colors.background.secondary};
 }`
 
 const TopButton = styled(Flex)`
+position: relative;
 padding: 0.75vw;
 margin: 0.2vw;
 border-radius: 1vw;

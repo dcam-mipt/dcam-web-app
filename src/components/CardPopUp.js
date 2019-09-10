@@ -40,7 +40,7 @@ let main = (props) => {
                         <Input
                             backgroundColor={`rgba(255, 255, 255, 0.5)`}
                             color={`white`}
-                            placeholder={`Сумма`}
+                            placeholder={`Введите сумму`}
                             short
                             number
                             pattern={`[0-9]*`}
