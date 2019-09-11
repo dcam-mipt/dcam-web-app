@@ -12,7 +12,7 @@ import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import Switch from './UIKit/Switch';
 import userActions from '../redux/actions/UserActions'
-const socket = io('https://dcam.pro:3000');
+// const socket = io('https://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -31,7 +31,7 @@ let main = (props) => {
     useEffect(() => {
         let check_entries = () => axios.get(`https://dcam.pro/api/auth/get_my_entries`).then((d) => { setEntries(d.data) })
         setTimeout(() => { check_entries() }, 0)
-        socket.on('Verifications', (msg) => { msg === (user && user.username) && check_entries() })
+        // socket.on('Verifications', (msg) => { msg === (user && user.username) && check_entries() })
     })
     let load_my_info = () => {
         setLoading(false)

@@ -6,7 +6,7 @@ import axios from 'axios'
 import io from 'socket.io-client';
 import mvConsts from '../../constants/mvConsts';
 import moment from 'moment-timezone'
-const socket = io('https://dcam.pro:3000');
+// const socket = io('https://dcam.pro:3000');
 
 let get_notifications = (all = `my`) => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/notifications/get_${all}_notifications`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
@@ -16,7 +16,7 @@ let main = (props) => {
         !users_notifications.length && get_notifications(props.only_my ? `my` : `all`)
             .then((d) => { set_users_notifications(d.data ? d.data : []) })
     }, [])
-    // socket.on('Transactions', async (msg) => { await update_transactions() })
+    // // socket.on('Transactions', async (msg) => { await update_transactions() })
     return (
         <Block height={props.only_my ? 80 : 91} >
             {

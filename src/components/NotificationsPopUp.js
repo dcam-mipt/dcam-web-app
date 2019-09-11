@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import io from 'socket.io-client';
 import userActions from '../redux/actions/UserActions'
 import NotificationsList from './AdminTools/NotificationsList'
-const socket = io('https://dcam.pro:3000');
+// const socket = io('https://dcam.pro:3000');
 
 let main = (props) => {
     useEffect(() => {

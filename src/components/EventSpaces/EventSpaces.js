@@ -40,7 +40,7 @@ let EventTargets = (props) => {
                                 return (
                                     <TopButton key={index} onClick={() => { set_selected_target(index) }} >
                                         <TopButtonImageWrapper>
-                                            <Image src={`http://dcam.pro:1337` + item.avatar.url.split(`:1337`)[1]} width={2} />
+                                            {/* <Image src={`http://dcam.pro:1337` + item.avatar.url.split(`:1337`)[1]} width={2} /> */}
                                         </TopButtonImageWrapper>
                                         <SpaceTitle selected={selected_target === index} >
                                             {item.name}

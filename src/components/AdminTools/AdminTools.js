@@ -11,7 +11,7 @@ import mvConsts from '../../constants/mvConsts'
 import TransactionsList from './TransactionsList'
 import NotificationsList from './NotificationsList'
 import io from 'socket.io-client';
-const socket = io('https://dcam.pro:3000');
+// const socket = io('http://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -52,7 +52,7 @@ let AdminTools = (props) => {
         !users_list.length && get_users().then((d) => { set_users_list(d) })
         !users_transactions.length && get_transactions().then(d => set_users_transactions(d))
     }, [])
-    socket.on('Transactions', async (msg) => { await update_transactions() })
+    // socket.on('Transactions', async (msg) => { await update_transactions() })
     return (
         <GlobalWrapper>
             <UsersWrapper user_is_selected={selected_user !== null} >

@@ -20,7 +20,7 @@ import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import NotificationsPopUp from './NotificationsPopUp';
 import { BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
-const socket = io('https://dcam.pro:3000');
+// const socket = io('https://dcam.pro:3000');
 
 let screens = [
     {
@@ -80,8 +80,8 @@ let Main = (props) => {
             .catch((d) => { signOut() })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     }, [])
-    socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
-    socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
+    // socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
+    // socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
     if (axios_is_ready) {
         return (
             <Wrapper>

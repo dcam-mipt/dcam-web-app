@@ -42,7 +42,7 @@ let colors = dayTheme
 export let changeTheme = (theme) => { colors = theme }
 
 export default {
-    api: `http://dcam.pro/api`,
+    api: `https://dcam.pro/api`,
     mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d}; transition: 0; }`,
     colors: colors,
     weekDays: {
