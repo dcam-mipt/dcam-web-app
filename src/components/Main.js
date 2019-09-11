@@ -82,6 +82,10 @@ let Main = (props) => {
     }, [])
     // socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
     // socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
+    useEffect(() => {
+        let i = setInterval(() => { get_my_balance().then((d) => { props.setBalance(+d.data) }) }, 1000)
+        return () => { clearInterval(i) }
+    }, [])
     if (axios_is_ready) {
         return (
             <Wrapper>

@@ -38,6 +38,6 @@ const Input = styled.input`
         ${props => props.placeholderColor === undefined ? null : `color: ${props => props.placeholderColor}`}
     }
     
-    ${props => props.extraProps === undefined ? null : props.extraProps}
+    ${props => props.extra === undefined ? null : props.extra}
 `
 /*eslint-enable no-unused-vars*/

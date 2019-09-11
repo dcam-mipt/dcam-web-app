@@ -42,8 +42,8 @@ let main = (props) => {
     }
     return <BarWrapper>
         <Bar row >
-            <Image src={require(`../assets/images/home.svg`)} width={2} />
-            <Text size={1.5} >Профиль</Text>
+            {/* <Image src={require(`../assets/images/home.svg`)} width={2} /> */}
+            <Text size={1.5} bold >Профиль</Text>
         </Bar>
         <Bar row >
             <Image src={user && user.avatar} width={3} round />
@@ -55,7 +55,7 @@ let main = (props) => {
                 <Text color={mvConsts.colors.text.support} >{user && get_user_status(user.last_seen)}</Text>
             </NameWrapper>
         </Bar>
-        {
+        {/* {
             loading
                 ? `loading...`
                 : user && user.telegram
@@ -102,7 +102,7 @@ let main = (props) => {
                                 <Text color={mvConsts.colors.text.support} >найдите бота в telegram</Text>
                             </NameWrapper>
                         </Bar>
-        }
+        } */}
         <Bar only_mobile >
             <CardPopUp />
         </Bar>

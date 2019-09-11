@@ -46,6 +46,7 @@ let main = (props) => {
                             pattern={`[0-9]*`}
                             onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 5) && setValue(Math.round(d.target.value * 100) / 100) }}
                             value={value}
+                            extra={`::-webkit-input-placeholder { font-size: 0.8vw; }`}
                         />
                         {
                             user && <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
