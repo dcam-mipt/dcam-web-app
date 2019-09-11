@@ -19,7 +19,7 @@ import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import NotificationsPopUp from './NotificationsPopUp';
-import { BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
+import { HashRouter, BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 // const socket = io('https://dcam.pro:3000');
 
 let screens = [
@@ -89,7 +89,7 @@ let Main = (props) => {
     if (axios_is_ready) {
         return (
             <Wrapper>
-                <Router>
+                <HashRouter>
                     <PopUp extra={`top: ${cardVisible ? 4 : 3}vw; right: 5vw;`} ref={cardRef} visible={cardVisible} >
                         <CardPopUp />
                     </PopUp>
@@ -118,7 +118,7 @@ let Main = (props) => {
                             </Switch>
                         </Space>
                     </Workspace>
-                </Router>
+                </HashRouter>
             </Wrapper>
         )
     } else {
