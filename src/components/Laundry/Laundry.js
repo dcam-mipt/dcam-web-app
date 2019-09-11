@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import userActions from '../../redux/actions/UserActions'
+import laundryActions from '../../redux/actions/LaundryActions'
 import axios from 'axios'
 import styled from 'styled-components'
 import moment from 'moment-timezone'
@@ -29,6 +30,7 @@ let useSlots = (initialIsVisible) => {
 }
 
 let cutter = (s) => s.length > 11 ? s.substring(0, 8) + `...` : s
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
@@ -42,6 +44,10 @@ let Laundry = (props) => {
     useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
+    useEffect(() => {
+        let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 1000)
+        return () => { clearInterval(i) }
+    }, [])
     let header = (
         <CalendarHeader>
             <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
@@ -166,7 +172,10 @@ let mapDispatchToProps = (dispatch) => {
     return {
         setToken: (data) => {
             return dispatch(userActions.setToken(data))
-        }
+        },
+        setLaundry: (data) => {
+            return dispatch(laundryActions.setLaundry(data))
+        },
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
