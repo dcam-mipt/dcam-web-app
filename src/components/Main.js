@@ -20,7 +20,7 @@ import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import NotificationsPopUp from './NotificationsPopUp';
 import { BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
-const socket = io('http://dcam.pro:3000');
+const socket = io('https://dcam.pro:3000');
 
 let screens = [
     {
@@ -46,11 +46,11 @@ let screens = [
     },
 ]
 
-let get_laundry = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_machines = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let match_notifications = async () => { await axios.get(`http://dcam.pro/api/notifications/match_as_checked`) }
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_machines = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let match_notifications = async () => { await axios.get(`https://dcam.pro/api/notifications/match_as_checked`) }
 
 let Main = (props) => {
     let [axios_is_ready, set_axios_is_ready] = useState(false)
@@ -59,7 +59,7 @@ let Main = (props) => {
     let [notificationsRef, notificationsVisible, setNotificationsVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
         props.setToken(undefined);
-        axios.get(`http://dcam.pro/api/auth/sign_out`)
+        axios.get(`https://dcam.pro/api/auth/sign_out`)
             .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
     })
@@ -67,10 +67,10 @@ let Main = (props) => {
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
         set_axios_is_ready(true)
-        axios.get(`http://dcam.pro/api/user/get_my_info`)
+        axios.get(`https://dcam.pro/api/user/get_my_info`)
             .then((d) => {
                 props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
-                axios.post(`http://dcam.pro/api/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
+                axios.post(`https://dcam.pro/api/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
 
                 get_machines().then((d) => { props.setMachines(d.data) })
                 get_laundry().then((d) => { props.setLaundry(d.data) })

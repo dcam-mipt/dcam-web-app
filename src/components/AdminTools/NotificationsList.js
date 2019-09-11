@@ -6,9 +6,9 @@ import axios from 'axios'
 import io from 'socket.io-client';
 import mvConsts from '../../constants/mvConsts';
 import moment from 'moment-timezone'
-const socket = io('http://dcam.pro:3000');
+const socket = io('https://dcam.pro:3000');
 
-let get_notifications = (all = `my`) => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/notifications/get_${all}_notifications`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_notifications = (all = `my`) => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/notifications/get_${all}_notifications`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
     let [users_notifications, set_users_notifications] = useState([])

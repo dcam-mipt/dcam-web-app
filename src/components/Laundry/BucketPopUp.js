@@ -45,7 +45,7 @@ let main = (props) => {
                 <Button backgroundColor={mvConsts.colors.accept} disabled={cost > props.balance} onClick={() => {
                     let a = selectedSlots
                     let deal = () => new Promise((resolve, reject) => {
-                        axios.get(`http://dcam.pro/api/laundry/book/${a[0].timestamp}/${a[0].machine_id}`)
+                        axios.get(`https://dcam.pro/api/laundry/book/${a[0].timestamp}/${a[0].machine_id}`)
                             .then((d) => {
                                 a.shift()
                                 setSelectedSlots(a)

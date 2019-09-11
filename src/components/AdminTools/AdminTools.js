@@ -11,7 +11,7 @@ import mvConsts from '../../constants/mvConsts'
 import TransactionsList from './TransactionsList'
 import NotificationsList from './NotificationsList'
 import io from 'socket.io-client';
-const socket = io('http://dcam.pro:3000');
+const socket = io('https://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -23,8 +23,8 @@ let get_user_status = (timestamp) => {
     return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
 }
 
-let get_users = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d.data ? d.data : []) }) })
-let get_transactions = () => new Promise((resolve, reject) => { axios.get(`http://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d.data ? d.data : []) }) })
+let get_users = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d.data ? d.data : []) }) })
+let get_transactions = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d.data ? d.data : []) }) })
 
 let loading_rotor = <Rotor><Image src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
 
@@ -102,7 +102,7 @@ let AdminTools = (props) => {
                                     onClick={async () => {
                                         try {
                                             set_loading(true)
-                                            await axios.get(`http://dcam.pro/api/balance/edit/${selected_user.objectId}/${money_delta}`)
+                                            await axios.get(`https://dcam.pro/api/balance/edit/${selected_user.objectId}/${money_delta}`)
                                             await update_transactions()
                                         } catch (error) {
                                             console.log(error);

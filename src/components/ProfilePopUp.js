@@ -12,7 +12,7 @@ import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
 import Switch from './UIKit/Switch';
 import userActions from '../redux/actions/UserActions'
-const socket = io('http://dcam.pro:3000');
+const socket = io('https://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -29,13 +29,13 @@ let main = (props) => {
     let [entries, setEntries] = useState(false)
     let [loading, setLoading] = useState(false)
     useEffect(() => {
-        let check_entries = () => axios.get(`http://dcam.pro/api/auth/get_my_entries`).then((d) => { setEntries(d.data) })
+        let check_entries = () => axios.get(`https://dcam.pro/api/auth/get_my_entries`).then((d) => { setEntries(d.data) })
         setTimeout(() => { check_entries() }, 0)
         socket.on('Verifications', (msg) => { msg === (user && user.username) && check_entries() })
     })
     let load_my_info = () => {
         setLoading(false)
-        axios.get(`http://dcam.pro/api/user/get_my_info`)
+        axios.get(`https://dcam.pro/api/user/get_my_info`)
             .then((d) => {
                 props.setUserInfo({ ...user, ...d.data })
             })
@@ -64,7 +64,7 @@ let main = (props) => {
                         <NameWrapper>
                             <Text size={1} >@{user.telegram.username}</Text>
                             <Text color={mvConsts.colors.text.support} pointer onClick={() => {
-                                axios.get(`http://dcam.pro/api/auth/forget_my_telegram`).then(() => { load_my_info() })
+                                axios.get(`https://dcam.pro/api/auth/forget_my_telegram`).then(() => { load_my_info() })
                             }} >забыть этот аккаунт</Text>
                         </NameWrapper>
                     </Bar>
@@ -87,7 +87,7 @@ let main = (props) => {
                                                 } else {
                                                     setLoading(true)
                                                     let string = new Array(5).fill(0).map((i, index) => document.getElementById(`pass_${index}`).value).join(``)
-                                                    axios.get(`http://dcam.pro/api/auth/check_verificatoin_pass/${string}`).then((d) => { load_my_info() })
+                                                    axios.get(`https://dcam.pro/api/auth/check_verificatoin_pass/${string}`).then((d) => { load_my_info() })
                                                 }
                                             }
                                         }}

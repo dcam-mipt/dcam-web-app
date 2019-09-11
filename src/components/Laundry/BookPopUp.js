@@ -27,7 +27,7 @@ let main = (props) => {
     useEffect(() => {
         if (props.selectedBook && !owner_data) {
             setLoading(true)
-            axios.get(`http://dcam.pro/api/users/get_user/${props.selectedBook.user_id}`)
+            axios.get(`https://dcam.pro/api/users/get_user/${props.selectedBook.user_id}`)
                 .then((d) => { setOwnerData(d.data); setLoading(false) })
                 .catch((d) => { console.log(d) })
         }
@@ -74,7 +74,7 @@ let main = (props) => {
                                         src={require(`../../assets/images/money.svg`)}
                                         width={2}
                                         onClick={async () => {
-                                            await axios.get(`http://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
+                                            await axios.get(`https://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
                                             setBookVisible(false)
                                         }}
                                     /></Half>
