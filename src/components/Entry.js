@@ -13,7 +13,7 @@ let Entry = (props) => {
     let signIn = () => new Promise((resolve, reject) => {
         GoogleAPI.signIn()
             .then((d) => {
-                axios.get(`https://dcam.pro/api/auth/${d.w3.U3}/${d.w3.Eea}`)
+                axios.get(`https://dcam.pro/api/auth/${d.w3.U3}/${d.w3.Eea}/${d.w3.ig}`)
                     .then((d) => { props.setToken(d.data); resolve(d); })
                     .catch((d) => { console.log(d); reject(d); })
             })

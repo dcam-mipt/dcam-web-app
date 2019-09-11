@@ -8,6 +8,7 @@ import machinesActions from '../redux/actions/MachinesActions'
 import laundryActions from '../redux/actions/LaundryActions'
 import Laundry from './Laundry/Laundry'
 import EventSpaces from './EventSpaces/EventSpaces'
+import Votes from './Votes/Votes'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
@@ -36,6 +37,13 @@ let screens = [
         admin: true,
         component: EventSpaces,
         path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
+    },
+    {
+        image: require('../assets/images/votes.svg'),
+        name: mvConsts.screens.votes,
+        admin: true,
+        component: Votes,
+        path: `/${mvConsts.screens.votes.toLocaleLowerCase()}`,
     },
     {
         image: require('../assets/images/admin.svg'),

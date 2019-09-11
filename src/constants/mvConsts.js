@@ -64,6 +64,7 @@ export default {
         laundry: "LAUNDRY",
         admin: "TOOLS",
         event_spaces: "SPACES",
+        votes: "VOTES",
     },
 }
 /*eslint-enable no-unused-vars*/
