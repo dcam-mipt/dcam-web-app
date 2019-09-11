@@ -8,6 +8,7 @@ import mvConsts from '../constants/mvConsts'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Input from './UIKit/Input'
+import Form from './UIKit/Form'
 
 let wallets = {
     beldii: 410018436058863,
@@ -25,10 +26,7 @@ let main = (props) => {
     let { user, balance } = props
     return (
         <BarWrapper>
-            <Bar row >
-                <Image src={require(`../assets/images/card.svg`)} width={2} />
-                <Text size={1.5} >Баланс</Text>
-            </Bar>
+            <Form array={[{type: `title`, text: `Баланс`}]} />
             <Bar>
                 <Card>
                     <Text color={`white`} >Стиралка 7ки</Text>

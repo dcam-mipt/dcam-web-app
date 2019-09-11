@@ -20,8 +20,8 @@ let GoogleWrapper = (props) => {
                 console.log(`google initialization error`, d)
             })
     })
-    return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
-    // return <Sorry/>
+    // return init ? props.user.token ? <Main /> : <Entry /> : <LoadingPage />
+    return <Sorry/>
 }
 
 let Sorry = () => {
