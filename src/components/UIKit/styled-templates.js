@@ -64,6 +64,7 @@ box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
     height: 90%;
     overflow: scroll;
     transition: 0s;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }`
 
 export const Text = styled(Flex)`

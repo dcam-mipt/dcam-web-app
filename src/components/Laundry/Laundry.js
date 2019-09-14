@@ -45,7 +45,7 @@ let Laundry = (props) => {
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
     useEffect(() => {
-        let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 1000)
+        let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 10000)
         return () => { clearInterval(i) }
     }, [])
     let header = (
