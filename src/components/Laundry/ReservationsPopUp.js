@@ -7,8 +7,11 @@ import axios from 'axios'
 import mvConsts from '../../constants/mvConsts'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
+import laundryActions from '../../redux/actions/LaundryActions'
 
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
+let calc_hours = (timestamp) => +(((+moment(timestamp).tz(`Europe/Moscow`) - +moment().tz(`Europe/Moscow`)) / 3600000 + ``).split(`.`)[0])
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
     let { my_reservations, setSelectedDay, setSelectedBook, setBookVisible, setReservationsVisible } = props
@@ -29,7 +32,10 @@ let main = (props) => {
                                     <Text size={1.2} >{moment(i.timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
                                 <Flex extra={`width:30%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
-                                <Flex extra={`width: 35%;`} row pointer onClick={() => { axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`) }} >
+                                <Flex extra={`width: 35%;`} row pointer onClick={async () => {
+                                    await axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`)
+                                    get_laundry().then((d) => { props.setLaundry(d.data) })
+                                }} >
                                     <Text>{i.timestamp > +moment().tz(`Europe/Moscow`) ? `Продать` : `Удалить`}</Text>
                                     <MarginWrapper><Image src={require(`../../assets/images/money.svg`)} width={1.5} /></MarginWrapper>
                                 </Flex>
@@ -55,7 +61,9 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = (dispatch) => {
     return {
-
+        setLaundry: (data) => {
+            return dispatch(laundryActions.setLaundry(data))
+        },
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)

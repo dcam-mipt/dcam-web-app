@@ -6,6 +6,7 @@ import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
 import { connect } from 'react-redux'
+import laundryActions from '../../redux/actions/LaundryActions'
 
 let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -19,6 +20,8 @@ let get_user_status = (timestamp) => {
 
 
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
+let calc_hours = (timestamp) => +(((+moment(timestamp).tz(`Europe/Moscow`) - +moment().tz(`Europe/Moscow`)) / 3600000 + ``).split(`.`)[0])
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
     let { setBookVisible } = props
@@ -68,7 +71,7 @@ let main = (props) => {
                             {
                                 (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={mvConsts.colors.text.support} >{props.selectedBook.timestamp > +moment().tz(`Europe/Moscow`) ? `Продать` : `Удалить`}</Text></Half>
+                                    <Half><Text color={mvConsts.colors.text.support} >{calc_hours(props.selectedBook.timestamp) > 2 ? `Продать` : `Удалить`}</Text></Half>
                                     <Half><Image
                                         pointer
                                         src={require(`../../assets/images/money.svg`)}
@@ -76,6 +79,7 @@ let main = (props) => {
                                         onClick={async () => {
                                             await axios.get(`https://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
                                             setBookVisible(false)
+                                            get_laundry().then((d) => { props.setLaundry(d.data) })
                                         }}
                                     /></Half>
                                 </Flex>
@@ -95,7 +99,9 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = (dispatch) => {
     return {
-
+        setLaundry: (data) => {
+            return dispatch(laundryActions.setLaundry(data))
+        },
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
