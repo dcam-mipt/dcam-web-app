@@ -3,6 +3,7 @@ import React from 'react'
 import { Flex, Image, Extra, Text, Bar, BarWrapper } from '../UIKit/styled-templates'
 import moment from 'moment'
 import Button from '../UIKit/Button'
+import Form from '../UIKit/Form'
 import axios from 'axios'
 import mvConsts from '../../constants/mvConsts'
 import styled from 'styled-components'
@@ -15,10 +16,11 @@ let main = (props) => {
     let cost = selectedSlots.length * 25
     return (
         <BarWrapper>
-            <Bar row >
+            {/* <Bar row >
                 <Image src={require(`../../assets/images/shopping-bag.svg`)} width={2} />
                 <Text size={1.5} >Корзина</Text>
-            </Bar>
+            </Bar> */}
+            <Form array={[{ type: `title`, text: `Корзина` }]} />
             <Bar>
                 {
                     selectedSlots.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
@@ -50,9 +52,9 @@ let main = (props) => {
                                 a.shift()
                                 setSelectedSlots(a)
                                 a.length
-                                ? deal()
-                                // : document.location.reload();
-                                : console.log();
+                                    ? deal()
+                                    // : document.location.reload();
+                                    : console.log();
                             })
                             .catch((d) => { console.log(d); reject(d) })
                     })

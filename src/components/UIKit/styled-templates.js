@@ -78,7 +78,7 @@ font-family: ${props => props.bold ? `Bold` : `Regular`};
 export const Bar = styled(Flex)`
 width: 100%;
 justify-content: flex-start;
-${props => props.clear ? null : `border-bottom: 0.15vw dashed ${props.background.support};`}
+// ${props => props.clear ? null : `border-bottom: 0.15vw dashed ${props.background.support};`}
 padding: 1vw 0 1vw 0;
 @media (min-width: 320px) and (max-width: 480px) {
     ${props => props.clear ? null : `border-bottom: 0.75vw dashed ${props.background.support};`}
@@ -87,6 +87,7 @@ padding: 1vw 0 1vw 0;
 }`
 
 export const BarWrapper = styled(Flex)`
+align-items: flex-start;
 > * {
     &:first-child {
         padding-top: 0;

@@ -3,6 +3,7 @@ import React from 'react'
 import { Flex, Image, Text, Bar, BarWrapper } from '../UIKit/styled-templates'
 import moment from 'moment'
 import Button from '../UIKit/Button'
+import Form from '../UIKit/Form'
 import axios from 'axios'
 import mvConsts from '../../constants/mvConsts'
 import styled from 'styled-components'
@@ -17,11 +18,11 @@ let main = (props) => {
     let { my_reservations, setSelectedDay, setSelectedBook, setBookVisible, setReservationsVisible } = props
     return (
         <BarWrapper>
-            <Bar row >
+            {/* <Bar row >
                 <Image src={require(`../../assets/images/ticket.svg`)} width={2} />
                 <Text size={1.5} >Мои Стирки</Text>
-                {/* <Text bold size={1.5} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >Мои Стирки</Text> */}
-            </Bar>
+            </Bar> */}
+            <Form array={[{ type: `title`, text: `Мои Стирки` }]} />
             <Bar>
                 {
                     my_reservations.filter(i => i.timestamp >= +moment().startOf(`day`)).sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
