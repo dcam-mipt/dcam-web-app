@@ -19,7 +19,7 @@ let Form = (props) => {
     }
     let [temp, set_temp] = useState(false)
     return (
-        <Flex extra={`align-items: flex-start; justify-content; flex-start;`} >
+        <Flex extra={`align-items: flex-start; justify-content; width: 100%; flex-start; @media (min-width: 320px) and (max-width: 480px) { width: 85vw; }; `} >
             {
                 array.map((question, question_index) => {
                     switch (question.type) {

@@ -28,12 +28,12 @@ let main = (props) => {
                     my_reservations.filter(i => i.timestamp >= +moment().startOf(`day`)).sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                         return (
                             <BucketRow key={index} >
-                                <Flex extra={`width: 35%; align-items: flex-start;`} >
-                                    <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
-                                    <Text size={1.2} >{moment(i.timestamp).format(`HH:mm`)}</Text>
+                                <Flex extra={`width: 40%; align-items: flex-start;`} >
+                                    <Text size={0.7} color={mvConsts.colors.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
+                                    <Text size={1.1} >{moment(i.timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
                                 <Flex extra={`width:30%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
-                                <Flex extra={`width: 35%;`} row pointer onClick={async () => {
+                                <Flex extra={`width: 30%;`} row pointer onClick={async () => {
                                     await axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`)
                                     get_laundry().then((d) => { props.setLaundry(d.data) })
                                 }} >

@@ -53,6 +53,7 @@ visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
 padding: 1.8vw;
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
+// transform: scale(${props => props.visible ? 1 : 1.1});
 @media (min-width: 320px) and (max-width: 480px) {
     position: fixed;
     display: ${props => props.visible ? `flex` : `none`};
@@ -78,10 +79,8 @@ font-family: ${props => props.bold ? `Bold` : `Regular`};
 export const Bar = styled(Flex)`
 width: 100%;
 justify-content: flex-start;
-// ${props => props.clear ? null : `border-bottom: 0.15vw dashed ${props.background.support};`}
 padding: 1vw 0 1vw 0;
 @media (min-width: 320px) and (max-width: 480px) {
-    // ${props => props.clear ? null : `border-bottom: 0.75vw dashed ${props.background.support};`}
     padding: 5vw 0 5vw 0;
     width: 85vw;
 }`
@@ -93,7 +92,6 @@ export const BarWrapper = styled(Flex)`
     };
     &:last-child {
         padding-bottom: 0;
-        border: 0;
     }
 }
 `

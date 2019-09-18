@@ -4,6 +4,7 @@ import moment from 'moment'
 import { Flex, Image, Extra, Bar, Text, Rotor, BarWrapper } from '../UIKit/styled-templates'
 import axios from 'axios'
 import styled from 'styled-components'
+import Form from '../UIKit/Form'
 import mvConsts from '../../constants/mvConsts'
 import { connect } from 'react-redux'
 import laundryActions from '../../redux/actions/LaundryActions'
@@ -28,7 +29,7 @@ let main = (props) => {
     let [owner_data, setOwnerData] = useState(undefined)
     let [loading, setLoading] = useState(false)
     useEffect(() => {
-        if (props.selectedBook && !owner_data) {
+        if (props.selectedBook) {
             setLoading(true)
             axios.get(`https://dcam.pro/api/users/get_user/${props.selectedBook.user_id}`)
                 .then((d) => { setOwnerData(d.data); setLoading(false) })
@@ -37,21 +38,22 @@ let main = (props) => {
         if (!props.selectedBook) {
             setOwnerData(undefined)
         }
-    })
+    }, [props.selectedBook])
     return (
         <Flex>
             {
                 loading
                     ? <Rotor><Image extra={``} src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
                     : (owner_data && props.selectedBook) && <BarWrapper>
-                        <Bar row >
+                        {/* <Bar row >
                             <Image src={require(`../../assets/images/bookmark.svg`)} width={2} />
                             <Text size={1.5} >Запись в стиралку</Text>
-                        </Bar>
+                        </Bar> */}
+                        <Form array={[{ type: `title`, text: `Запись в стиралку` }]} />
                         <Bar row >
                             <Image src={owner_data.avatar} width={3} round />
                             <NameWrapper>
-                                <Text size={1} >{owner_data.username.split(`@`)[0].split(`.`)[0]}</Text>
+                                <Text size={1} >{props.selectedBook.email.split(`@`)[0]}</Text>
                                 <Text color={mvConsts.colors.text.support} >{get_user_status(owner_data.last_seen)}</Text>
                             </NameWrapper>
                             <ImageWrapper><Image width={3} /></ImageWrapper>
