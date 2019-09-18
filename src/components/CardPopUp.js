@@ -25,8 +25,8 @@ let main = (props) => {
     let [order_id, setOrderId] = useState(0)
     let { user, balance } = props
     return (
-        <BarWrapper>
-            <Form array={[{type: `title`, text: `Баланс`}]} />
+        <BarWrapper extra={`align-items: flex-start;`} >
+            <Form array={[{ type: `title`, text: `Баланс` }]} />
             <Bar>
                 <Card>
                     <Text color={`white`} >Стиралка 7ки</Text>
@@ -44,7 +44,12 @@ let main = (props) => {
                             pattern={`[0-9]*`}
                             onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 5) && setValue(Math.round(d.target.value * 100) / 100) }}
                             value={value}
-                            extra={`::-webkit-input-placeholder { font-size: 0.8vw; }`}
+                            extra={`::-webkit-input-placeholder {
+                                font-size: 0.8vw;
+                                @media (min-width: 320px) and (max-width: 480px) {
+                                    font-size: 3vw;
+                                };
+                            }`}
                         />
                         {
                             user && <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
