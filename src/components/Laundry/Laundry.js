@@ -36,12 +36,12 @@ let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
     let [mobileCalendar, setMobileCalendar] = useState(false)
     let [selectedSlots, selectSlot, setSelectedSlots] = useSlots([])
-    let [bucketRef, bucketVisible, setBucketVisible] = useComponentVisible(false);
-    let [reservationsRef, reservationsVisible, setReservationsVisible] = useComponentVisible(false);
+    let [bucket_ref, bucket_visible, set_bucket_visible, close_bucket] = useComponentVisible(false);
+    let [reservationsRef, reservationsVisible, setReservationsVisible, close_reservations] = useComponentVisible(false);
     let [selectedBook, setSelectedBook] = useState(undefined)
-    let [bookRef, bookVisible, setBookVisible] = useComponentVisible(false);
+    let [bookRef, bookVisible, setBookVisible, close_book] = useComponentVisible(false);
     let my_reservations = props.user && props.laundry ? props.laundry.filter(i => i.user_id === props.user.objectId && i.timestamp > +moment().add(-2, `hour`)) : []
-    useEffect(() => { !selectedSlots.length && setBucketVisible(false) })
+    useEffect(() => { !selectedSlots.length && set_bucket_visible(false) })
     useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
     useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
     useEffect(() => {
@@ -56,13 +56,13 @@ let Laundry = (props) => {
             <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
                 Мои стирки
                 <PopUp extra={`top: ${reservationsVisible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible} >
-                    <ReservationsPopUp {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
+                    <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                 </PopUp>
             </Button>
-            <Button backgroundColor={mvConsts.colors.lightblue} disabled={!selectedSlots.length} onClick={() => { setBucketVisible(!bucketVisible) }} >
+            <Button backgroundColor={mvConsts.colors.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
                 Корзина {selectedSlots.length && `(${selectedSlots.length})`}
-                <PopUp extra={`top: ${bucketVisible ? 3.5 : 2}vw; right: 0vw;`} ref={bucketRef} visible={bucketVisible} >
-                    <BucketPopUp {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                <PopUp extra={`top: ${bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={bucket_ref} visible={bucket_visible} >
+                    <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
                 </PopUp>
             </Button>
             <Button backgroundColor={mvConsts.colors.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
@@ -107,7 +107,7 @@ let Laundry = (props) => {
                             </Calendar>
                             <Schedule mobileCalendar={mobileCalendar} >
                                 <PopUp extra={`top: ${bookVisible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
-                                    <BookPopUp {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
+                                    <BookPopUp close={close_book} {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
                                 </PopUp>
                                 {
                                     <TwoHourRow>

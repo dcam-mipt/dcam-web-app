@@ -27,12 +27,13 @@ export default function useComponentVisible(initialIsVisible) {
     const [isComponentVisible, setIsComponentVisible] = useState(initialIsVisible);
     const ref = useRef(null);
     const handleClickOutside = (event) => (ref.current && !ref.current.contains(event.target)) && setIsComponentVisible(false);
+    const close = () => { setTimeout(() => { setIsComponentVisible(false) }, 0) }
     useEffect(() => {
         document.addEventListener('click', handleClickOutside, true);
         return () => {
             document.removeEventListener('click', handleClickOutside, true);
         };
     });
-    return [ref, isComponentVisible, setIsComponentVisible, <PopUp/>];
+    return [ref, isComponentVisible, setIsComponentVisible, close, < PopUp />];
 }
 /*eslint-enable no-unused-vars*/

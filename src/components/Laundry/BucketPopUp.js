@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react'
-import { Flex, Image, Extra, Text, Bar, BarWrapper } from '../UIKit/styled-templates'
+import { Flex, Image, Extra, Text, Bar, BarWrapper, ClosePopUp } from '../UIKit/styled-templates'
 import moment from 'moment'
 import Button from '../UIKit/Button'
 import Form from '../UIKit/Form'
@@ -63,6 +63,7 @@ let main = (props) => {
                     Купить ({cost}р)
                 </Button>
             </Bar>
+            <ClosePopUp props={props} />
         </BarWrapper>
     )
 }

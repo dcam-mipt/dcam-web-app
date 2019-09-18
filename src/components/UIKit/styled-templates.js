@@ -1,4 +1,5 @@
 /*eslint-disable no-unused-vars*/
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import mvConsts, { darkTheme, dayTheme } from '../../constants/mvConsts'
 import { connect } from 'react-redux'
@@ -102,4 +103,6 @@ to { transform: rotate(360deg); }
 `;
 
 export const Rotor = styled.div`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
+
+export const ClosePopUp = (props) => <Text onClick={() => { if (props.props.close !== undefined) { props.props.close() } }} size={1.5} only_mobile extra={`width: 85vw; align-items: flex-start; margin-top: 10%; cursor: pointer;`} >Закрыть</Text>
 /*eslint-enable no-unused-vars*/
