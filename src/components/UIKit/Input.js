@@ -2,10 +2,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
+import InputMask from 'react-input-mask';
 
-let Button = (props) => <Input visible={props.visible === undefined ? true : props.visible} {...props} />
-
-export default Button
+// export default (props) => <Input visible={props.visible === undefined ? true : props.visible} {...props} />
+export default (props) => <InputMask {...props} >
+    {(inputProps) => <Input visible={props.visible === undefined ? true : props.visible} {...inputProps} />}
+</InputMask>
 
 const Input = styled.input`
     outline: none;
@@ -13,7 +15,7 @@ const Input = styled.input`
     text-align: center;
     font-size: 0.8vw;
     text-align: ${props => props.textAlign ? props.textAlign : `left`};
-    width: ${props => props.short ? 6.25 : 15}vw;
+    width: ${props => props.float ? null :  props.short ? 6.25 : 15}vw;
     height: ${props => +props.visible}vw;
     padding: ${props => +props.visible}vw;
     border-radius: 0.5vw;
@@ -27,7 +29,7 @@ const Input = styled.input`
         color: ${props => props.color ? props.color : mvConsts.colors.text.support};
     }
     @media (min-width: 320px) and (max-width: 480px) {
-        width: ${props => props.short ? 27 : 68}vw;
+        width: ${props => props.float ? null :  props.short ? 27 : 68}vw;
         height: ${props => +props.visible * 5}vw;
         padding: ${props => +props.visible * 4}vw;
         border-radius: 2vw;

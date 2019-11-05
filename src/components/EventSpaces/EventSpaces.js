@@ -33,67 +33,96 @@ let EventTargets = (props) => {
     return (
         <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
             <Flex>
-                <Top row >
+                <Flex row extra={`height: 30vh; width: 90vw; justify-content: space-between;`} >
+                    <PopUp extra={`top: ${create_target_visible ? 4 : 3}vw; left: 10vw;`} ref={create_target_ref} visible={create_target_visible} >
+                        <CreateSpacePopUp onCreate={() => { get_targets().then(d => { set_targets(d) }) }} />
+                    </PopUp>
+                    <PopUp extra={`top: ${week_selector_visible ? 8 : 7}vw;`} ref={week_selector_ref} visible={week_selector_visible} >
+                        <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); set_week_selector_visible(false) }} />
+                    </PopUp>
+                    <PopUp extra={`top: ${create_event_visible ? 4 : 3}vw; right: 0vw;`} ref={create_event_ref} visible={create_event_visible} >
+                        <CreateEventPopUp target_id={target_id} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
+                    </PopUp>
                     <Flex row >
                         {
                             targets.map((item, index) => {
                                 return (
-                                    <TopButton key={index} onClick={() => { set_selected_target(index) }} >
-                                        <TopButtonImageWrapper>
-                                            {/* <Image src={`http://dcam.pro:1337` + item.avatar.url.split(`:1337`)[1]} width={2} /> */}
-                                        </TopButtonImageWrapper>
-                                        <SpaceTitle selected={selected_target === index} >
-                                            {item.name}
-                                        </SpaceTitle>
-                                    </TopButton>
+                                    <Flex key={index} >
+                                        <Text extra={`margin: 0.2vw;`} size={1} >{item.name}</Text>
+                                        <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${index === selected_target ? mvConsts.colors.lightblue : mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_selected_target(index) }} >
+                                            <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
+                                                <Image src={item.avatar.url} width={4} />
+                                            </Flex>
+                                        </Flex>
+                                    </Flex>
                                 )
                             })
                         }
                         {
-                            is_admin && <TopButton onClick={() => { set_create_target_visible(true) }} >
-                                <TopButtonImageWrapper>
-                                    <Image src={require(`../../assets/images/plus.svg`)} width={2} />
-                                </TopButtonImageWrapper>
-                                <PopUp extra={`top: ${create_target_visible ? 4 : 3}vw; left: 0vw;`} ref={create_target_ref} visible={create_target_visible} >
-                                    <CreateSpacePopUp onCreate={() => { get_targets().then(d => { set_targets(d) }) }} />
-                                </PopUp>
-                            </TopButton>
+                            is_admin && <Flex>
+                                <Text extra={`margin: 0.2vw;`} size={1} >добавить</Text>
+                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_create_target_visible(true) }} >
+                                    <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
+                                        <Image src={require(`../../assets/images/plus.svg`)} width={4} />
+                                    </Flex>
+                                </Flex>
+                            </Flex>
                         }
                     </Flex>
                     <Flex row >
-                        <WeekSelectorWrapper>
-                            <Image onClick={() => { set_week_start(+moment(week_start).add(-1, `week`)) }} extra={`transform: rotate(180deg);`} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
-                            <Text size={1} onClick={() => { set_week_selector_visible(true) }} extra={`width: 8vw; &:hover { box-shadow: 0 0 1vw rgba(0, 0, 0, 0.1); } `} >
-                                {moment(week_start).format(`DD.MM`)} - {moment(week_start).add(6 / 7, `week`).format(`DD.MM`)}
-                                <PopUp extra={`top: ${week_selector_visible ? 8 : 7}vw;`} ref={week_selector_ref} visible={week_selector_visible} >
-                                    <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); set_week_selector_visible(false) }} />
-                                </PopUp>
-                            </Text>
-                            <Image onClick={() => { set_week_start(+moment(week_start).add(1, `week`)) }} src={require(`../../assets/images/arrow.svg`)} width={1.5} />
-                        </WeekSelectorWrapper>
-                        <Button backgroundColor={mvConsts.colors.accept} onClick={() => { set_create_event_visible(true) }} >
-                            Создать
-                            <PopUp extra={`top: ${create_event_visible ? 4 : 3}vw; right: 0vw;`} ref={create_event_ref} visible={create_event_visible} >
-                                <CreateEventPopUp target_id={target_id} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
-                            </PopUp>
-                        </Button>
+                        <Flex>
+                            <Text extra={`margin: 0.2vw;`} size={1} >записаться</Text>
+                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); > * { transform: rotate(-90deg); } };`} onClick={() => { set_create_event_visible(true) }} >
+                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: rgba(255, 255, 255, 0.5);`} >
+                                    <Image src={require(`../../assets/images/plus_white.svg`)} extra={`opacity: 0.75;`} width={4} />
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                        <Flex>
+                            <Text extra={`margin: 0.2vw;`} size={1} >начало недели</Text>
+                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_week_selector_visible(true) }} >
+                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
+                                    <Flex extra={`width: 4vw; height: 4vw;`} >
+                                        <Text size={1.5} color={mvConsts.colors.text.support} extra={`border-bottom: 0.1vw solid ${mvConsts.colors.text.support}`} >{moment(week_start).format(`DD`)}</Text>
+                                        <Text size={1.5} color={mvConsts.colors.text.support} >{moment(week_start).format(`MM`)}</Text>
+                                    </Flex>
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                        <Flex>
+                            <Text extra={`margin: 0.2vw;`} size={1} >общежитие</Text>
+                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} >
+                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
+                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{7}</Text>
+                                </Flex>
+                            </Flex>
+                        </Flex>
                     </Flex>
-                </Top>
-                <Flex extra={`height: 84vh;`} >
-                    <Flex row extra={`padding-left: 5vw;h`} >
+                </Flex>
+                <Flex extra={`height: 64vh; justify-content: flex-start;`} >
+                    <Flex row extra={`padding-left: 5vw;`} >
                         {
                             new Array(24).fill(0).map((item, index) => {
-                                return ( <Text key={index} color={mvConsts.colors.text.support} extra={`width: 3.5vw;`} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text> )
+                                return (<Text key={index} color={mvConsts.colors.text.support} extra={`width: 3.5vw;`} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text>)
                             })
                         }
                     </Flex>
                     {
                         new Array(7).fill(0).map((item, index) => {
+                            let events_for_day = events.filter(i => +moment(i.timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
                             return (
-                                <Flex row key={index} >
+                                <Flex row key={index} extra={`height: ${(100 / 7) * 0.85}%; margin: 0.2%;`} >
                                     <Text color={mvConsts.colors.text.support} size={1} extra={`width: 5vw;`} >{moment(week_start).add(index, `day`).format(`DD.MM`)}, {mvConsts.weekDays.short[index].toLocaleUpperCase()}</Text>
-                                    <Flex extra={`width: 84vw; height: 3vw; margin: 0.25vw; background: ${mvConsts.colors.background.support}; border-radius: 0.5vw;`} >
-
+                                    <Flex extra={`position: relative; width: 84vw; height: 100%; margin: 0.25vw; background: ${mvConsts.colors.background.support}; border-radius: 0.5vw;`} >
+                                        {
+                                            events_for_day.map((e, e_i) => {
+                                                return (
+                                                    <Flex key={index} extra={`width: ${+e.duration * 3 - 0.1}vw; height: 80%; border-radius: 0.5vw; background: ${mvConsts.colors.accept}; position: absolute; left: ${+moment(+e.timestamp).tz(`Europe/Moscow`).format(`HH`) / 24 * 84}vw; z-index: 2;`} >
+                                                        <Text color={`white`} extra={`text-align: center;`} >{e.name}</Text>
+                                                    </Flex>
+                                                )
+                                            })
+                                        }
                                     </Flex>
                                 </Flex>
                             )
@@ -187,7 +216,7 @@ transition: 0.2s;
 
 const Top = styled(Flex)`
 width: 90vw;
-height: 8vh;
+// height: 8vh;
 justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
