@@ -40,7 +40,7 @@ let CreateSpacePopUp = (props) => {
             color: mvConsts.colors.accept,
             disabled: q !== undefined ? !q[1].value || !q[3].value : false,
             action: async () => {
-                await axios.post(`${mvConsts.api}/targets/create/${q[1].value}`, q[3].value, { headers: { 'Content-Type': q[3].value.type } })
+                await axios.post(`${mvConsts.api}/targets/create/${q[1].value}/${props.target_id}`, q[3].value, { headers: { 'Content-Type': q[3].value.type } })
                 props.onCreate()
             }
         }
