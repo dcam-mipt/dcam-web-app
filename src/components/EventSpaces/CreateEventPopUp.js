@@ -20,11 +20,11 @@ let CreateEventPopUp = (props) => {
                 <Text bold size={1.5} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >Новое мероприятие</Text>
                 <Flex row extra={`width: 100%; justify-content: space-between;`} >
                     <Text>начало</Text>
-                    <Input type={`time`} float />
+                    <Input type={`time`} />
                 </Flex>
                 <Flex row extra={`width: 100%; justify-content: space-between;`} >
                     <Text>конец</Text>
-                    <Input type={`time`} float />
+                    <Input type={`time`} />
                 </Flex>
                 <Button backgroundColor={mvConsts.colors.accept} >Создать</Button>
             </Flex>

@@ -10,6 +10,7 @@ export default (props) => <Input visible={props.visible === undefined ? true : p
 // </InputMask>
 
 const Input = styled.input`
+    -webkit-appearance: none;
     outline: none;
     border: none;
     text-align: center;
