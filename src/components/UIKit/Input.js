@@ -4,10 +4,10 @@ import styled from 'styled-components'
 import mvConsts from '../../constants/mvConsts'
 import InputMask from 'react-input-mask';
 
-// export default (props) => <Input visible={props.visible === undefined ? true : props.visible} {...props} />
-export default (props) => <InputMask {...props} >
-    {(inputProps) => <Input visible={props.visible === undefined ? true : props.visible} {...inputProps} />}
-</InputMask>
+export default (props) => <Input visible={props.visible === undefined ? true : props.visible} {...props} />
+// export default (props) => <InputMask {...props} >
+//     {(inputProps) => <Input visible={props.visible === undefined ? true : props.visible} {...inputProps} />}
+// </InputMask>
 
 const Input = styled.input`
     outline: none;
