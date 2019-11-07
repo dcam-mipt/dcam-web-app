@@ -29,6 +29,7 @@ let EventTargets = (props) => {
     let [create_event_ref, create_event_visible, set_create_event_visible] = useComponentVisible(false);
     let [create_target_ref, create_target_visible, set_create_target_visible] = useComponentVisible(false);
     let [dormitory_ref, dormitory_visible, set_dormitory_visible] = useComponentVisible(false);
+    let [requests_ref, requests_visible, set_requests_visible] = useComponentVisible(false);
     let selected_dormitory_number = dormitories.filter(i => i.objectId === selected_dormitory)[0] && dormitories.filter(i => i.objectId === selected_dormitory)[0].number
     useEffect(() => {
         get_targets().then(d => {
@@ -63,7 +64,7 @@ let EventTargets = (props) => {
                             is_admin && <Flex extra={`position: relative;`} >
                                 <Text extra={`margin: 0.2vw;`} size={1} >добавить</Text>
                                 <PopUp extra={`top: ${create_target_visible ? 2 : 1}vw; left: 0;`} ref={create_target_ref} visible={create_target_visible} >
-                                    <CreateSpacePopUp target_id={selected_target} onCreate={() => { get_targets().then(d => { set_targets(d) }) }} />
+                                    <CreateSpacePopUp dormitory_id={selected_dormitory} onCreate={() => { get_targets().then(d => { set_targets(d) }) }} />
                                 </PopUp>
                                 <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_create_target_visible(true) }} >
                                     <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
@@ -78,7 +79,7 @@ let EventTargets = (props) => {
                         <Flex extra={`position: relative;`} >
                             <Text extra={`margin: 0.2vw;`} size={1} >записаться</Text>
                             <PopUp extra={`top: ${create_event_visible ? 2 : 1}vw; right: 0vw;`} ref={create_event_ref} visible={create_event_visible} >
-                                <CreateEventPopUp selected_target={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
+                                <CreateEventPopUp target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
                             </PopUp>
                             <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); > * { transform: rotate(-90deg); } };`} onClick={() => { set_create_event_visible(true) }} >
                                 <Flex extra={`padding: 1vw; border-radius: 6vw; background: rgba(255, 255, 255, 0.5);`} >
@@ -126,9 +127,39 @@ let EventTargets = (props) => {
                         {
                             is_admin && <Flex extra={`position: relative;`} >
                                 <Text extra={`margin: 0.2vw;`} size={1} >заявки</Text>
-                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} >
+                                <PopUp extra={`top: ${requests_visible ? 2 : 1}vw; right: 0vw;`} ref={requests_ref} visible={requests_visible} >
+                                    {
+                                        events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).map((item, index) => {
+                                            return (
+                                                <Flex row key={index} extra={`margin: 0.5vw; align-items: flex-start;`} >
+                                                    <Flex extra={`width: 6vw; align-items: flex-start; margin-right: 1vw;`} >
+                                                        <Flex row >
+                                                            <Text bold size={1} >{moment(item.start_timestamp).format(`HH:mm`)}</Text> -
+                                                            <Text bold size={1} >{moment(item.end_timestamp).format(`HH:mm`)}</Text>
+                                                        </Flex>
+                                                        <Text>{moment(item.start_timestamp).format(`DD.MM.YY`)}</Text>
+                                                    </Flex>
+                                                    <Text extra={`width: 7vw; align-items: flex-start;`} >{item.user_id}</Text>
+                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.accept}`} onClick={async () => {
+                                                        await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/true`)
+                                                        get_events().then(d => { set_events(d) })
+                                                    }} >
+                                                        <Image src={require(`../../assets/images/like.svg`)} width={1} />
+                                                    </Flex>
+                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.WARM_ORANGE}`} onClick={async () => {
+                                                        await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/false`)
+                                                        get_events().then(d => { set_events(d) })
+                                                    }} >
+                                                        <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
+                                                    </Flex>
+                                                </Flex>
+                                            )
+                                        })
+                                    }
+                                </PopUp>
+                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_requests_visible(true) }} >
                                     <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                        <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{3}</Text>
+                                        <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
                                     </Flex>
                                 </Flex>
                             </Flex>
@@ -157,7 +188,7 @@ let EventTargets = (props) => {
                                                 let width = (+e.end_timestamp - +e.start_timestamp) / day_length * 84
                                                 let left = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * 84
                                                 return (
-                                                    <Flex key={e_i} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${mvConsts.colors.accept}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} >
+                                                    <Flex key={e_i} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${e.accepted ? mvConsts.colors.accept : mvConsts.colors.yellow}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} >
                                                         <Flex extra={`height: 3vw; justify-content: space-around; margin-left: 0.5vw;`} >
                                                             <Text color={`white`} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
                                                             <Text color={`white`} >{moment(e.end_timestamp).format(`HH:mm`)}</Text>
