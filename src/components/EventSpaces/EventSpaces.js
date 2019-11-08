@@ -139,7 +139,7 @@ let EventTargets = (props) => {
                                                         </Flex>
                                                         <Text>{moment(item.start_timestamp).format(`DD.MM.YY`)}</Text>
                                                     </Flex>
-                                                    <Text extra={`width: 7vw; align-items: flex-start;`} >{item.user_id}</Text>
+                                                    <Text extra={`width: 7vw; align-items: flex-start;`} >{item.username.split(`@`)[0]}</Text>
                                                     <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.accept}`} onClick={async () => {
                                                         await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/true`)
                                                         get_events().then(d => { set_events(d) })
@@ -157,9 +157,9 @@ let EventTargets = (props) => {
                                         })
                                     }
                                 </PopUp>
-                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_requests_visible(true) }} >
-                                    <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                        <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
+                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? mvConsts.colors.yellow : mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { (events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length) && set_requests_visible(true) }} >
+                                    <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `rgba(255, 255, 255, 0.5)` : mvConsts.colors.background.secondary};`} >
+                                        <Text extra={`width: 4vw; height: 4vw;`} size={3} color={events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `white` : mvConsts.colors.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
                                     </Flex>
                                 </Flex>
                             </Flex>
