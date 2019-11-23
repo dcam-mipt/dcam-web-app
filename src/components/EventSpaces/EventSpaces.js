@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Flex, Text, Image, PopUp } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
 import Button from '../UIKit/Button'
+import Form from '../UIKit/Form'
 import mvConsts from '../../constants/mvConsts';
 import moment from 'moment'
 import Calendar from './Calendar'
@@ -12,10 +13,20 @@ import CreateEventPopUp from './CreateEventPopUp'
 import CreateSpacePopUp from './CreateTargetPopUp'
 import { connect } from 'react-redux'
 import axios from 'axios'
+import BookEventPopUp from './BookEventPopUp'
 
 let get_targets = () => axios.get(`${mvConsts.api}/targets/get`).then(d => d.data).catch(e => e)
 let get_events = () => axios.get(`${mvConsts.api}/events/get`).then(d => d.data).catch(e => e)
 let get_dormitories = () => axios.get(`${mvConsts.api}/dormitory/get`).then(d => d.data).catch(e => e)
+
+let useDetails = (default_value) => {
+    let [id, set_id] = useState(``)
+    let [details_ref, details_visible, set_details_visible] = useComponentVisible(default_value);
+    return [details_ref, details_visible, (visible, id) => {
+        set_details_visible(visible)
+        set_id(id)
+    }, id]
+}
 
 let EventTargets = (props) => {
     let { is_admin } = props
@@ -30,7 +41,11 @@ let EventTargets = (props) => {
     let [create_target_ref, create_target_visible, set_create_target_visible] = useComponentVisible(false);
     let [dormitory_ref, dormitory_visible, set_dormitory_visible] = useComponentVisible(false);
     let [requests_ref, requests_visible, set_requests_visible] = useComponentVisible(false);
+    let [details_ref, details_visible, set_details_visible, details_id] = useDetails(false);
     let selected_dormitory_number = dormitories.filter(i => i.objectId === selected_dormitory)[0] && dormitories.filter(i => i.objectId === selected_dormitory)[0].number
+    let d = events.filter(i => i.objectId === details_id)[0]
+    let details_bottom = d ? 9 - moment(d.start_timestamp).isoWeekday() - 1 : 0
+    let details_left = d ? moment(d.end_timestamp).format(`HH`) : 0
     useEffect(() => {
         get_targets().then(d => {
             set_targets(d)
@@ -123,7 +138,6 @@ let EventTargets = (props) => {
                                 </Flex>
                             </Flex>
                         </Flex>
-
                         {
                             is_admin && <Flex extra={`position: relative;`} >
                                 <Text extra={`margin: 0.2vw;`} size={1} >заявки</Text>
@@ -131,7 +145,7 @@ let EventTargets = (props) => {
                                     {
                                         events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).map((item, index) => {
                                             return (
-                                                <Flex row key={index} extra={`margin: 0.5vw; align-items: flex-start;`} >
+                                                <Flex row key={index} extra={`margin: 0.5vw; align-items: flex-start; cursor: pointer; &:hover{ transform: scale(1.02); };`} onClick={() => { set_details_visible(true, item.objectId) }} >
                                                     <Flex extra={`width: 6vw; align-items: flex-start; margin-right: 1vw;`} >
                                                         <Flex row >
                                                             <Text bold size={1} >{moment(item.start_timestamp).format(`HH:mm`)}</Text> -
@@ -167,7 +181,7 @@ let EventTargets = (props) => {
 
                     </Flex>
                 </Flex>
-                <Flex extra={`height: 64vh; justify-content: flex-start;`} >
+                <Flex extra={`height: 64vh; justify-content: flex-start; position: relative;`} >
                     <Flex row extra={`padding-left: 5vw;`} >
                         {
                             new Array(24).fill(0).map((item, index) => {
@@ -175,6 +189,9 @@ let EventTargets = (props) => {
                             })
                         }
                     </Flex>
+                    <PopUp extra={`bottom: calc(1.5vw + ${30 / 7 * details_bottom}vw + ${details_visible ? 0 : 1}vw); right: calc(${3.5 * (24 - details_left)}vw);`} ref={details_ref} visible={details_visible} >
+                        <BookEventPopUp event={d} />
+                    </PopUp>
                     {
                         new Array(7).fill(0).map((item, index) => {
                             let events_for_day = events.filter(i => i.target_id === selected_target).filter(i => +moment(i.start_timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
@@ -188,8 +205,8 @@ let EventTargets = (props) => {
                                                 let width = (+e.end_timestamp - +e.start_timestamp) / day_length * 84
                                                 let left = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * 84
                                                 return (
-                                                    <Flex key={e_i} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${e.accepted ? mvConsts.colors.accept : mvConsts.colors.yellow}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} >
-                                                        <Flex extra={`height: 3vw; justify-content: space-around; margin-left: 0.5vw;`} >
+                                                    <Flex key={e_i} id={`e_` + e.id} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${e.accepted ? mvConsts.colors.accept : mvConsts.colors.yellow}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} onClick={() => { set_details_visible(true, e.objectId) }} >
+                                                        <Flex extra={`height: 3vw; justify-content: space-around; align-items: flex-start; margin-left: 0.5vw;`} >
                                                             <Text color={`white`} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
                                                             <Text color={`white`} >{moment(e.end_timestamp).format(`HH:mm`)}</Text>
                                                         </Flex>
@@ -228,5 +245,12 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EventTargets)
+
+const NameWrapper = styled(Flex)`
+padding-left: 1vw;
+align-items: flex-start;
+@media (min-width: 320px) and (max-width: 480px) {
+    padding-left: 5vw;
+}`
 
 /*eslint-enable no-unused-vars*/
