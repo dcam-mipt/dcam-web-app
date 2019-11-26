@@ -178,7 +178,6 @@ let EventTargets = (props) => {
                                 </Flex>
                             </Flex>
                         }
-
                     </Flex>
                 </Flex>
                 <Flex extra={`height: 64vh; justify-content: flex-start; position: relative;`} >

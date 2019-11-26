@@ -34,8 +34,8 @@ let BookEventPopUp = (props) => {
     let [loading, set_loading] = useState(false)
     let [owner_data, set_owner_data] = useState(undefined)
     useEffect(() => {
-        set_start_timestamp(event ? event.start_timestamp : moment().startOf(`hour`).add(1, `hour`).format(`HH:mm`))
-        set_end_timestamp(event ? event.end_timestamp : moment().startOf(`hour`).add(2, `hour`).format(`HH:mm`))
+        set_start_timestamp(event ? +event.start_timestamp : moment().startOf(`hour`).add(1, `hour`).format(`HH:mm`))
+        set_end_timestamp(event ? +event.end_timestamp : moment().startOf(`hour`).add(2, `hour`).format(`HH:mm`))
         set_number_of_people(event ? event.number_of_people : ``)
         set_aim(event ? event.aim : ``)
     }, [event])
@@ -62,40 +62,67 @@ let BookEventPopUp = (props) => {
                         </NameWrapper>
                         <ImageWrapper><Image width={3} /></ImageWrapper>
                     </Bar>
-                    <Bar clear >
-                        <Flex extra={`width: 100%; `} row >
-                            <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
-                            <Half>
-                                <Flex row>
-                                    <Text size={1.4} >{moment(start_timestamp).format(`HH:mm`)}</Text>
-                                    <Text size={1.4} extra={`margin: 0 0.5vw 0 0.5vw;`} >-</Text>
-                                    <Text size={1.4} >{moment(end_timestamp).format(`HH:mm`)}</Text>
+                    {
+                        is_admin
+                            ? <Bar clear>
+                                <Flex extra={`align-items: flex-start; justify-content; flex-start;`} >
+                                    <DatePicker date={day} onChange={(d) => { set_day(d) }} />
+                                    <Flex row extra={`width: 100%; justify-content: space-between;`} >
+                                        <Text>начало</Text>
+                                        <Input type={`time`} value={start_timestamp} onChange={(e) => { set_start_timestamp(e.target.value) }} float />
+                                    </Flex>
+                                    <Flex row extra={`width: 100%; justify-content: space-between;`} >
+                                        <Text>конец</Text>
+                                        <Input type={`time`} value={end_timestamp} onChange={(e) => { set_end_timestamp(e.target.value) }} float />
+                                    </Flex>
+                                    <Flex row extra={`width: 100%; justify-content: space-between;`} >
+                                        <Text>количество людей</Text>
+                                        <Input type={`number`} short extra={`width: 5.2vw;`} value={number_of_people} onChange={(e) => { set_number_of_people(`` + +e.target.value) }} integer />
+                                    </Flex>
+                                    <Text>цель визита</Text>
+                                    <Input type={`textarea`} value={aim} onChange={(e) => { set_aim(e.target.value) }} />
                                 </Flex>
-                            </Half>
-                        </Flex>
-                        <Flex extra={`width: 100%; `} row >
-                            <Half><Text color={mvConsts.colors.text.support} >Количество людей</Text></Half>
-                            <Half><Text size={1.4} >{number_of_people}</Text></Half>
-                        </Flex>
-                        <Flex extra={`width: 100%; `} row >
-                            <Half><Text color={mvConsts.colors.text.support} >Цель</Text></Half>
-                            <Half><Text>{aim}</Text></Half>
-                        </Flex>
-                    </Bar>
-                    <Button backgroundColor={mvConsts.colors.accept} short={false} onClick={async () => {
-                        let start = +moment(day).startOf(`day`).add(start_timestamp.split(`:`)[0], `hour`).add(start_timestamp.split(`:`)[1], `minute`)
-                        let end = +moment(day).startOf(`day`).add(end_timestamp.split(`:`)[0], `hour`).add(end_timestamp.split(`:`)[1], `minute`)
-                        await axios.post(`${mvConsts.api}/events/create/`, {
-                            start: start,
-                            end: end,
-                            target_id: props.target_id,
-                            number_of_people: number_of_people,
-                            aim: aim,
-                        })
-                        props.onCreate !== undefined && props.onCreate()
-                        set_start_timestamp(moment().startOf(`hour`).add(1, `hour`).format(`HH:mm`))
-                        set_end_timestamp(moment().startOf(`hour`).add(2, `hour`).format(`HH:mm`))
-                    }} >Записаться</Button>
+                                <Flex row >
+                                    <Button backgroundColor={mvConsts.colors.WARM_ORANGE} >
+                                        Удалить
+                                    </Button>
+                                    <Button backgroundColor={mvConsts.colors.accept} onClick={async () => {
+                                        let start = +moment(day).startOf(`day`).add(start_timestamp.split(`:`)[0], `hour`).add(start_timestamp.split(`:`)[1], `minute`)
+                                        let end = +moment(day).startOf(`day`).add(end_timestamp.split(`:`)[0], `hour`).add(end_timestamp.split(`:`)[1], `minute`)
+                                        await axios.post(`${mvConsts.api}/events/create/`, {
+                                            start: start,
+                                            end: end,
+                                            target_id: props.target_id,
+                                            number_of_people: number_of_people,
+                                            aim: aim,
+                                        })
+                                        props.onCreate !== undefined && props.onCreate()
+                                        set_start_timestamp(moment().startOf(`hour`).add(1, `hour`).format(`HH:mm`))
+                                        set_end_timestamp(moment().startOf(`hour`).add(2, `hour`).format(`HH:mm`))
+                                    }} >Редактировать</Button>
+                                </Flex>
+                            </Bar>
+                            : <Bar clear >
+                                <Flex extra={`width: 100%; `} row >
+                                    <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                                    <Half>
+                                        <Flex row>
+                                            <Text size={1.4} >{moment(start_timestamp).format(`HH:mm`)}</Text>
+                                            <Text size={1.4} extra={`margin: 0 0.5vw 0 0.5vw;`} >-</Text>
+                                            <Text size={1.4} >{moment(end_timestamp).format(`HH:mm`)}</Text>
+                                        </Flex>
+                                    </Half>
+                                </Flex>
+                                <Flex extra={`width: 100%; `} row >
+                                    <Half><Text color={mvConsts.colors.text.support} >Количество людей</Text></Half>
+                                    <Half><Text size={1.4} >{number_of_people}</Text></Half>
+                                </Flex>
+                                <Flex extra={`width: 100%; `} row >
+                                    <Half><Text color={mvConsts.colors.text.support} >Цель</Text></Half>
+                                    <Half><Text>{aim}</Text></Half>
+                                </Flex>
+                            </Bar>
+                    }
                 </Flex>
                 <ClosePopUp props={props} />
             </Flex>
@@ -109,7 +136,7 @@ let BookEventPopUp = (props) => {
 
 let mapStateToProps = (state) => {
     return {
-        is_admin: !state.user.is_admin,
+        is_admin: state.user.is_admin,
     }
 }
 export default connect(mapStateToProps)(BookEventPopUp)
@@ -126,7 +153,7 @@ const NameWrapper = styled(Flex)`
 padding-left: 1vw;
 align-items: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
-    padding-left: 5vw;
+    padding - left: 5vw;
 }`
 
 const ImageWrapper = styled(Flex)`
