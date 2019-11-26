@@ -189,7 +189,7 @@ let EventTargets = (props) => {
                             })
                         }
                     </Flex>
-                    <PopUp extra={`bottom: calc(1.5vw + ${30 / 7 * details_bottom}vw + ${details_visible ? 0 : 1}vw); right: calc(${3.5 * (24 - details_left)}vw);`} ref={details_ref} visible={details_visible} >
+                    <PopUp extra={`bottom: calc(1.2vw + ${30 / 7 * details_bottom}vw + ${details_visible ? 0 : 1}vw); right: calc(${3.5 * (24 - details_left)}vw);`} ref={details_ref} visible={details_visible} >
                         <BookEventPopUp event={d} />
                     </PopUp>
                     {

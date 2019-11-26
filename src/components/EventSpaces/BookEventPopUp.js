@@ -1,9 +1,10 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Image, PopUp, ClosePopUp } from '../UIKit/styled-templates'
+import { Flex, Text, Image, PopUp, ClosePopUp, Bar } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
 import Button from '../UIKit/Button'
+import Form from '../UIKit/Form'
 import DatePicker from '../UIKit/DatePicker'
 import Selector from '../UIKit/Selector'
 import mvConsts from '../../constants/mvConsts';
@@ -12,6 +13,16 @@ import Calendar from './Calendar'
 import useComponentVisible from '../UIKit/useComponentVisible'
 import axios from 'axios'
 import { connect } from 'react-redux'
+
+let get_user_status = (timestamp) => {
+    if (+moment() - +timestamp < 5 * 6000) {
+        return `онлайн`
+    }
+    if (+moment() - +timestamp < 24 * 3600000) {
+        return `сегодня в ${moment(+timestamp).format(`HH:mm`)}`
+    }
+    return `оффлайн с ${moment(+timestamp).format(`DD.MM.YY`)}`
+}
 
 let BookEventPopUp = (props) => {
     let { event, is_admin } = props
@@ -25,6 +36,8 @@ let BookEventPopUp = (props) => {
     useEffect(() => {
         set_start_timestamp(event ? event.start_timestamp : moment().startOf(`hour`).add(1, `hour`).format(`HH:mm`))
         set_end_timestamp(event ? event.end_timestamp : moment().startOf(`hour`).add(2, `hour`).format(`HH:mm`))
+        set_number_of_people(event ? event.number_of_people : ``)
+        set_aim(event ? event.aim : ``)
     }, [event])
     useEffect(() => {
         if (event) {
@@ -39,36 +52,36 @@ let BookEventPopUp = (props) => {
     if (event) {
         return (
             <Flex>
-                <Flex extra={`align-items: flex-start; justify-content; flex-start;`} >
-                    <Text bold size={1.5} >Запись</Text>
-                    <Flex row>
+                <Flex extra={`justify-content; flex-start;`} >
+                    <Form array={[{ type: `title`, text: `Запись` }]} />
+                    <Bar row >
                         <Image src={owner_data && owner_data.avatar} round width={3} />
-                        <Text size={1} extra={`margin: 2vw;`} >{owner_data && owner_data.username.split(`@`)[0]}</Text>
-                    </Flex>
-                    {
-                        is_admin ?
-                            <Flex>
-                                <DatePicker date={day} onChange={(d) => { set_day(d) }} />
-                                <Flex row extra={`width: 100%; justify-content: space-between;`} >
-                                    <Text>начало</Text>
-                                    <Input type={`time`} value={start_timestamp} onChange={(e) => { set_start_timestamp(e.target.value) }} float />
+                        <NameWrapper>
+                            <Text size={1} >{owner_data && owner_data.username.split(`@`)[0]}</Text>
+                            <Text color={mvConsts.colors.text.support} >{owner_data && get_user_status(owner_data.last_seen)}</Text>
+                        </NameWrapper>
+                        <ImageWrapper><Image width={3} /></ImageWrapper>
+                    </Bar>
+                    <Bar clear >
+                        <Flex extra={`width: 100%; `} row >
+                            <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                            <Half>
+                                <Flex row>
+                                    <Text size={1.4} >{moment(start_timestamp).format(`HH:mm`)}</Text>
+                                    <Text size={1.4} extra={`margin: 0 0.5vw 0 0.5vw;`} >-</Text>
+                                    <Text size={1.4} >{moment(end_timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
-                                <Flex row extra={`width: 100%; justify-content: space-between;`} >
-                                    <Text>конец</Text>
-                                    <Input type={`time`} value={end_timestamp} onChange={(e) => { set_end_timestamp(e.target.value) }} float />
-                                </Flex>
-                            </Flex>
-                            : <Flex extra={`align-items: flex-start;`} >
-                                <Text>{mvConsts.weekDays.short[moment(start_timestamp).isoWeekday() - 1]} {moment(start_timestamp).format(`DD.MM.YYYY`)}</Text>
-                                <Text bold size={1} >{moment(start_timestamp).format(`HH:mm`)} - {moment(end_timestamp).format(`HH:mm`)}</Text>
-                            </Flex>
-                    }
-                    <Flex row extra={`width: 100%; justify-content: space-between;`} >
-                        <Text>количество людей</Text>
-                        <Input type={`number`} short extra={`width: 5.2vw;`} value={number_of_people} onChange={(e) => { set_number_of_people(`` + +e.target.value) }} integer />
-                    </Flex>
-                    <Text>цель визита</Text>
-                    <Input type={`textarea`} value={aim} onChange={(e) => { set_aim(e.target.value) }} />
+                            </Half>
+                        </Flex>
+                        <Flex extra={`width: 100%; `} row >
+                            <Half><Text color={mvConsts.colors.text.support} >Количество людей</Text></Half>
+                            <Half><Text size={1.4} >{number_of_people}</Text></Half>
+                        </Flex>
+                        <Flex extra={`width: 100%; `} row >
+                            <Half><Text color={mvConsts.colors.text.support} >Цель</Text></Half>
+                            <Half><Text>{aim}</Text></Half>
+                        </Flex>
+                    </Bar>
                     <Button backgroundColor={mvConsts.colors.accept} short={false} onClick={async () => {
                         let start = +moment(day).startOf(`day`).add(start_timestamp.split(`:`)[0], `hour`).add(start_timestamp.split(`:`)[1], `minute`)
                         let end = +moment(day).startOf(`day`).add(end_timestamp.split(`:`)[0], `hour`).add(end_timestamp.split(`:`)[1], `minute`)
@@ -100,4 +113,26 @@ let mapStateToProps = (state) => {
     }
 }
 export default connect(mapStateToProps)(BookEventPopUp)
+
+const Half = styled(Flex)`
+width: 50%;
+align-items: flex-start;
+height: 3vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    height: 15vw;
+}`
+
+const NameWrapper = styled(Flex)`
+padding-left: 1vw;
+align-items: flex-start;
+@media (min-width: 320px) and (max-width: 480px) {
+    padding-left: 5vw;
+}`
+
+const ImageWrapper = styled(Flex)`
+width: 7vw;
+align-items: flex-end;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 35vw;
+}`
 /*eslint-enable no-unused-vars*/
