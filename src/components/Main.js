@@ -71,7 +71,7 @@ let Main = (props) => {
             .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
     })
-    useEffect(() => { document.title = `dcam.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
+    useEffect(() => { document.title = `psamcs.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
         set_axios_is_ready(true)

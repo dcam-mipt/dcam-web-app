@@ -1,5 +1,5 @@
 /*eslint-disable no-unused-vars*/
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import GoogleAPI from '../API/GoogleAPI'
 import userActions from '../redux/actions/UserActions'
@@ -19,18 +19,27 @@ let Entry = (props) => {
             })
             .catch((d) => { console.log(d) })
     })
+    let [photos, set_photos] = useState([])
+    let [current_photo, set_current_photo] = useState(0)
+    useEffect(() => {
+        window.VK.api("photos.get", { "owner_id": "-46253638", "album_id": "267290657", "count": "1000", "v": "5.103" }, (data) => {
+            set_photos(data.response.items.filter(i => i.sizes[0].width > i.sizes[0].height).map(i => i.sizes.pop().url))
+            set_current_photo(Math.round(Math.random() * data.response.items.length))
+            setInterval(() => {
+                set_current_photo(Math.round(Math.random() * data.response.items.length))
+            }, 2000)
+        });
+    }, [])
     return (
         <Wrapper>
             <Left>
-                <Flex extra={`width: 100%; height: 100%; align-items: flex-start; justify-content: flex-end;`} >
-                    <Flex row extra={`margin-left: 1vw;`} >
-                        <Text extra={`margin-right: 0.5vw;`} >Это open source проект, вот наш</Text>
-                        <Text ><a href="https://github.com/dcam-mipt" target="_blank">GitHub.</a></Text>
-                    </Flex>
-                    <Flex row extra={`margin: 0 0 1vw 1vw;`} >
-                        <Text extra={`margin-right: 0.5vw;`} >Если у Вас возникли проблемы при работе с сайтом - пишите</Text>
-                        <Text ><a href="https://vk.com/mityabeldii" target="_blank">eму.</a></Text>
-                    </Flex>
+                <Flex extra={`width: 100%; height: 100%;`} >
+                    {
+                        photos.length > 0 && <Image extra={`height: 110%;`} src={photos[current_photo]} />
+                    }
+                    <Overlay>
+                        <Image src={require(`../assets/images/psamsc_logo.svg`)} width={15} />
+                    </Overlay>
                 </Flex>
             </Left>
             <Right>
@@ -60,6 +69,16 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Entry)
+
+const Overlay = styled(Flex)`
+width: 70vw;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+position: absolute;
+z-index: 1;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
 
 const MarginWrapper = styled(Flex)`
 margin: 2vw 0  2vw 0;

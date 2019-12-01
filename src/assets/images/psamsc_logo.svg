@@ -1,1 +1,15 @@
-<svg id="main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><style>.cls-1{fill:#fff;opacity:0;}</style></defs><title>psamsc_logo</title><rect id="frame" class="cls-1" width="1000" height="1000"/><path d="M850,150H404.55C228.82,150,86.36,306.7,86.36,500S228.82,850,404.55,850H913.64V150Zm0,318.18H404.55c-16,0-28.93,14.25-28.93,31.82s12.95,31.82,28.93,31.82H850v95.45H404.55c-63.91,0-115.71-57-115.71-127.27s51.8-127.27,115.71-127.27H850Zm0-159.09H404.55C308.69,309.09,231,394.56,231,500s77.7,190.91,173.56,190.91H850v95.45H404.55c-143.78,0-260.34-128.21-260.34-286.36S260.77,213.64,404.55,213.64H850Z"/></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="main" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;fill-opacity:0;}
+	.st1{fill:#FFFFFF;}
+</style>
+<title>psamsc_logo</title>
+<rect id="frame" class="st0" width="1000" height="1000"/>
+<path class="st1" d="M850,150H404.5C228.8,150,86.4,306.7,86.4,500s142.5,350,318.2,350h509.1V150H850z M850,468.2H404.5
+	c-16,0-28.9,14.2-28.9,31.8s13,31.8,28.9,31.8H850v95.5H404.5c-63.9,0-115.7-57-115.7-127.3s51.8-127.3,115.7-127.3H850V468.2z
+	 M850,309.1H404.5C308.7,309.1,231,394.6,231,500s77.7,190.9,173.6,190.9H850v95.5H404.5c-143.8,0-260.3-128.2-260.3-286.4
+	s116.6-286.4,260.3-286.4H850V309.1z"/>
+</svg>
