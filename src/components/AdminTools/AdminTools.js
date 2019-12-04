@@ -8,10 +8,6 @@ import { Flex, Image, Bar, Text, Rotor } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
 import Button from '../UIKit/Button'
 import mvConsts from '../../constants/mvConsts'
-import TransactionsList from './TransactionsList'
-import NotificationsList from './NotificationsList'
-import io from 'socket.io-client';
-// const socket = io('http://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
     if (+moment() - +timestamp < 5 * 6000) {
@@ -24,35 +20,20 @@ let get_user_status = (timestamp) => {
 }
 
 let get_users = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/users/get_users_list`).then((d) => { resolve(d.data ? d.data : []) }) })
-let get_transactions = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/transactions/get_all_transactions`).then((d) => { resolve(d.data ? d.data : []) }) })
 
 let loading_rotor = <Rotor><Image src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
 
 let AdminTools = (props) => {
     let [users_list, set_users_list] = useState([])
-    let [users_transactions, set_users_transactions] = useState([])
     let [search, set_search] = useState(``)
     let [selected_user, set_selected_user] = useState(null)
     let [new_balance, set_new_balance] = useState(``)
     let [loading, set_loading] = useState(false)
     let money_delta = selected_user ? +new_balance - selected_user.money : 0
-    let update_transactions = async () => {
-        set_loading(true)
-        let new_users_list = (await get_users())
-        set_users_list(new_users_list)
-        if (selected_user) {
-            set_new_balance(``)
-            set_selected_user(new_users_list.filter(i => i.objectId === selected_user.objectId)[0])
-        }
-        set_users_transactions((await get_transactions()))
-        set_loading(false)
-    }
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
         !users_list.length && get_users().then((d) => { set_users_list(d) })
-        !users_transactions.length && get_transactions().then(d => set_users_transactions(d))
     }, [])
-    // socket.on('Transactions', async (msg) => { await update_transactions() })
     return (
         <GlobalWrapper>
             <UsersWrapper user_is_selected={selected_user !== null} >
@@ -65,7 +46,7 @@ let AdminTools = (props) => {
                                 <User is_selected_user={selected_user && selected_user.objectId === user.objectId} pointer key={user_index} row onClick={() => { set_new_balance(``); set_selected_user(selected_user && selected_user.objectId === user.objectId ? null : user) }} >
                                     <Image src={user.avatar} width={3} round />
                                     <NameWrapper>
-                                        <Text size={0.8} >{user.username.split(`@`)[0]  }</Text>
+                                        <Text size={0.8} >{user.username.split(`@`)[0]}</Text>
                                         <Text color={mvConsts.colors.text.support} >{get_user_status(user.last_seen)}</Text>
                                     </NameWrapper>
                                 </User>
@@ -79,7 +60,7 @@ let AdminTools = (props) => {
                 {
                     selected_user ? <Flex>
                         <Card>
-                            <Text color={`white`} >Стиралка 7ки</Text>
+                            <Text color={`white`} >Стиралка</Text>
                             <Flex row >
                                 <Text bold color={`white`} size={1.2} >{selected_user.money}</Text>
                                 <Text color={`white`} >р</Text>
@@ -91,10 +72,9 @@ let AdminTools = (props) => {
                                     color={`white`}
                                     placeholder={`Сумма`}
                                     short
-                                    number
-                                    pattern={`[0-9]*`}
-                                    onChange={(d) => { (!isNaN(d.target.value) && d.target.value.length < 10) && set_new_balance(Math.round(d.target.value * 100) / 100) }}
+                                    onChange={(d) => { set_new_balance(d.target.value) }}
                                     value={new_balance}
+                                    type={`number`}
                                 />
                                 <Button
                                     disabled={+new_balance === selected_user.money || new_balance === ``}
@@ -103,7 +83,6 @@ let AdminTools = (props) => {
                                         try {
                                             set_loading(true)
                                             await axios.get(`https://dcam.pro/api/balance/edit/${selected_user.objectId}/${money_delta}`)
-                                            await update_transactions()
                                         } catch (error) {
                                             console.log(error);
                                         }
@@ -116,15 +95,12 @@ let AdminTools = (props) => {
                     </Flex> : null
                 }
                 <Button only_mobile backgroundColor={mvConsts.colors.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
-                <Block only_desktop subtrahend={(card_width / 86 * 54) * (selected_user ? 1 : 0)} >
-                    <TransactionsList transactions={selected_user ? users_transactions.filter(i => i.from === selected_user.objectId || i.to === selected_user.objectId) : users_transactions} />
-                </Block>
             </TransactionsWrapper>
             <Flex only_desktop extra={`width: 25vw; `} >
-                <NotificationsList user_id={selected_user ? selected_user.objectId : undefined} />
+
             </Flex>
             <Flex only_desktop extra={`width: 30vw;`} >
-                <Text>machines</Text>
+
             </Flex>
         </GlobalWrapper>
     )

@@ -19,7 +19,6 @@ import { Flex, Image, Text, PopUp } from './UIKit/styled-templates'
 import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
 import io from 'socket.io-client';
-import NotificationsPopUp from './NotificationsPopUp';
 import { HashRouter, BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 // const socket = io('https://dcam.pro:3000');
 

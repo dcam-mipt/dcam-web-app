@@ -27,7 +27,7 @@ let Entry = (props) => {
             set_current_photo(Math.round(Math.random() * data.response.items.length))
             setInterval(() => {
                 set_current_photo(Math.round(Math.random() * data.response.items.length))
-            }, 2000)
+            }, 5000)
         });
     }, [])
     return (
@@ -38,7 +38,7 @@ let Entry = (props) => {
                         photos.length > 0 && <Image extra={`height: 110%;`} src={photos[current_photo]} />
                     }
                     <Overlay>
-                        <Image src={require(`../assets/images/psamsc_logo.svg`)} width={15} />
+                        <Image src={require(`../assets/images/psamcs_logo.svg`)} width={30} />
                     </Overlay>
                 </Flex>
             </Left>
@@ -100,7 +100,7 @@ height: 100vh;
 const Left = styled(Flex)`
 width: 70vw;
 height: 100vh;
-background-color: ${mvConsts.colors.yellow};
+background-color: rgba(0, 0, 0, 0.02);
 @media (min-width: 320px) and (max-width: 480px) {
     display: none;
 }`

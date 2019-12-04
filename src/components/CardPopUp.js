@@ -29,7 +29,7 @@ let main = (props) => {
             <Form array={[{ type: `title`, text: `Баланс` }]} />
             <Bar>
                 <Card>
-                    <Text color={`white`} >Стиралка 7ки</Text>
+                    <Text color={`white`} >Стиралка</Text>
                     <Flex row >
                         <Text bold color={`white`} size={1.2} >{balance}</Text>
                         <Text color={`white`} >р</Text>
