@@ -83,7 +83,10 @@ let BookEventPopUp = (props) => {
                                     <Input type={`textarea`} value={aim} onChange={(e) => { set_aim(e.target.value) }} />
                                 </Flex>
                                 <Flex row >
-                                    <Button backgroundColor={mvConsts.colors.WARM_ORANGE} >
+                                    <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={async () => {
+                                        await axios.get(`${mvConsts.api}/events/delete/${props.event.objectId}`)
+                                        props.onDelete()
+                                    }} >
                                         Удалить
                                     </Button>
                                     <Button backgroundColor={mvConsts.colors.accept} onClick={async () => {

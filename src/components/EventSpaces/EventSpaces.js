@@ -29,7 +29,7 @@ let useDetails = (default_value) => {
 }
 
 let EventTargets = (props) => {
-    let { is_admin } = props
+    let { is_admin, user } = props
     let [selected_target, set_selected_target] = useState(``)
     let [targets, set_targets] = useState([])
     let [events, set_events] = useState([])
@@ -41,11 +41,10 @@ let EventTargets = (props) => {
     let [create_target_ref, create_target_visible, set_create_target_visible] = useComponentVisible(false);
     let [dormitory_ref, dormitory_visible, set_dormitory_visible] = useComponentVisible(false);
     let [requests_ref, requests_visible, set_requests_visible] = useComponentVisible(false);
+    let [my_books_ref, my_books_visible, set_my_books_visible] = useComponentVisible(false);
     let [details_ref, details_visible, set_details_visible, details_id] = useDetails(false);
     let selected_dormitory_number = dormitories.filter(i => i.objectId === selected_dormitory)[0] && dormitories.filter(i => i.objectId === selected_dormitory)[0].number
     let d = events.filter(i => i.objectId === details_id)[0]
-    let details_bottom = d ? 9 - moment(d.start_timestamp).isoWeekday() - 1 : 0
-    let details_left = d ? moment(d.end_timestamp).format(`HH`) : 0
     useEffect(() => {
         get_targets().then(d => {
             set_targets(d)
@@ -57,7 +56,10 @@ let EventTargets = (props) => {
         get_events().then(d => { set_events(d) })
     }, [])
     return (
-        <Flex row extra={`@supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
+        <Flex row extra={`position: relative; @supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
+            <PopUp extra={`top: ${details_visible ? -2 : -3}vw; left: 0vw;`} ref={details_ref} visible={details_visible} >
+                <BookEventPopUp event={d} onDelete={() => { get_events().then(d => { set_events(d) }) }} />
+            </PopUp>
             <Flex>
                 <Flex row extra={`height: 30vh; width: 90vw; justify-content: space-between;`} >
                     <Flex row >
@@ -117,7 +119,6 @@ let EventTargets = (props) => {
                                 </Flex>
                             </Flex>
                         </Flex>
-
                         <Flex extra={`position: relative;`} >
                             <Text extra={`margin: 0.2vw;`} size={1} >общежитие</Text>
                             <PopUp extra={`top: ${dormitory_visible ? 2 : 1}vw; right: 0vw;`} ref={dormitory_ref} visible={dormitory_visible} >
@@ -138,6 +139,32 @@ let EventTargets = (props) => {
                                 </Flex>
                             </Flex>
                         </Flex>
+                        <Flex extra={`position: relative;`} >
+                            <Text extra={`margin: 0.2vw;`} size={1} >мои записи</Text>
+                            <PopUp extra={`top: ${my_books_visible ? 2 : 1}vw; right: 0vw;`} ref={my_books_ref} visible={my_books_visible} >
+                                {
+                                    events && events.filter(i => i.user_id === user.objectId).map((item, index) => {
+                                        return (
+                                            <Flex row key={index} extra={`margin: 0.5vw; align-items: flex-start; cursor: pointer; &:hover{ transform: scale(1.02); };`} onClick={() => { set_details_visible(false, item.objectId); setTimeout(() => { set_details_visible(true, item.objectId) }, 200) }} >
+                                                <Flex extra={`width: 6vw; align-items: flex-start; margin-right: 1vw;`} >
+                                                    <Flex row >
+                                                        <Text bold size={1} >{moment(item.start_timestamp).format(`HH:mm`)}</Text> -
+                                                            <Text bold size={1} >{moment(item.end_timestamp).format(`HH:mm`)}</Text>
+                                                    </Flex>
+                                                    <Text>{moment(item.start_timestamp).format(`DD.MM.YY`)}</Text>
+                                                </Flex>
+                                                <Text extra={`width: 7vw; align-items: flex-start;`} >{item.username.split(`@`)[0]}</Text>
+                                            </Flex>
+                                        )
+                                    })
+                                }
+                            </PopUp>
+                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { events && events.filter(i => i.user_id === user.objectId).length && set_my_books_visible(true) }} >
+                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
+                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{events.filter(i => i.user_id === user.objectId).length}</Text>
+                                </Flex>
+                            </Flex>
+                        </Flex>
                         {
                             is_admin && <Flex extra={`position: relative;`} >
                                 <Text extra={`margin: 0.2vw;`} size={1} >заявки</Text>
@@ -145,7 +172,7 @@ let EventTargets = (props) => {
                                     {
                                         events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).map((item, index) => {
                                             return (
-                                                <Flex row key={index} extra={`margin: 0.5vw; align-items: flex-start; cursor: pointer; &:hover{ transform: scale(1.02); };`} onClick={() => { set_details_visible(true, item.objectId) }} >
+                                                <Flex row key={index} extra={`margin: 0.5vw; align-items: flex-start; cursor: pointer; &:hover{ transform: scale(1.02); };`} onClick={() => { set_details_visible(false, item.objectId); setTimeout(() => { set_details_visible(true, item.objectId) }, 200) }} >
                                                     <Flex extra={`width: 6vw; align-items: flex-start; margin-right: 1vw;`} >
                                                         <Flex row >
                                                             <Text bold size={1} >{moment(item.start_timestamp).format(`HH:mm`)}</Text> -
@@ -188,9 +215,6 @@ let EventTargets = (props) => {
                             })
                         }
                     </Flex>
-                    <PopUp extra={`bottom: calc(1.2vw + ${30 / 7 * details_bottom}vw + ${details_visible ? 0 : 1}vw); right: calc(${3.5 * (24 - details_left)}vw);`} ref={details_ref} visible={details_visible} >
-                        <BookEventPopUp event={d} />
-                    </PopUp>
                     {
                         new Array(7).fill(0).map((item, index) => {
                             let events_for_day = events.filter(i => i.target_id === selected_target).filter(i => +moment(i.start_timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
@@ -204,7 +228,7 @@ let EventTargets = (props) => {
                                                 let width = (+e.end_timestamp - +e.start_timestamp) / day_length * 84
                                                 let left = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * 84
                                                 return (
-                                                    <Flex key={e_i} id={`e_` + e.id} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${e.accepted ? mvConsts.colors.accept : mvConsts.colors.yellow}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} onClick={() => { set_details_visible(true, e.objectId) }} >
+                                                    <Flex key={e_i} id={`e_` + e.id} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${e.accepted ? mvConsts.colors.accept : mvConsts.colors.yellow}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
                                                         <Flex extra={`height: 3vw; justify-content: space-around; align-items: flex-start; margin-left: 0.5vw;`} >
                                                             <Text color={`white`} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
                                                             <Text color={`white`} >{moment(e.end_timestamp).format(`HH:mm`)}</Text>
@@ -234,6 +258,7 @@ let EventTargets = (props) => {
 let mapStateToProps = (state) => {
     return {
         is_admin: state.user.is_admin,
+        user: state.user.user,
     }
 }
 let mapDispatchToProps = (dispatch) => {
