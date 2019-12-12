@@ -66,61 +66,46 @@ let EventTargets = (props) => {
                         {
                             targets.filter(i => i.dormitory_id === selected_dormitory).map((item, index) => {
                                 return (
-                                    <Flex key={index} >
-                                        <Text extra={`margin: 0.2vw;`} size={1} >{item.name}</Text>
-                                        <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${item.objectId === selected_target ? mvConsts.colors.lightblue : mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_selected_target(item.objectId) }} >
-                                            <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                                <Image src={item.avatar.url} width={4} />
-                                            </Flex>
-                                        </Flex>
-                                    </Flex>
+                                    <SquareWrapper key={index} title={item.name} color={selected_target === item.objectId ? mvConsts.colors.lightblue : null} onClick={() => { set_selected_target(item.objectId) }} >
+                                        <Image src={item.avatar.url} width={4} />
+                                    </SquareWrapper>
                                 )
                             })
                         }
                         {
                             is_admin && <Flex extra={`position: relative;`} >
-                                <Text extra={`margin: 0.2vw;`} size={1} >добавить</Text>
                                 <PopUp extra={`top: ${create_target_visible ? 2 : 1}vw; left: 0;`} ref={create_target_ref} visible={create_target_visible} >
                                     <CreateSpacePopUp dormitory_id={selected_dormitory} onCreate={() => { get_targets().then(d => { set_targets(d) }) }} />
                                 </PopUp>
-                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_create_target_visible(true) }} >
-                                    <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                        <Image src={require(`../../assets/images/plus.svg`)} width={4} />
-                                    </Flex>
-                                </Flex>
+                                <SquareWrapper title={`добавить`} onClick={() => { set_create_target_visible(true) }} >
+                                    <Image src={require(`../../assets/images/plus.svg`)} width={4} />
+                                </SquareWrapper>
                             </Flex>
                         }
                     </Flex>
                     <Flex row >
 
                         <Flex extra={`position: relative;`} >
-                            <Text extra={`margin: 0.2vw;`} size={1} >записаться</Text>
                             <PopUp extra={`top: ${create_event_visible ? 2 : 1}vw; right: 0vw;`} ref={create_event_ref} visible={create_event_visible} >
                                 <CreateEventPopUp target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
                             </PopUp>
-                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.accept}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); > * { transform: rotate(-90deg); } };`} onClick={() => { set_create_event_visible(true) }} >
-                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: rgba(255, 255, 255, 0.5);`} >
-                                    <Image src={require(`../../assets/images/plus_white.svg`)} extra={`opacity: 0.75;`} width={4} />
-                                </Flex>
-                            </Flex>
+                            <SquareWrapper title={`записаться`} onClick={() => { set_create_event_visible(true) }} >
+                                <Image src={require(`../../assets/images/plus_white.svg`)} extra={`opacity: 0.75;`} width={4} />
+                            </SquareWrapper>
                         </Flex>
 
                         <Flex extra={`position: relative;`} >
-                            <Text extra={`margin: 0.2vw;`} size={1} >начало недели</Text>
                             <PopUp extra={`top: ${week_selector_visible ? 2 : 1}vw; right: 0;`} ref={week_selector_ref} visible={week_selector_visible} >
                                 <Calendar onSelectDate={(date) => { set_week_start(+moment(date).startOf(`isoWeek`)); set_week_selector_visible(false) }} />
                             </PopUp>
-                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_week_selector_visible(true) }} >
-                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                    <Flex extra={`width: 4vw; height: 4vw;`} >
-                                        <Text size={1.5} color={mvConsts.colors.text.support} extra={`border-bottom: 0.1vw solid ${mvConsts.colors.text.support}`} >{moment(week_start).format(`DD`)}</Text>
-                                        <Text size={1.5} color={mvConsts.colors.text.support} >{moment(week_start).format(`MM`)}</Text>
-                                    </Flex>
+                            <SquareWrapper title={`добавить`} onClick={() => { set_week_selector_visible(true) }} >
+                                <Flex extra={`width: 4vw; height: 4vw;`} >
+                                    <Text size={1.5} color={mvConsts.colors.text.support} extra={`border-bottom: 0.1vw solid ${mvConsts.colors.text.support}`} >{moment(week_start).format(`DD`)}</Text>
+                                    <Text size={1.5} color={mvConsts.colors.text.support} >{moment(week_start).format(`MM`)}</Text>
                                 </Flex>
-                            </Flex>
+                            </SquareWrapper>
                         </Flex>
                         <Flex extra={`position: relative;`} >
-                            <Text extra={`margin: 0.2vw;`} size={1} >общежитие</Text>
                             <PopUp extra={`top: ${dormitory_visible ? 2 : 1}vw; right: 0vw;`} ref={dormitory_ref} visible={dormitory_visible} >
                                 {
                                     dormitories && dormitories.map((item, index) => {
@@ -133,14 +118,11 @@ let EventTargets = (props) => {
                                     })
                                 }
                             </PopUp>
-                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { set_dormitory_visible(true) }} >
-                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{selected_dormitory_number}</Text>
-                                </Flex>
-                            </Flex>
+                            <SquareWrapper title={`общежитие`} onClick={() => { set_dormitory_visible(true) }} >
+                                <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{selected_dormitory_number}</Text>
+                            </SquareWrapper>
                         </Flex>
                         <Flex extra={`position: relative;`} >
-                            <Text extra={`margin: 0.2vw;`} size={1} >мои записи</Text>
                             <PopUp extra={`top: ${my_books_visible ? 2 : 1}vw; right: 0vw;`} ref={my_books_ref} visible={my_books_visible} >
                                 {
                                     events && events.filter(i => i.user_id === user.objectId).map((item, index) => {
@@ -159,15 +141,12 @@ let EventTargets = (props) => {
                                     })
                                 }
                             </PopUp>
-                            <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { events && events.filter(i => i.user_id === user.objectId).length && set_my_books_visible(true) }} >
-                                <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${mvConsts.colors.background.secondary};`} >
-                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{events.filter(i => i.user_id === user.objectId).length}</Text>
-                                </Flex>
-                            </Flex>
+                            <SquareWrapper title={`общежитие`} onClick={() => { events && events.filter(i => i.user_id === user.objectId).length && set_my_books_visible(true) }} >
+                                <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{events.filter(i => i.user_id === user.objectId).length}</Text>
+                            </SquareWrapper>
                         </Flex>
                         {
                             is_admin && <Flex extra={`position: relative;`} >
-                                <Text extra={`margin: 0.2vw;`} size={1} >заявки</Text>
                                 <PopUp extra={`top: ${requests_visible ? 2 : 1}vw; right: 0vw;`} ref={requests_ref} visible={requests_visible} >
                                     {
                                         events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).map((item, index) => {
@@ -198,11 +177,9 @@ let EventTargets = (props) => {
                                         })
                                     }
                                 </PopUp>
-                                <Flex extra={`margin: 0.5vw; padding: 1vw; border-radius: 2vw; background: ${events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? mvConsts.colors.yellow : mvConsts.colors.background.primary}; cursor: pointer; &:hover { transform: scale(1.05) rotate(5deg); };`} onClick={() => { (events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length) && set_requests_visible(true) }} >
-                                    <Flex extra={`padding: 1vw; border-radius: 6vw; background: ${events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `rgba(255, 255, 255, 0.5)` : mvConsts.colors.background.secondary};`} >
-                                        <Text extra={`width: 4vw; height: 4vw;`} size={3} color={events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `white` : mvConsts.colors.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
-                                    </Flex>
-                                </Flex>
+                                <SquareWrapper title={`заявки`} onClick={() => { (events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length) && set_requests_visible(true) }} >
+                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `white` : mvConsts.colors.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
+                                </SquareWrapper>
                             </Flex>
                         }
                     </Flex>
@@ -270,11 +247,38 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EventTargets)
 
-const NameWrapper = styled(Flex)`
-padding-left: 1vw;
-align-items: flex-start;
+let SquareWrapper = (props) => {
+    return (
+        <Flex>
+            <Text extra={`margin: 0.2vw;`} size={1} >{props.title}</Text>
+            <Square {...props} >
+                <Flex>
+                    {props.children}
+                </Flex>
+            </Square>
+        </Flex>
+    )
+}
+
+const Square = styled(Flex)`
+margin: 0.5vw;
+padding: 1vw;
+border-radius: 2vw;
+background: ${props => props.color ? props.color : mvConsts.colors.background.primary};
+cursor: pointer;
+&:hover {
+    transform: scale(1.05) rotate(5deg);
+    > * {
+        // transform: rotate(-90deg);
+    }
+};
+> * {
+    padding: 1vw;
+    border-radius: 6vw;
+    background: ${props => props.color ? `rgba(255, 255, 255, 0.3)` : `rgba(0, 0, 0, 0.1)`};
+}
 @media (min-width: 320px) and (max-width: 480px) {
-    padding-left: 5vw;
+    
 }`
 
 /*eslint-enable no-unused-vars*/
