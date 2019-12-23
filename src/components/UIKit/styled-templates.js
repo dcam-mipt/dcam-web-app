@@ -103,16 +103,17 @@ to { transform: rotate(360deg); }
 
 export const ThemeWrapper = (props) => {
     let default_theme = dayTheme
-    switch (localStorage.getItem(`theme`)) {
-        case `system`:
-            default_theme = window.matchMedia(`(prefers-color-scheme: dark)`).matches ? darkTheme : dayTheme
-        case `disabled`:
-            default_theme = dayTheme
-        case `scheduled`:
-            default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
-        case `automatic`:
-            default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
-        default: default_theme = dayTheme
+    if (localStorage.getItem(`theme`) === `system`) {
+        default_theme = window.matchMedia(`(prefers-color-scheme: dark)`).matches ? darkTheme : dayTheme
+    }
+    if (localStorage.getItem(`theme`) === `disabled`) {
+        default_theme = dayTheme
+    }
+    if (localStorage.getItem(`theme`) === `scheduled`) {
+        default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
+    }
+    if (localStorage.getItem(`theme`) === `automatic`) {
+        default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
     }
     let [theme, setTheme] = useState(default_theme)
     useEffect(() => {

@@ -96,7 +96,7 @@ let Laundry = (props) => {
                                             onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
                                         >
                                             <Flex extra={`width: 15vw;`} >
-                                                <Text size={1} color={is_week_end ? props => props.theme.WARM_ORANGE : null} >
+                                                <Text bold={is_today} size={1} color={is_week_end ? props => props.theme.WARM_ORANGE : null} >
                                                     {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
                                                 </Text>
                                             </Flex>
@@ -194,6 +194,7 @@ flex-direction: column
 transition: 0.2s
 width: 5vw;
 font-size: 0.8vw;
+color: ${props => props.theme.text.primary}
 @media (min-width: 320px) and (max-width: 480px) {
     width: 15vw;
     font-size: 4vw;

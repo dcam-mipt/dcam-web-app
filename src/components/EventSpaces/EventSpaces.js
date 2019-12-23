@@ -57,7 +57,7 @@ let EventTargets = (props) => {
     }, [])
     return (
         <Flex row extra={`position: relative; @supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
-            <PopUp extra={`top: ${details_visible ? -2 : -3}vw; left: 0vw;`} ref={details_ref} visible={details_visible} >
+            <PopUp extra={`top: ${details_visible ? 1 : 0}vw; left: 0vw;`} ref={details_ref} visible={details_visible} >
                 <BookEventPopUp event={d} onDelete={() => { get_events().then(d => { set_events(d) }) }} />
             </PopUp>
             <Flex>
@@ -160,18 +160,18 @@ let EventTargets = (props) => {
                                                         <Text>{moment(item.start_timestamp).format(`DD.MM.YY`)}</Text>
                                                     </Flex>
                                                     <Text extra={`width: 7vw; align-items: flex-start;`} >{item.username.split(`@`)[0]}</Text>
-                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${props => props.theme.accept}`} onClick={async () => {
+                                                    <LikeButton color={props => props.theme.accept} onClick={async () => {
                                                         await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/true`)
                                                         get_events().then(d => { set_events(d) })
                                                     }} >
                                                         <Image src={require(`../../assets/images/like.svg`)} width={1} />
-                                                    </Flex>
-                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${props => props.theme.WARM_ORANGE}`} onClick={async () => {
+                                                    </LikeButton>
+                                                    <LikeButton color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                                         await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/false`)
                                                         get_events().then(d => { set_events(d) })
                                                     }} >
                                                         <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
-                                                    </Flex>
+                                                    </LikeButton>
                                                 </Flex>
                                             )
                                         })
@@ -205,7 +205,7 @@ let EventTargets = (props) => {
                                                 let width = (+e.end_timestamp - +e.start_timestamp) / day_length * 84
                                                 let left = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * 84
                                                 return (
-                                                    <Block key={e_i} accepted={e.accepted} width={width} left={left} id={`e_` + e.id} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
+                                                    <Block key={e_i} is_selected={details_id === e.objectId && details_visible} accepted={e.accepted} width={width} left={left} id={`e_` + e.id} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
                                                         <Flex extra={`height: 3vw; justify-content: space-around; align-items: flex-start; margin-left: 0.5vw;`} >
                                                             <Text color={`white`} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
                                                             <Text color={`white`} >{moment(e.end_timestamp).format(`HH:mm`)}</Text>
@@ -260,6 +260,17 @@ let SquareWrapper = (props) => {
     )
 }
 
+const LikeButton = styled(Flex)`
+cursor: pointer;
+width: 2vw;
+height: 2vw;
+margin-left: 0.5vw;
+border-radius: 0.5vw;
+background: ${props => props.color}
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
 const Block = styled(Flex)`
 width: ${props => props.width}vw;
 justify-content: flex-start;
@@ -270,14 +281,16 @@ position: absolute;
 left: ${props => props.left}vw;
 z-index: 2;
 cursor: pointer;
+${props => props.is_selected ? `box-shadow: 0 0 1vw ${props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.accepted ? props.theme.accept : props.theme.yellow}; transform: scale(1.05);` : `` }
 &:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 1vw ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.accepted ? props.theme.accept : props.theme.yellow};
 };
 flex-direction: row;
 @media (min-width: 320px) and (max-width: 480px) {
     
-}`
+}
+`
 
 const Square = styled(Flex)`
 margin: 0.5vw;
