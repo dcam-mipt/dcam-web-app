@@ -31,7 +31,7 @@ width: ${props => props.short ? 6.25 : 15}vw;
 height: ${props => +props.visible}vw;
 padding: ${props => +props.visible}vw;
 border-radius: 0.5vw;
-background-color: ${props => props.shaped ? `transparent` : props.disabled ? mvConsts.colors.background.support : props.backgroundColor ? props.backgroundColor : mvConsts.colors.yellow};
+background-color: ${props => props.shaped ? `transparent` : props.disabled ? props.theme.background.support : props.backgroundColor ? props.backgroundColor : props.theme.yellow};
 margin: ${props => +props.visible / 6}vw;
 color: ${props => props.shaped ? props.backgroundColor : `white`};
 font-size: 0.8vw;

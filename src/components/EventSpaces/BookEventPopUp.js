@@ -58,7 +58,7 @@ let BookEventPopUp = (props) => {
                         <Image src={owner_data && owner_data.avatar} round width={3} />
                         <NameWrapper>
                             <Text size={1} >{owner_data && owner_data.username.split(`@`)[0]}</Text>
-                            <Text color={mvConsts.colors.text.support} >{owner_data && get_user_status(owner_data.last_seen)}</Text>
+                            <Text color={props => props.theme.text.support} >{owner_data && get_user_status(owner_data.last_seen)}</Text>
                         </NameWrapper>
                         <ImageWrapper><Image width={3} /></ImageWrapper>
                     </Bar>
@@ -83,13 +83,13 @@ let BookEventPopUp = (props) => {
                                     <Input type={`textarea`} value={aim} onChange={(e) => { set_aim(e.target.value) }} />
                                 </Flex>
                                 <Flex row >
-                                    <Button backgroundColor={mvConsts.colors.WARM_ORANGE} onClick={async () => {
+                                    <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={async () => {
                                         await axios.get(`${mvConsts.api}/events/delete/${props.event.objectId}`)
                                         props.onDelete()
                                     }} >
                                         Удалить
                                     </Button>
-                                    <Button backgroundColor={mvConsts.colors.accept} onClick={async () => {
+                                    <Button backgroundColor={props => props.theme.accept} onClick={async () => {
                                         let start = +moment(day).startOf(`day`).add(start_timestamp.split(`:`)[0], `hour`).add(start_timestamp.split(`:`)[1], `minute`)
                                         let end = +moment(day).startOf(`day`).add(end_timestamp.split(`:`)[0], `hour`).add(end_timestamp.split(`:`)[1], `minute`)
                                         await axios.post(`${mvConsts.api}/events/create/`, {
@@ -107,7 +107,7 @@ let BookEventPopUp = (props) => {
                             </Bar>
                             : <Bar clear >
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                                    <Half><Text color={props => props.theme.text.support} >Время</Text></Half>
                                     <Half>
                                         <Flex row>
                                             <Text size={1.4} >{moment(start_timestamp).format(`HH:mm`)}</Text>
@@ -117,11 +117,11 @@ let BookEventPopUp = (props) => {
                                     </Half>
                                 </Flex>
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={mvConsts.colors.text.support} >Количество людей</Text></Half>
+                                    <Half><Text color={props => props.theme.text.support} >Количество людей</Text></Half>
                                     <Half><Text size={1.4} >{number_of_people}</Text></Half>
                                 </Flex>
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={mvConsts.colors.text.support} >Цель</Text></Half>
+                                    <Half><Text color={props => props.theme.text.support} >Цель</Text></Half>
                                     <Half><Text>{aim}</Text></Half>
                                 </Flex>
                             </Bar>

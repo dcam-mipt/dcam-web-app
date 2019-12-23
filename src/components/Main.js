@@ -8,7 +8,6 @@ import machinesActions from '../redux/actions/MachinesActions'
 import laundryActions from '../redux/actions/LaundryActions'
 import Laundry from './Laundry/Laundry'
 import EventSpaces from './EventSpaces/EventSpaces'
-import Votes from './Votes/Votes'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
@@ -18,9 +17,7 @@ import GoogleAPI from '../API/GoogleAPI'
 import { Flex, Image, Text, PopUp } from './UIKit/styled-templates'
 import ProfilePopUp from './ProfilePopUp';
 import CardPopUp from './CardPopUp';
-import io from 'socket.io-client';
 import { HashRouter, BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
-// const socket = io('https://dcam.pro:3000');
 
 let screens = [
     {
@@ -38,13 +35,6 @@ let screens = [
         path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
     },
     {
-        image: require('../assets/images/votes.svg'),
-        name: mvConsts.screens.votes,
-        admin: true,
-        component: Votes,
-        path: `/${mvConsts.screens.votes.toLocaleLowerCase()}`,
-    },
-    {
         image: require('../assets/images/admin.svg'),
         name: mvConsts.screens.admin,
         admin: true,
@@ -57,13 +47,10 @@ let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dc
 let get_machines = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let match_notifications = async () => { await axios.get(`https://dcam.pro/api/notifications/match_as_checked`) }
 
 let Main = (props) => {
     let [axios_is_ready, set_axios_is_ready] = useState(false)
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
-    let [cardRef, cardVisible, setCardVisible] = useComponentVisible(false);
-    let [notificationsRef, notificationsVisible, setNotificationsVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
         props.setToken(undefined);
         axios.get(`https://dcam.pro/api/auth/sign_out`)
@@ -87,46 +74,36 @@ let Main = (props) => {
             .catch((d) => { signOut() })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     }, [])
-    // socket.on('Laundry', (msg) => { get_laundry().then((d) => { props.setLaundry(d.data) }) })
-    // socket.on('Balance', (msg) => { msg === (props.user && props.user.objectId) && get_my_balance().then((d) => { props.setBalance(+d.data) }) })
     useEffect(() => {
         let i = setInterval(() => { get_my_balance().then((d) => { props.setBalance(+d.data) }) }, 1000)
         return () => { clearInterval(i) }
     }, [])
     if (axios_is_ready) {
         return (
-            <Wrapper>
-                <HashRouter>
-                    <PopUp extra={`top: ${cardVisible ? 4 : 3}vw; right: 5vw;`} ref={cardRef} visible={cardVisible} >
-                        <CardPopUp />
-                    </PopUp>
-                    <PopUp extra={`top: ${profileVisible ? 4 : 3}vw; right: 1vw;`} ref={profileRef} visible={profileVisible} >
+            <HashRouter>
+                <Wrapper>
+                    <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw;`} ref={profileRef} visible={profileVisible} >
                         <ProfilePopUp signOut={signOut} />
                     </PopUp>
                     <Menu>
-                        {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
-                        <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
+                        <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
+                        <Flex>
+                            {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
+                            <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
+                        </Flex>
+                        <MenuItemImage only_desktop onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                     </Menu>
                     <Workspace>
-                        <Header row extra={`justify-content: flex-end;`} >
-                            <MenuButton selected={cardVisible} onClick={() => { setCardVisible(!cardVisible) }} >
-                                <Circle any_money={props.balance > 0} ><Text color={`white`} >{props.balance}</Text></Circle>
-                            </MenuButton>
-                            <MenuButton selected={profileVisible} onClick={() => { setProfileVisible(!profileVisible) }} >
-                                <Image src={require('../assets/images/menu.svg')} width={3} round />
-                            </MenuButton>
-                        </Header>
-                        <Space>
-                            <Switch>
-                                <Route path="/" exact component={Laundry} />
-                                {
-                                    screens.map((item, index) => <Route key={index} exact path={item.path} component={item.component} />)
-                                }
-                            </Switch>
-                        </Space>
+                        <Switch>
+                            <Route path="/" exact component={Laundry} />
+                            {
+                                screens.map((item, index) => <Route key={index} exact path={item.path} component={item.component} />)
+                            }
+                        </Switch>
                     </Workspace>
-                </HashRouter>
-            </Wrapper>
+                </Wrapper>
+            </HashRouter>
+
         )
     } else {
         return null
@@ -169,19 +146,11 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
 
-const Circle = styled(Flex)`
-width: 2.5vw;
-height: 2.5vw;
-background-color: ${props => props.any_money ? mvConsts.colors.accept : props.background.support};
-border-radius: 2.5vw;
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
 const Wrapper = styled(Flex)`
 flex-direction: row;
 width: 100vw;
 height: 100vh;
+background: ${props => props.theme.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: column;
     height: 100vh;
@@ -191,35 +160,48 @@ height: 100vh;
 }`
 
 const Menu = styled(Flex)`
-width: 6vw;
-height: 100vh;
-background-color: ${props => props.background.primary};
+width: 5vw;
+height: calc(100vh - 1vw);
+border-radius: 1.5vw;
+margin: 0.5vw;
+background: ${props => props.theme.background.primary};
+box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 z-index: 2;
+justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
-    width: 100vw;
+    width: 96vw;
     height: 6vh;
-    bottom: 0;
+    border-radius: 1.2vh;
+    bottom: 0.5vh;
     position: fixed;
+    margin: 0;
     flex-direction: row
     justify-content: space-around;
+    > * {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+    }
 }`
 
 const MenuItemImage = styled.img`;
-width: 3vw;
-height: 3vw;
+width: 2.5vw;
+height: 2.5vw;
+margin: 0.25vw;
 padding: 1.5vw;
 cursor: pointer;
 display: ${props => props.only_mobile ? `none` : `block`}
+&:hover { width: 3vw; height: 3vw; margin: 0; }
+transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
+    display: ${props => props.only_desktop ? `none` : `block`}
     width: 5vh;
     height: 5vh;
-    display: block;
 }`
 
 const Workspace = styled(Flex)`
 width: 94vw;
 height: 100vh;
-background-color: ${props => props.background.secondary};
 overflow; hidden;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
@@ -248,9 +230,10 @@ const MenuButton = styled(Flex)`
 width: 3.5vw;
 height: 3.5vw;
 border-radius: 0.5vw;
-background-color: ${props => props.selected && props.background.primary};
+background: ${props => props.selected && props.theme.background.primary};
 margin-left: 0.5vw;
-&:hover { background-color: ${props => props.background.primary}; }
+position: relative;
+&:hover { background-color: ${props => props.theme.background.primary}; }
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`

@@ -66,7 +66,7 @@ let EventTargets = (props) => {
                         {
                             targets.filter(i => i.dormitory_id === selected_dormitory).map((item, index) => {
                                 return (
-                                    <SquareWrapper key={index} title={item.name} color={selected_target === item.objectId ? mvConsts.colors.lightblue : null} onClick={() => { set_selected_target(item.objectId) }} >
+                                    <SquareWrapper key={index} title={item.name} color={selected_target === item.objectId ? props => props.theme.lightblue : null} onClick={() => { set_selected_target(item.objectId) }} >
                                         <Image src={item.avatar.url} width={4} />
                                     </SquareWrapper>
                                 )
@@ -100,8 +100,8 @@ let EventTargets = (props) => {
                             </PopUp>
                             <SquareWrapper title={`добавить`} onClick={() => { set_week_selector_visible(true) }} >
                                 <Flex extra={`width: 4vw; height: 4vw;`} >
-                                    <Text size={1.5} color={mvConsts.colors.text.support} extra={`border-bottom: 0.1vw solid ${mvConsts.colors.text.support}`} >{moment(week_start).format(`DD`)}</Text>
-                                    <Text size={1.5} color={mvConsts.colors.text.support} >{moment(week_start).format(`MM`)}</Text>
+                                    <Text size={1.5} color={props => props.theme.text.support} extra={`border-bottom: 0.1vw solid ${props => props.theme.text.support}`} >{moment(week_start).format(`DD`)}</Text>
+                                    <Text size={1.5} color={props => props.theme.text.support} >{moment(week_start).format(`MM`)}</Text>
                                 </Flex>
                             </SquareWrapper>
                         </Flex>
@@ -111,7 +111,7 @@ let EventTargets = (props) => {
                                     dormitories && dormitories.map((item, index) => {
                                         return (
                                             <Flex row key={index} extra={`&:hover{ opacity: 0.75;`} onClick={() => { set_selected_dormitory(item.objectId); set_selected_target(targets.filter(i => i.dormitory_id === item.objectId).length > 0 ? targets.filter(i => i.dormitory_id === item.objectId)[0].objectId : 0) }} >
-                                                <Flex extra={`width: 0.75vw; height: 0.75vw; border-radius: 2vw; background: ${selected_dormitory === item.objectId ? mvConsts.colors.accept : mvConsts.colors.background.support};`} />
+                                                <Flex extra={`width: 0.75vw; height: 0.75vw; border-radius: 2vw; background: ${props => selected_dormitory === item.objectId ? props.theme.accept : props.theme.background.support};`} />
                                                 <Text extra={`width: 9vw; align-items: flex-start; margin: 1vw; cursor: pointer; };`} size={1} >Общежитие №{item.number}</Text>
                                             </Flex>
                                         )
@@ -119,7 +119,7 @@ let EventTargets = (props) => {
                                 }
                             </PopUp>
                             <SquareWrapper title={`общежитие`} onClick={() => { set_dormitory_visible(true) }} >
-                                <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{selected_dormitory_number}</Text>
+                                <Text extra={`width: 4vw; height: 4vw;`} size={3} color={props => props.theme.text.support} >{selected_dormitory_number}</Text>
                             </SquareWrapper>
                         </Flex>
                         <Flex extra={`position: relative;`} >
@@ -142,7 +142,7 @@ let EventTargets = (props) => {
                                 }
                             </PopUp>
                             <SquareWrapper title={`общежитие`} onClick={() => { events && events.filter(i => i.user_id === user.objectId).length && set_my_books_visible(true) }} >
-                                <Text extra={`width: 4vw; height: 4vw;`} size={3} color={mvConsts.colors.text.support} >{events.filter(i => i.user_id === user.objectId).length}</Text>
+                                <Text extra={`width: 4vw; height: 4vw;`} size={3} color={props => props.theme.text.support} >{events.filter(i => i.user_id === user.objectId).length}</Text>
                             </SquareWrapper>
                         </Flex>
                         {
@@ -160,13 +160,13 @@ let EventTargets = (props) => {
                                                         <Text>{moment(item.start_timestamp).format(`DD.MM.YY`)}</Text>
                                                     </Flex>
                                                     <Text extra={`width: 7vw; align-items: flex-start;`} >{item.username.split(`@`)[0]}</Text>
-                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.accept}`} onClick={async () => {
+                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${props => props.theme.accept}`} onClick={async () => {
                                                         await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/true`)
                                                         get_events().then(d => { set_events(d) })
                                                     }} >
                                                         <Image src={require(`../../assets/images/like.svg`)} width={1} />
                                                     </Flex>
-                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${mvConsts.colors.WARM_ORANGE}`} onClick={async () => {
+                                                    <Flex extra={`cursor: pointer; width: 2vw; height: 2vw; margin-left: 0.5vw; border-radius: 0.5vw; background: ${props => props.theme.WARM_ORANGE}`} onClick={async () => {
                                                         await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/false`)
                                                         get_events().then(d => { set_events(d) })
                                                     }} >
@@ -178,7 +178,7 @@ let EventTargets = (props) => {
                                     }
                                 </PopUp>
                                 <SquareWrapper title={`заявки`} onClick={() => { (events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length) && set_requests_visible(true) }} >
-                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `white` : mvConsts.colors.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
+                                    <Text extra={`width: 4vw; height: 4vw;`} size={3} color={events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length ? `white` : props => props.theme.text.support} >{events && events.filter(i => i.target_id === selected_target).filter(i => !i.accepted).length}</Text>
                                 </SquareWrapper>
                             </Flex>
                         }
@@ -188,7 +188,7 @@ let EventTargets = (props) => {
                     <Flex row extra={`padding-left: 5vw;`} >
                         {
                             new Array(24).fill(0).map((item, index) => {
-                                return (<Text key={index} color={mvConsts.colors.text.support} extra={`width: 3.5vw;`} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text>)
+                                return (<Text key={index} color={props => props.theme.text.support} extra={`width: 3.5vw;`} >{moment().startOf(`day`).add(index, `hour`).format(`HH:mm`)}</Text>)
                             })
                         }
                     </Flex>
@@ -197,20 +197,20 @@ let EventTargets = (props) => {
                             let events_for_day = events.filter(i => i.target_id === selected_target).filter(i => +moment(i.start_timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
                             return (
                                 <Flex row key={index} extra={`height: ${(100 / 7) * 0.85}%; margin: 0.2%;`} >
-                                    <Text color={mvConsts.colors.text.support} size={1} extra={`width: 5vw;`} >{moment(week_start).add(index, `day`).format(`DD.MM`)}, {mvConsts.weekDays.short[index].toLocaleUpperCase()}</Text>
-                                    <Flex row extra={`position: relative; width: 84vw; height: 100%; margin: 0.25vw; background: ${mvConsts.colors.background.support}; border-radius: 0.5vw;`} >
+                                    <Text color={props => props.theme.text.support} size={1} extra={`width: 5vw;`} >{moment(week_start).add(index, `day`).format(`DD.MM`)}, {mvConsts.weekDays.short[index].toLocaleUpperCase()}</Text>
+                                    <Grid>
                                         {
                                             events_for_day.map((e, e_i) => {
                                                 let day_length = 24 * 60 * 60 * 1000
                                                 let width = (+e.end_timestamp - +e.start_timestamp) / day_length * 84
                                                 let left = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * 84
                                                 return (
-                                                    <Flex key={e_i} id={`e_` + e.id} row extra={`width: ${width}vw; justify-content: flex-start; height: 80%; border-radius: 0.5vw; background: ${e.accepted ? mvConsts.colors.accept : mvConsts.colors.yellow}; position: absolute; left: ${left}vw; z-index: 2; cursor: pointer; &:hover { transform: scale(1.05); box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2); };`} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
+                                                    <Block key={e_i} accepted={e.accepted} width={width} left={left} id={`e_` + e.id} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
                                                         <Flex extra={`height: 3vw; justify-content: space-around; align-items: flex-start; margin-left: 0.5vw;`} >
                                                             <Text color={`white`} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
                                                             <Text color={`white`} >{moment(e.end_timestamp).format(`HH:mm`)}</Text>
                                                         </Flex>
-                                                    </Flex>
+                                                    </Block>
                                                 )
                                             })
                                         }
@@ -221,7 +221,7 @@ let EventTargets = (props) => {
                                                 )
                                             })
                                         }
-                                    </Flex>
+                                    </Grid>
                                 </Flex>
                             )
                         })
@@ -260,11 +260,30 @@ let SquareWrapper = (props) => {
     )
 }
 
+const Block = styled(Flex)`
+width: ${props => props.width}vw;
+justify-content: flex-start;
+height: 80%;
+border-radius: 0.5vw;
+background: ${props => props.accepted ? props.theme.accept : props.theme.yellow};
+position: absolute;
+left: ${props => props.left}vw;
+z-index: 2;
+cursor: pointer;
+&:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2);
+};
+flex-direction: row;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
 const Square = styled(Flex)`
 margin: 0.5vw;
 padding: 1vw;
 border-radius: 2vw;
-background: ${props => props.color ? props.color : mvConsts.colors.background.primary};
+background: ${props => props.color ? props.color : props.theme.background.primary};
 cursor: pointer;
 &:hover {
     transform: scale(1.05) rotate(5deg);
@@ -277,6 +296,18 @@ cursor: pointer;
     border-radius: 6vw;
     background: ${props => props.color ? `rgba(255, 255, 255, 0.3)` : `rgba(0, 0, 0, 0.1)`};
 }
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const Grid = styled(Flex)`
+position: relative;
+width: 84vw;
+height: 100%;
+margin: 0.25vw;
+background: ${props => props.theme.background.support};
+border-radius: 0.5vw;
+flex-direction: row;
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`

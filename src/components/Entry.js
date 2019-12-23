@@ -48,7 +48,7 @@ let Entry = (props) => {
                     <Text size={2} bold>Войти</Text>
                     <Text>при помощи почты @phystech.edu</Text>
                     <MarginWrapper>
-                        <Button backgroundColor={mvConsts.colors.purple} onClick={() => { signIn() }} >Авторизация</Button>
+                        <Button backgroundColor={props => props.theme.purple} onClick={() => { signIn() }} >Авторизация</Button>
                     </MarginWrapper>
                 </Flex>
             </Right>
@@ -107,7 +107,7 @@ background-color: rgba(0, 0, 0, 0.02);
 const Right = styled(Flex)`
 width: 30vw;
 height: 100vh;
-background-color: ${mvConsts.colors.background.primary};
+background-color: ${props => props.theme.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;

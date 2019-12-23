@@ -47,7 +47,7 @@ let AdminTools = (props) => {
                                     <Image src={user.avatar} width={3} round />
                                     <NameWrapper>
                                         <Text size={0.8} >{user.username.split(`@`)[0]}</Text>
-                                        <Text color={mvConsts.colors.text.support} >{get_user_status(user.last_seen)}</Text>
+                                        <Text color={props => props.theme.text.support} >{get_user_status(user.last_seen)}</Text>
                                     </NameWrapper>
                                 </User>
                             )
@@ -64,7 +64,7 @@ let AdminTools = (props) => {
                             <Flex row >
                                 <Text bold color={`white`} size={1.2} >{selected_user.money}</Text>
                                 <Text color={`white`} >р</Text>
-                                {+new_balance !== 0 && <Text bold extra={`margin-left: 1vw;`} color={money_delta > 0 ? mvConsts.colors.accept : mvConsts.colors.WARM_ORANGE} size={1} >{money_delta > 0 && `+`}{money_delta}р</Text>}
+                                {+new_balance !== 0 && <Text bold extra={`margin-left: 1vw;`} color={props => money_delta > 0 ? props.theme.accept : props.theme.WARM_ORANGE} size={1} >{money_delta > 0 && `+`}{money_delta}р</Text>}
                             </Flex>
                             <Flex row >
                                 <Input
@@ -78,7 +78,7 @@ let AdminTools = (props) => {
                                 />
                                 <Button
                                     disabled={+new_balance === selected_user.money || new_balance === ``}
-                                    backgroundColor={loading ? mvConsts.colors.background.support : mvConsts.colors.accept}
+                                    backgroundColor={props => loading ? props.theme.background.support : props.theme.accept}
                                     onClick={async () => {
                                         try {
                                             set_loading(true)
@@ -94,7 +94,7 @@ let AdminTools = (props) => {
                         </Card>
                     </Flex> : null
                 }
-                <Button only_mobile backgroundColor={mvConsts.colors.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
+                <Button only_mobile backgroundColor={props => props.theme.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
             </TransactionsWrapper>
             <Flex only_desktop extra={`width: 25vw; `} >
 
@@ -120,11 +120,11 @@ let mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(AdminTools)
 
 const User = styled(Flex)`
-background-color: ${props => props.is_selected_user ? props.background.secondary : `transparent`};
+background-color: ${props => props.is_selected_user ? props.theme.background.secondary : `transparent`};
 padding: 0.5vw;
 border-radius: 0.5vw;
 transition: 0s;
-&:hover { background-color: ${props => props.background.secondary} };
+&:hover { background-color: ${props => props.theme.background.secondary} };
 @media (min-width: 320px) and (max-width: 480px) {
     padding: 2.5vw;
     border-radius: 2.5vw;
@@ -152,7 +152,7 @@ justify-content: flex-start;
 
 const UsersWrapper = styled(Flex)`
 height: 89vh;
-background-color: ${props => props.background.primary};
+background-color: ${props => props.theme.background.primary};
 padding: 1vw 1vw 0 1vw;
 margin-left: 1vw;
 border-radius: 0.5vw;
@@ -190,7 +190,7 @@ const Card = styled(Flex)`
 width: ${card_width}vw;
 height: ${card_width / 86 * 54}vw;
 border-radius: ${card_width / 20}vw;
-background-color: ${mvConsts.colors.purple};
+background-color: ${props => props.theme.purple};
 justify-content: space-around;
 align-items: flex-start;
 > * {

@@ -4,11 +4,11 @@
 	 viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;}
-	.st1{fill:none;stroke:#FFFFFF;stroke-width:10;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#D5D5D5;stroke-width:10;stroke-miterlimit:10;}
 </style>
-<title>psamcs_logo</title>
+<title>psamcs_logo_grey</title>
 <rect class="st0" width="1000" height="1000"/>
-<path class="st1" d="M216.8,307.1c53.5-68.2,133-111,219.3-118.1h154.5c-35.2,61.3-73.8,106.6-120.1,138
+<path class="st1" d="M216.8,307.1c53.5-68.2,132.9-111,219.3-118.1h154.5c-35.2,61.3-73.8,106.6-120.1,138
 	C398.8,345,317.6,337.3,216.8,307.1z"/>
 <path class="st1" d="M370.6,584.1c15.2,61,10.8,129.1-11.2,210.6C209.5,742.4,122.7,586,157.6,431.1
 	C258.8,474.7,327.9,522.4,370.6,584.1z"/>

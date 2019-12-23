@@ -54,26 +54,26 @@ let main = (props) => {
                             <Image src={owner_data.avatar} width={3} round />
                             <NameWrapper>
                                 <Text size={1} >{props.selectedBook.email.split(`@`)[0]}</Text>
-                                <Text color={mvConsts.colors.text.support} >{get_user_status(owner_data.last_seen)}</Text>
+                                <Text color={props => props.theme.text.support} >{get_user_status(owner_data.last_seen)}</Text>
                             </NameWrapper>
                             <ImageWrapper><Image width={3} /></ImageWrapper>
                         </Bar>
                         <Bar clear >
                             <Flex extra={`width: 100%; `} row >
-                                <Half><Text color={mvConsts.colors.text.support} >Время</Text></Half>
+                                <Half><Text color={props => props.theme.text.support} >Время</Text></Half>
                                 <Half>
-                                    <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
+                                    <Text color={props => props.theme.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
                                     <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
                                 </Half>
                             </Flex>
                             <Flex extra={`width: 100%; `} row >
-                                <Half><Text color={mvConsts.colors.text.support} >Машина</Text></Half>
+                                <Half><Text color={props => props.theme.text.support} >Машина</Text></Half>
                                 <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
                             </Flex>
                             {
                                 (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={mvConsts.colors.text.support} >{calc_hours(props.selectedBook.timestamp) > 2 ? `Продать` : `Удалить`}</Text></Half>
+                                    <Half><Text color={props => props.theme.text.support} >{calc_hours(props.selectedBook.timestamp) > 2 ? `Продать` : `Удалить`}</Text></Half>
                                     <Half><Image
                                         pointer
                                         src={require(`../../assets/images/money.svg`)}
@@ -141,7 +141,7 @@ width: 2vw;
 height: 2vw;
 border-radius: 2vw;
 font-size: 0.8vw;
-background-color: ${mvConsts.colors.accept};
+background-color: ${props => props.theme.accept};
 color: white;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 10vw;

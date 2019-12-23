@@ -1,8 +1,9 @@
 /*eslint-disable no-unused-vars*/
-import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import React, { useState, useEffect } from 'react'
+import styled, { keyframes, ThemeProvider } from 'styled-components'
 import mvConsts, { darkTheme, dayTheme } from '../../constants/mvConsts'
 import { connect } from 'react-redux'
+import moment from 'moment'
 
 export const Image = styled.img`
 width: ${props => props.width}vw;
@@ -25,7 +26,6 @@ justify-content: ${props => props.row ? props.start ? `flex-start` : props.end ?
 align-items: ${props => !props.row ? props.start ? `flex-start` : props.end ? `flex-end` : `center` : `center`};
 flex-direction: ${props => props.row ? `row` : `column`}
 transition: 0.2s
-${props => props.extra}
 font-size: 1vw;
 background-size: cover;
 background-repeat: no-repeat;
@@ -35,10 +35,9 @@ cursor: ${props => props.pointer ? `pointer` : `null`}
     display: ${props => props.only_desktop ? `none` : `flex`}
     font-size: 4vw;
 }
+${props => props.extra}
 `
 
-// Flex.defaultProps = { ...darkTheme }
-Flex.defaultProps = { ...dayTheme }
 
 export const PopUp = styled(Flex)`
 display: flex;
@@ -47,7 +46,7 @@ justify-content: center;
 flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
-background-color: ${props => props.background.primary};
+background-color: ${props => props.theme.background.primary};
 z-index: ${props => props.visible ? 3 : 0};
 position: absolute;
 visibility: ${props => props.visible ? `visible` : `hidden`}
@@ -71,7 +70,7 @@ box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 
 export const Text = styled(Flex)`
 font-size: ${props => props.size ? props.size : 0.8}vw;
-color: ${props => props.color ? props.color : props.text.primary};
+color: ${props => props.color ? props.color : props.theme.text.primary};
 font-family: ${props => props.bold ? `Bold` : `Regular`};
 @media (min-width: 320px) and (max-width: 480px) {
     font-size: ${props => (props.size ? props.size : 0.8) * 4}vw;
@@ -101,6 +100,36 @@ const rotate = keyframes`
 from { transform: rotate(0deg); }
 to { transform: rotate(360deg); }
 `;
+
+export const ThemeWrapper = (props) => {
+    let default_theme = dayTheme
+    switch (localStorage.getItem(`theme`)) {
+        case `system`:
+            default_theme = window.matchMedia(`(prefers-color-scheme: dark)`).matches ? darkTheme : dayTheme
+        case `disabled`:
+            default_theme = dayTheme
+        case `scheduled`:
+            default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
+        case `automatic`:
+            default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
+        default: default_theme = dayTheme
+    }
+    let [theme, setTheme] = useState(default_theme)
+    useEffect(() => {
+        window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`, () => {
+            if (window.matchMedia(`(prefers-color-scheme: dark)`).matches) {
+                setTheme(darkTheme)
+            } else {
+                setTheme(dayTheme)
+            }
+        });
+    }, [])
+    return (
+        <ThemeProvider theme={theme} >
+            {props.children}
+        </ThemeProvider>
+    )
+}
 
 export const Rotor = styled.div`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
 

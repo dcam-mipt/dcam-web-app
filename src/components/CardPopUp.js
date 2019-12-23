@@ -62,7 +62,7 @@ let main = (props) => {
                                 <input style={{ display: `flex` }} id={`yandex`} className={`money_button yandex ${value < 2 ? `un` : ``}active`} type={value < 2 ? `button` : `submit`} value={``} />
                             </form>
                         }
-                        <input className={`money_button qiwi unactive`} type={value < 2 ? `button` : `submit`} value={``} />
+                        {/* <input className={`money_button qiwi unactive`} type={value < 2 ? `button` : `submit`} value={``} /> */}
                     </Flex>
                 </Card>
             </Bar>
@@ -88,7 +88,7 @@ const Card = styled(Flex)`
 width: ${card_width}vw;
 height: ${card_width / 86 * 54}vw;
 border-radius: ${card_width / 20}vw;
-background-color: ${mvConsts.colors.purple};
+background-color: ${props => props.theme.purple};
 justify-content: space-around;
 align-items: flex-start;
 > * {

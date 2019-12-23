@@ -12,7 +12,7 @@ let Selector = (props) => {
     return (
         <Flex>
             <Box width={props.width} id={`select_day`} onClick={() => { set_visible(true) }} >
-                <Text color={props.selected !== undefined ? mvConsts.colors.text.primary : mvConsts.colors.text.support} >{props.selected !== undefined ? array[props.selected] : props.placeholder ? props.placeholder : `пусто`}</Text>
+                <Text color={props => props.selected !== undefined ? props.theme.text.primary : props.theme.text.support} >{props.selected !== undefined ? array[props.selected] : props.placeholder ? props.placeholder : `пусто`}</Text>
                 <PopUp extra={`top: ${visible ? 3.5 : 2}vw;`} ref={ref} visible={visible} >
                     <Flex extra={`display: block; overflow-y: scroll; max-height: 15vw;`} >
                         {
@@ -37,9 +37,9 @@ const Box = styled(Flex)`
 padding: 1vw;
 width: ${props => props.width}vw;
 border-radius: 0.5vw;
-background-color: ${props => props.backgroundColor ? props.backgroundColor : mvConsts.colors.background.secondary};
+background-color: ${props => props.theme.backgroundColor ? props.theme.backgroundColor : props.theme.background.secondary};
 margin: 0.25vw;
-color: ${props => props.color ? props.color : mvConsts.colors.text.primary};
+color: ${props => props.color ? props.color : props.theme.text.primary};
 cursor: pointer;
 position: relative;
 @media (min-width: 320px) and (max-width: 480px) {

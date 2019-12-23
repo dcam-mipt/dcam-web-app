@@ -34,11 +34,11 @@ let main = (props) => {
                                         <Flex key={day_index} extra={`
                                                     width: 2.5vw;
                                                     height: 2.5vw;
-                                                    border: 0.15vw solid ${is_selected ? mvConsts.colors.purple : is_today ? mvConsts.colors.accept : `transparent`};
+                                                    border: 0.15vw solid ${props => is_selected ? props.theme.purple : is_today ? props.theme.accept : `transparent`};
                                                     border-radius: 0.5vw;
                                                     cursor: pointer;
                                                 `} onClick={() => { set_selected_date_connected(date) }} >
-                                            <Text color={the_same_month ? `black` : mvConsts.colors.text.support} >
+                                            <Text color={props => the_same_month ? `black` : props.theme.text.support} >
                                                 {moment(date).format(`D`)}
                                             </Text>
                                         </Flex>

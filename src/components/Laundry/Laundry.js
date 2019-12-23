@@ -50,7 +50,7 @@ let Laundry = (props) => {
     }, [])
     let header = (
         <CalendarHeader>
-            <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
+            <Button backgroundColor={props => props.theme.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
                 Сегодня
             </Button>
             <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
@@ -59,13 +59,13 @@ let Laundry = (props) => {
                     <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                 </PopUp>
             </Button>
-            <Button backgroundColor={mvConsts.colors.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
+            <Button backgroundColor={props => props.theme.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
                 Корзина {selectedSlots.length && `(${selectedSlots.length})`}
                 <PopUp extra={`top: ${bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={bucket_ref} visible={bucket_visible} >
                     <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
                 </PopUp>
             </Button>
-            <Button backgroundColor={mvConsts.colors.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
+            <Button backgroundColor={props => props.theme.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
                 {mobileCalendar ? `Расписание` : moment(+selectedDay).format(`DD.MM`)}
             </Button>
         </CalendarHeader>
@@ -76,35 +76,39 @@ let Laundry = (props) => {
                 props.laundry
                     ? <Flex>
                         <Wrapper>
-                            <Calendar mobileCalendar={mobileCalendar} >
-                                <Flex only_desktop > {header} </Flex>
+                            <Flex extra={`width: 42vw; background: red; height: 1vw;`} >
+
+                            </Flex>
+                            <Flex>
                                 {
-                                    new Array(4).fill(0).map((week, week_index) => {
-                                        return (
-                                            <WeekRow key={week_index} >
-                                                {
-                                                    new Array(7).fill(0).map((day, day_index) => {
-                                                        let start_of_day = +moment().startOf(`isoWeek`).add(week_index, `week`).add(day_index, `day`)
-                                                        let is_before = start_of_day < +moment().startOf(`day`)
-                                                        return (mobileCalendar ? !is_before : true) && <Day
-                                                            key={day_index}
-                                                            day_index={day_index}
-                                                            week_index={week_index}
-                                                            onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
-                                                            is_selected_day={selectedDay === +moment(start_of_day).startOf(`day`)}
-                                                            is_today={+moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)}
-                                                            is_before={is_before}
-                                                            is_weekend={+moment(start_of_day).isoWeekday() > 5}
-                                                        >
-                                                            {dayCell(start_of_day, props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length, props.machines.length)}
-                                                        </Day>
-                                                    })
-                                                }
-                                            </WeekRow>
-                                        )
+                                    new Array(11).fill(0).map((day, day_index) => {
+                                        let start_of_day = +moment().startOf(`isoWeek`).add(day_index, `day`)
+                                        let is_before = start_of_day < +moment().startOf(`day`)
+                                        let is_week_end = +moment(start_of_day).isoWeekday() > 5
+                                        let is_selected_day = selectedDay === +moment(start_of_day).startOf(`day`)
+                                        let is_today = +moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)
+                                        let machines_number = props.machines.length
+                                        let booked = props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length
+                                        let percentage = booked / (machines_number * 12)
+                                        let color = percentage > (2 / 3) ? props => props.theme.WARM_ORANGE : percentage < (1 / 3) ? props => props.theme.accept : props => props.theme.yellow
+                                        return !is_before && <Day
+                                            is_selected_day={is_selected_day}
+                                            onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
+                                        >
+                                            <Flex extra={`width: 15vw;`} >
+                                                <Text size={1} color={is_week_end ? props => props.theme.WARM_ORANGE : null} >
+                                                    {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
+                                                </Text>
+                                            </Flex>
+                                            <Flex extra={`width: 40vw;`} row >
+                                                <Text extra={`margin-right: 2vw;`} >Свободно:</Text>
+                                                <Text color={color} size={1} >{machines_number * 12 - booked}</Text>
+                                            </Flex>
+                                            {/* <Flex extra={`width: 5vw;`} ><Image src={require(`../../assets/images/arrow.svg`)} width={1.5} /></Flex> */}
+                                        </Day>
                                     })
                                 }
-                            </Calendar>
+                            </Flex>
                             <Schedule mobileCalendar={mobileCalendar} >
                                 <PopUp extra={`top: ${bookVisible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
                                     <BookPopUp close={close_book} {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
@@ -151,7 +155,6 @@ let Laundry = (props) => {
                                     })
                                 }
                             </Schedule>
-                            <Flex extra={`position: fixed; bottom: 6vh;`} only_mobile > {header} </Flex>
                         </Wrapper>
                     </Flex>
                     : <Circles rotate />
@@ -183,48 +186,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
 let days_of_week_full = [`Понедельник`, `Вторник`, `Среда`, `Четверг`, `Пятница`, `Суббота`, `Воскресенье`]
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 
-let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
-    let percentage = booked / (machines_number * 12)
-    let color = percentage > (2 / 3) ? mvConsts.colors.WARM_ORANGE : percentage < (1 / 3) ? mvConsts.colors.accept : mvConsts.colors.yellow
-    let is_week_end = moment(start_of_day).isoWeekday() > 5
-    let mobile_cell = () => {
-        return (
-            <Flex extra={``} row>
-                <Flex extra={`width: 30vw;`} row >
-                    <Text size={1} color={is_week_end ? mvConsts.colors.WARM_ORANGE : null} >
-                        {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
-                    </Text>
-                </Flex>
-                <Flex extra={`width: 40vw;`} row >
-                    <Text extra={`margin-right: 2vw;`} >Свободно:</Text>
-                    <Text color={color} >{machines_number * 12 - booked}</Text>
-                </Flex>
-                <Flex extra={`width: 5vw;`} ><Image src={require(`../../assets/images/arrow.svg`)} width={1.5} /></Flex>
-            </Flex>
-        )
-    }
-    let desktop_cell = () => {
-        return (
-            <Flex>
-                <Flex row >
-                    <Flex only_desktop extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`DD`)}</Flex>
-                    .<Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`MM`)}</Flex>
-                </Flex>
-                <Flex row >
-                    <Flex extra={`width: 2vw; height: 2vw; color: ${color}`} >{machines_number * 12 - booked}</Flex>
-                    /<Flex extra={`width: 2vw; height: 2vw;`} >{machines_number * 12}</Flex>
-                </Flex>
-            </Flex>
-        )
-    }
-    return (
-        <Flex>
-            <Flex only_mobile>{mobile_cell()}</Flex>
-            <Flex only_desktop>{desktop_cell()}</Flex>
-        </Flex>
-    )
-}
-
 const TimeNode = styled.div`
 display: flex
 justify-content: center
@@ -245,7 +206,7 @@ align-items: center
 flex-direction: row;
 transition: 0.2s;
 width: 94vw;
-height: 92vh;
+height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;
@@ -262,11 +223,11 @@ align-items: center
 flex-direction: column;
 transition: 0.2s;
 width: 64vw;
-height: 92vh;
+height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `block` : `none`}
     width: 100vw;
-    max-height: 92vh;
+    max-height: 100vh;
     overflow: scroll;
     padding: 1vh 0 16vh 0;
 }
@@ -281,7 +242,7 @@ align-items: center
 flex-direction: column;
 transition: 0.2s;
 width: 30vw;
-height: 92vh;
+height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `none` : `block`}
     width: 100vw;
@@ -300,7 +261,7 @@ align-items: center
 flex-direction: row
 transition: 0.2s
 width: 30vw;
-height: 3.2vw;
+height: 3.6vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 13vw;
@@ -312,10 +273,10 @@ justify-content: center
 align-items: center
 flex-direction: column
 transition: 0.2s
-width: ${props => 20 / props.width}vw;
-height: 3vw;
+width: ${props => 21 / props.width}vw;
+height: 3.5vw;
 cursor: pointer;
-background-color: ${props => props.is_before ? `none` : props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : mvConsts.colors.background.support};
+background-color: ${props => props.is_before ? `none` : props.is_my_book ? props.theme.accept : props.is_book ? props.theme.WARM_ORANGE : props.is_selected ? props.theme.lightblue : props.theme.background.support};
 color: white;
 font-size: 0.8vw;
 margin: 0 0.08vw 0 0;
@@ -328,30 +289,30 @@ border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index
     border-width: 0.2vw;
 }`
 
-const WeekRow = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: row;
-transition: 0.2s
+const WeekRow = styled(Flex)`
+flex-direction: column;
 @media (min-width: 320px) and (max-width: 480px) {
-    flex-direction: column;
+    
 }`
 
 const Day = styled(Flex)`
 box-sizing: border-box;
 -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;
-width: 8.5vw;
-height: 8.5vw;
-background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? `white` : props.is_weekend ? `#e0e0e0` : `#d6d6d6`};
-border-top-left-radius: ${props => +(props.week_index === 0 && props.day_index === 0) * 1}vw;
-border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index === 6) * 1}vw;
-border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
-border-bottom-right-radius: ${props => +(props.week_index === 3 && props.day_index === 6) * 1}vw;
+background: ${props => props.is_weekend ? props.theme.background.primary : props.theme.background.primary};
 ${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
-border: 0.${props => 1 + +(props.is_selected_day || props.is_today)}vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : mvConsts.colors.background.secondary}
+border: 0.2vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : props.theme.background.secondary}
 cursor: ${props => !props.is_before ? `default` : `pointer`};
+width: 22vw;
+height: 4vw;
+padding: 2vw;
+// margin: 0.125vw;
+border-radius: 1vw;
+flex-direction: row;
+${props => props.is_selected_day ? `box-shadow: 0 0 2vw rgba(255, 255, 255, 0.5)` : null}
+&:hover {
+    transform: scale(1.05)
+}
 @media (min-width: 320px) and (max-width: 480px) {
     width: 92vw;
     height: 20vw;
@@ -359,7 +320,7 @@ cursor: ${props => !props.is_before ? `default` : `pointer`};
     margin: 1vw;
     border-radius: 4vw;
     background-color: white;
-    border: 1vw solid ${props => props.is_selected_day ? mvConsts.colors.purple : props.is_today ? mvConsts.colors.accept : `transparent`}
+    border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
 }`
 
 const GlobalWrapper = styled.div`

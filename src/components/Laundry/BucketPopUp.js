@@ -27,7 +27,7 @@ let main = (props) => {
                         return (
                             <BucketRow key={index} >
                                 <Flex extra={`width: 35%; align-items: flex-start;`} >
-                                    <Text color={mvConsts.colors.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
+                                    <Text color={props => props.theme.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
                                     <Text size={1.2} >{moment(i.timestamp).format(`HH:mm`)}</Text>
                                 </Flex>
                                 <Flex extra={`width:30%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
@@ -44,7 +44,7 @@ let main = (props) => {
                 <ClearButton>
                     <Image src={require(`../../assets/images/trash.svg`)} width={1.5} />
                 </ClearButton>
-                <Button backgroundColor={mvConsts.colors.accept} disabled={cost > props.balance} onClick={() => {
+                <Button backgroundColor={props => props.theme.accept} disabled={cost > props.balance} onClick={() => {
                     let a = selectedSlots
                     let deal = () => new Promise((resolve, reject) => {
                         axios.get(`https://dcam.pro/api/laundry/book/${a[0].timestamp}/${a[0].machine_id}`)
@@ -84,7 +84,7 @@ const ClearButton = styled(Flex)`
 width: 3vw;
 height: 3vw;
 border-radius: 0.5vw;
-background-color: ${mvConsts.colors.WARM_ORANGE};
+background-color: ${props => props.theme.WARM_ORANGE};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 12.8vw;
     height: 12.8vw;
@@ -110,7 +110,7 @@ const MachineCircle = styled(Flex)`
 width: 2vw;
 height: 2vw;
 border-radius: 2vw;
-background-color: ${mvConsts.colors.accept};
+background-color: ${props => props.theme.accept};
 color: white;
 margin: 0 1vw 0 1vw;
 @media (min-width: 320px) and (max-width: 480px) {

@@ -37,7 +37,7 @@ let CreateEventPopUp = (props) => {
                 </Flex>
                 <Text>цель визита</Text>
                 <Input type={`textarea`} value={aim} onChange={(e) => { set_aim(e.target.value) }} />
-                <Button backgroundColor={mvConsts.colors.accept} short={false} onClick={async () => {
+                <Button backgroundColor={props => props.theme.accept} short={false} onClick={async () => {
                     let start = +moment(day).startOf(`day`).add(start_timestamp.split(`:`)[0], `hour`).add(start_timestamp.split(`:`)[1], `minute`)
                     let end = +moment(day).startOf(`day`).add(end_timestamp.split(`:`)[0], `hour`).add(end_timestamp.split(`:`)[1], `minute`)
                     await axios.post(`${mvConsts.api}/events/create/`, {
