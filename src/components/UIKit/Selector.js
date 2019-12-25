@@ -13,7 +13,7 @@ let Selector = (props) => {
         <Flex>
             <Box width={props.width} id={`select_day`} onClick={() => { set_visible(true) }} >
                 <Text color={props => props.selected !== undefined ? props.theme.text.primary : props.theme.text.support} >{props.selected !== undefined ? array[props.selected] : props.placeholder ? props.placeholder : `пусто`}</Text>
-                <PopUp extra={`top: ${visible ? 3.5 : 2}vw;`} ref={ref} visible={visible} >
+                <PopUp extra={`${props.bottom ? `bottom` : `top`}: ${visible ? 3.5 : 2}vw; ${props.left ? `left: 0;` : props.right ? `right: 0;` : null}`} ref={ref} visible={visible} >
                     <Flex extra={`display: block; overflow-y: scroll; max-height: 15vw;`} >
                         {
                             array.length ?

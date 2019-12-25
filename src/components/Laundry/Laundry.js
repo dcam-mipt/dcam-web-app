@@ -29,7 +29,7 @@ let useSlots = (initialIsVisible) => {
     return [selectedSlots, setSlots, setSelectedSlots];
 }
 
-let cutter = (s) => s.length > 11 ? s.substring(0, 8) + `...` : s
+let cutter = (s) => s.length > 10 ? s.substring(0, 8) + `...` : s
 let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Laundry = (props) => {
@@ -186,12 +186,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(Laundry)
 let days_of_week_full = [`Понедельник`, `Вторник`, `Среда`, `Четверг`, `Пятница`, `Суббота`, `Воскресенье`]
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 
-const TimeNode = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const TimeNode = styled(Flex)`
 flex-direction: column
-transition: 0.2s
 width: 5vw;
 font-size: 0.8vw;
 color: ${props => props.theme.text.primary}
@@ -200,14 +196,11 @@ color: ${props => props.theme.text.primary}
     font-size: 4vw;
 }`
 
-const Wrapper = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const Wrapper = styled(Flex)`
 flex-direction: row;
-transition: 0.2s;
 width: 94vw;
-height: 100vh;
+height: 90vh;
+align-items: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;
@@ -217,12 +210,8 @@ height: 100vh;
     height: 85vh;
 }`
 
-const Calendar = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const Calendar = styled(Flex)`
 flex-direction: column;
-transition: 0.2s;
 width: 64vw;
 height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -236,14 +225,11 @@ height: 100vh;
     height: 85vh;
 }`
 
-const Schedule = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const Schedule = styled(Flex)`
 flex-direction: column;
-transition: 0.2s;
 width: 30vw;
-height: 100vh;
+height: 90vh;
+justify-content: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `none` : `block`}
     width: 100vw;
@@ -255,27 +241,19 @@ height: 100vh;
     height: 85vh;
 }`
 
-const TwoHourRow = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const TwoHourRow = styled(Flex)`
 flex-direction: row
-transition: 0.2s
 width: 30vw;
-height: 3.6vw;
+height: 3.5vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 13vw;
 }`
 
-const Machine = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const Machine = styled(Flex)`
 flex-direction: column
-transition: 0.2s
 width: ${props => 21 / props.width}vw;
-height: 3.5vw;
+height: 3.4vw;
 cursor: pointer;
 background-color: ${props => props.is_before ? `none` : props.is_my_book ? props.theme.accept : props.is_book ? props.theme.WARM_ORANGE : props.is_selected ? props.theme.lightblue : props.theme.background.support};
 color: white;
@@ -301,13 +279,13 @@ box-sizing: border-box;
 -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;
 background: ${props => props.is_weekend ? props.theme.background.primary : props.theme.background.primary};
-${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
 border: 0.2vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : props.theme.background.secondary}
+${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
 cursor: ${props => !props.is_before ? `default` : `pointer`};
 width: 22vw;
-height: 4vw;
+height: 2.8vw;
+margin: 0.1vw;
 padding: 2vw;
-// margin: 0.125vw;
 border-radius: 1vw;
 flex-direction: row;
 ${props => props.is_selected_day ? `box-shadow: 0 0 2vw rgba(255, 255, 255, 0.5)` : null}
@@ -324,12 +302,8 @@ ${props => props.is_selected_day ? `box-shadow: 0 0 2vw rgba(255, 255, 255, 0.5)
     border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
 }`
 
-const GlobalWrapper = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const GlobalWrapper = styled(Flex)`
 flex-direction: column
-transition: 0.2s
 width: 94vw;
 height: 94vh;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -340,12 +314,9 @@ height: 94vh;
 }
 `
 
-const CalendarHeader = styled.div`
-display: flex
+const CalendarHeader = styled(Flex)`
 justify-content: flex-end
-align-items: center
 flex-direction: row
-transition: 0.2s
 width: 60vw;
 @media (min-width: 320px) and (max-width: 480px) {
     background-color: white;

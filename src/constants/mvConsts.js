@@ -37,24 +37,9 @@ export let darkTheme = {
     }
 }
 
-let hexToRgbA = (hex, alpha = 1) => {
-    var r = parseInt(hex.slice(1, 3), 16),
-        g = parseInt(hex.slice(3, 5), 16),
-        b = parseInt(hex.slice(5, 7), 16);
-    // console.log(`rgba(` + r + `,` + g + `,` + b + `,` + alpha + `)`);
-    return `rgb(` + r + `, ` + g + `, ` + b + `)`;
-    // if (alpha) {
-        // return `rgba(` + r + `,` + g + `,` + b + `,` + alpha + `)`;
-    // } else {
-    //     console.log(`rgb(` + r + `, ` + g + `, ` + b + `)`);
-    //     return `rgb(` + r + `, ` + g + `, ` + b + `)`;
-    // }
-}
-
 export default {
     api: `https://dcam.pro/api`,
     mobile_media_query: (d) => `@media (min-width: 320px) and (max-width: 480px) { ${d}; transition: 0; }`,
-    hexToRgbA: hexToRgbA,
     weekDays: {
         short: [`ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`, `ВС`],
         full: [`воскресенье`, `понедельник`, `вторник`, `среда`, `четверг`, `пятница`, `суббота`]
@@ -66,5 +51,11 @@ export default {
         event_spaces: `SPACES`,
         votes: `VOTES`,
     },
+    night_mode: {
+        system: `Системная`,
+        disabled: `Не использовать`,
+        scheduled: `По расписанию`,
+        automatic: `Автоматически`,
+    }
 }
 /*eslint-enable no-unused-vars*/

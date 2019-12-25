@@ -79,7 +79,7 @@ font-family: ${props => props.bold ? `Bold` : `Regular`};
 export const Bar = styled(Flex)`
 width: 100%;
 justify-content: flex-start;
-padding: 1vw 0 1vw 0;
+padding: 0.5vw 0 0.5vw 0;
 @media (min-width: 320px) and (max-width: 480px) {
     padding: 5vw 0 5vw 0;
     width: 85vw;
