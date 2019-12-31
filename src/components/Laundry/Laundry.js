@@ -129,10 +129,11 @@ let Laundry = (props) => {
                                                 </TimeNode>
                                                 {
                                                     props.machines.map((machine, machine_index) => {
+                                                        let compar_dates = (a, b) => moment(a).tz(`Europe/Moscow`).format(`DD.MM.YY HH:mm`) === moment(b).format(`DD.MM.YY HH:mm`)
                                                         let slot_data = { machine_id: machine.objectId, timestamp: timestamp }
-                                                        let is_book = props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
-                                                        let book = is_book && props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId)[0]
-                                                        let is_my_book = my_reservations.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
+                                                        let is_book = props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId).length
+                                                        let book = is_book && props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId)[0]
+                                                        let is_my_book = my_reservations.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId).length
                                                         let is_before = slot_data.timestamp < +moment().add(-2, `hour`)
                                                         return (
                                                             <Machine
