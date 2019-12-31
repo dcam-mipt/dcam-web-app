@@ -96,7 +96,7 @@ let Laundry = (props) => {
                                                             is_before={is_before}
                                                             is_weekend={+moment(start_of_day).isoWeekday() > 5}
                                                         >
-                                                            {dayCell(start_of_day, props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length, props.machines.length)}
+                                                            {dayCell(start_of_day, props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length, props.machines.filter(i => !i.is_broken).length)}
                                                         </Day>
                                                     })
                                                 }
