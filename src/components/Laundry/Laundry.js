@@ -12,8 +12,9 @@ import mvConsts from '../../constants/mvConsts';
 import BookPopUp from './BookPopUp'
 import BucketPopUp from './BucketPopUp'
 import ReservationsPopUp from './ReservationsPopUp'
-import { Flex, Image, Text, PopUp } from '../UIKit/styled-templates'
+import { Flex, Image, Text, PopUp, Bar } from '../UIKit/styled-templates'
 import Circles from '../UIKit/Circles'
+import CardPopUp from '../CardPopUp'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -48,50 +49,34 @@ let Laundry = (props) => {
         let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 10000)
         return () => { clearInterval(i) }
     }, [])
-    let header = (
-        <CalendarHeader>
-            <Button backgroundColor={props => props.theme.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
-                Сегодня
-            </Button>
-            <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
-                Мои стирки
-                <PopUp extra={`top: ${reservationsVisible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible} >
-                    <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
-                </PopUp>
-            </Button>
-            <Button backgroundColor={props => props.theme.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
-                Корзина {selectedSlots.length && `(${selectedSlots.length})`}
-                <PopUp extra={`top: ${bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={bucket_ref} visible={bucket_visible} >
-                    <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
-                </PopUp>
-            </Button>
-            <Button backgroundColor={props => props.theme.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
-                {mobileCalendar ? `Расписание` : moment(+selectedDay).format(`DD.MM`)}
-            </Button>
-        </CalendarHeader>
-    )
     return (
         <GlobalWrapper>
             {
                 props.laundry
                     ? <Flex>
                         <Wrapper>
-                            <Flex extra={`width: 42vw; background: red; height: 1vw;`} >
-
+                            <Flex extra={`width: 23vw;`} >
+                                <Bar row >
+                                    <Text size={1.5} bold >Мои стирки</Text>
+                                </Bar>
+                            </Flex>
+                            <Flex extra={`width: 22vw;`} >
+                                <CardPopUp />
                             </Flex>
                             <Flex>
                                 {
-                                    new Array(11).fill(0).map((day, day_index) => {
-                                        let start_of_day = +moment().startOf(`isoWeek`).add(day_index, `day`)
+                                    new Array(10).fill(0).map((day, day_index) => {
+                                        let start_of_day = +moment().startOf(`day`).tz(`Europe/Moscow`).add(day_index, `day`)
                                         let is_before = start_of_day < +moment().startOf(`day`)
                                         let is_week_end = +moment(start_of_day).isoWeekday() > 5
                                         let is_selected_day = selectedDay === +moment(start_of_day).startOf(`day`)
                                         let is_today = +moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)
-                                        let machines_number = props.machines.length
+                                        let machines_number = props.machines.filter(i => !i.is_broken).length
                                         let booked = props.laundry.filter(i => +moment(i.timestamp).startOf(`day`) === start_of_day).length
                                         let percentage = booked / (machines_number * 12)
                                         let color = percentage > (2 / 3) ? props => props.theme.WARM_ORANGE : percentage < (1 / 3) ? props => props.theme.accept : props => props.theme.yellow
                                         return !is_before && <Day
+                                            key={day_index}
                                             is_selected_day={is_selected_day}
                                             onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
                                         >
