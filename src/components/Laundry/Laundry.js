@@ -125,21 +125,23 @@ let Laundry = (props) => {
                                                 </TimeNode>
                                                 {
                                                     props.machines.map((machine, machine_index) => {
+                                                        let compar_dates = (a, b) => moment(a).tz(`Europe/Moscow`).format(`DD.MM.YY HH:mm`) === moment(b).format(`DD.MM.YY HH:mm`)
                                                         let slot_data = { machine_id: machine.objectId, timestamp: timestamp }
-                                                        let is_book = props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
-                                                        let book = is_book && props.laundry.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId)[0]
-                                                        let is_my_book = my_reservations.filter(i => i.timestamp === timestamp).filter(i => i.machine_id === machine.objectId).length
+                                                        let is_book = props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId).length
+                                                        let book = is_book && props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId)[0]
+                                                        let is_my_book = my_reservations.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId).length
                                                         let is_before = slot_data.timestamp < +moment().add(-2, `hour`)
+                                                        let unselectable = is_before || machine.is_broken
                                                         return (
                                                             <Machine
                                                                 index={machine_index}
                                                                 width={props.machines.length}
                                                                 key={machine_index}
-                                                                onClick={() => { if (!is_before) { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) } }}
+                                                                onClick={() => { if (!unselectable) { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) } }}
                                                                 is_selected={selectedSlots.filter((i, index) => compareObjects(i, slot_data)).length}
                                                                 is_book={is_book}
                                                                 is_my_book={is_my_book}
-                                                                is_before={is_before}
+                                                                unselectable={unselectable}
                                                             >
                                                                 {cutter(is_book ? book.email.split(`@`)[0].split(`.`)[0] : `-`)}
                                                             </Machine>
@@ -315,7 +317,7 @@ transition: 0.2s
 width: ${props => 20 / props.width}vw;
 height: 3vw;
 cursor: pointer;
-background-color: ${props => props.is_before ? `none` : props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : mvConsts.colors.background.support};
+background-color: ${props => props.unselectable ? `none` : props.is_my_book ? mvConsts.colors.accept : props.is_book ? mvConsts.colors.WARM_ORANGE : props.is_selected ? mvConsts.colors.lightblue : mvConsts.colors.background.support};
 color: white;
 font-size: 0.8vw;
 margin: 0 0.08vw 0 0;
