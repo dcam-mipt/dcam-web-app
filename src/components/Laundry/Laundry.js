@@ -48,6 +48,7 @@ let Laundry = (props) => {
         let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 10000)
         return () => { clearInterval(i) }
     }, [])
+    console.log(props.laundry && props.laundry.filter(i => i.timestamp > +moment()).map(i => moment(i.timestamp).format(`HH:mm`)));
     let header = (
         <CalendarHeader>
             <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
@@ -125,7 +126,7 @@ let Laundry = (props) => {
                                                 </TimeNode>
                                                 {
                                                     props.machines.map((machine, machine_index) => {
-                                                        let compar_dates = (a, b) => moment(a).tz(`Europe/Moscow`).format(`DD.MM.YY HH:mm`) === moment(b).format(`DD.MM.YY HH:mm`)
+                                                        let compar_dates = (a, b) => moment(a).format(`DD.MM.YY HH:mm`) === moment(b).format(`DD.MM.YY HH:mm`)
                                                         let slot_data = { machine_id: machine.objectId, timestamp: timestamp }
                                                         let is_book = props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId).length
                                                         let book = is_book && props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId)[0]
