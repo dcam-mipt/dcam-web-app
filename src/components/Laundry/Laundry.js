@@ -48,7 +48,6 @@ let Laundry = (props) => {
         let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 10000)
         return () => { clearInterval(i) }
     }, [])
-    console.log(props.laundry && props.laundry.filter(i => i.timestamp > +moment()).map(i => moment(i.timestamp).format(`HH:mm`)));
     let header = (
         <CalendarHeader>
             <Button backgroundColor={mvConsts.colors.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
