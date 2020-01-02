@@ -56,17 +56,19 @@ let Laundry = (props) => {
                     ? <Flex>
                         <Wrapper>
                             <Flex extra={`width: 23vw;`} >
-                                <Bar row >
+                                {/* <Bar row >
                                     <Text size={1.5} bold >Мои стирки</Text>
-                                </Bar>
+                                </Bar> */}
+                                <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                             </Flex>
                             <Flex extra={`width: 22vw;`} >
                                 <CardPopUp />
+                                <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
                             </Flex>
                             <Flex>
                                 {
                                     new Array(10).fill(0).map((day, day_index) => {
-                                        let start_of_day = +moment().startOf(`day`).tz(`Europe/Moscow`).add(day_index, `day`)
+                                        let start_of_day = +moment().startOf(`day`).add(day_index, `day`)
                                         let is_before = start_of_day < +moment().startOf(`day`)
                                         let is_week_end = +moment(start_of_day).isoWeekday() > 5
                                         let is_selected_day = selectedDay === +moment(start_of_day).startOf(`day`)
@@ -80,12 +82,12 @@ let Laundry = (props) => {
                                             is_selected_day={is_selected_day}
                                             onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
                                         >
-                                            <Flex extra={`width: 15vw;`} >
+                                            <Flex extra={`width: 17vw;`} >
                                                 <Text bold={is_today} size={1} color={is_week_end ? props => props.theme.WARM_ORANGE : null} >
                                                     {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
                                                 </Text>
                                             </Flex>
-                                            <Flex extra={`width: 40vw;`} row >
+                                            <Flex extra={`width: 38vw;`} row >
                                                 <Text extra={`margin-right: 2vw;`} >Свободно:</Text>
                                                 <Text color={color} size={1} >{machines_number * 12 - booked}</Text>
                                             </Flex>
@@ -244,7 +246,7 @@ align-items: center
 flex-direction: column
 transition: 0.2s
 width: ${props => 20 / props.width}vw;
-height: 3vw;
+height: 3.3vw;
 cursor: pointer;
 background-color: ${props => props.unselectable ? `none` : props.is_my_book ? props.theme.accept : props.is_book ? props.theme.WARM_ORANGE : props.is_selected ? props.theme.lightblue : props.theme.background.support};
 color: white;
@@ -273,7 +275,7 @@ background: ${props => props.is_weekend ? props.theme.background.primary : props
 border: 0.2vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : props.theme.background.secondary}
 ${props => props.is_selected_day ? `border-radius: 0.5vw` : null};
 cursor: ${props => !props.is_before ? `default` : `pointer`};
-width: 22vw;
+width: 20vw;
 height: 2.8vw;
 margin: 0.1vw;
 padding: 2vw;

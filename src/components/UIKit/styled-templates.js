@@ -132,6 +132,65 @@ export const ThemeWrapper = (props) => {
     )
 }
 
+function convertHex(hex, opacity) {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+}
+
+export const Book = (props) => {
+    const Wrapper = styled(Flex)`
+    background: ${props => props.is_weekend ? props.theme.background.primary : props.theme.background.primary};
+    cursor: pointer;
+    width: 19.5vw;
+    border-radius: 1vw;
+    margin: 0.25vw;
+    padding: 0.75vw;
+    flex-direction: row;
+    border: 0.2vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : props.theme.background.secondary}
+    justify-content: space-between;
+    &:hover {
+        transform: scale(1.05)
+    }
+    @media (min-width: 320px) and (max-width: 480px) {
+        width: 92vw;
+        height: 20vw;
+        padding: 2vw;
+        margin: 1vw;
+        border-radius: 4vw;
+        background-color: white;
+        border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
+    }`
+    const ImageWrapper = styled(Flex)`
+    padding: 0.75vw;
+    border-radius: 1vw;
+    background: ${props => convertHex(props.theme.accept, 0.75)};
+    @media (min-width: 320px) and (max-width: 480px) {
+        
+    }`
+    return (
+        <Wrapper {...props} >
+            <Flex row>
+                <ImageWrapper>
+                    <Image width={1.5} src={props.image} />
+                </ImageWrapper>
+                <Flex extra={`align-items: flex-start; margin-left: 1.5vw;`} >
+                    <Text size={1} bold >{props.title}</Text>
+                    <Text color={props => props.theme.text.support} >{moment(props.date).format(`DD.MM.YY`)}</Text>
+                </Flex>
+            </Flex>
+            {
+                props.children
+            }
+            <Flex extra={`align-items: flex-start; margin-left: 0.5vw;`} >
+                <Text size={1.2} bold >{moment(props.date).format(`HH:mm`)}</Text>
+            </Flex>
+        </Wrapper>
+    )
+}
+
 export const Rotor = styled.div`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
 
 export const ClosePopUp = (props) => <Text onClick={() => { if (props.props.close !== undefined) { props.props.close() } }} size={1.5} only_mobile extra={`width: 85vw; align-items: flex-start; margin-top: 10%; cursor: pointer;`} >Закрыть</Text>

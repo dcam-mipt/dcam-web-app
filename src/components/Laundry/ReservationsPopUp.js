@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
-import React from 'react'
-import { Flex, Image, Text, Bar, BarWrapper, ClosePopUp } from '../UIKit/styled-templates'
+import React, { useState, useEffect } from 'react'
+import { Flex, Image, Text, Bar, BarWrapper, ClosePopUp, Book } from '../UIKit/styled-templates'
 import moment from 'moment'
 import Button from '../UIKit/Button'
 import Form from '../UIKit/Form'
@@ -13,52 +13,76 @@ import laundryActions from '../../redux/actions/LaundryActions'
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 let calc_hours = (timestamp) => +(((+moment(timestamp).tz(`Europe/Moscow`) - +moment().tz(`Europe/Moscow`)) / 3600000 + ``).split(`.`)[0])
 let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_history = (user_id) => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get_users_history/${user_id}`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
     let { my_reservations, setSelectedDay, setSelectedBook, setBookVisible, setReservationsVisible } = props
+    let [history, set_history] = useState([])
     return (
-        <BarWrapper>
+        <Wrapper>
             {/* <Bar row >
                 <Image src={require(`../../assets/images/ticket.svg`)} width={2} />
                 <Text size={1.5} >Мои Стирки</Text>
             </Bar> */}
             <Form array={[{ type: `title`, text: `Мои Стирки` }]} />
             <Bar>
+                <Flex extra={`width: 100%; align-items: flex-start;`} >
+                    <Text>Предстоящие</Text>
+                </Flex>
                 {
                     my_reservations.filter(i => i.timestamp >= +moment().startOf(`day`)).sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
                         return (
-                            <BucketRow key={index} >
-                                <Flex extra={`width: 40%; align-items: flex-start;`} >
-                                    <Text size={0.7} color={props => props.theme.text.support} >{days_of_week_short[moment(i.timestamp).isoWeekday() - 1].toUpperCase()} {moment(i.timestamp).format(`DD.MM.YY`)}</Text>
-                                    <Text size={1.1} >{moment(i.timestamp).format(`HH:mm`)}</Text>
-                                </Flex>
-                                <Flex extra={`width:30%;`}><MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle></Flex>
-                                <Flex extra={`width: 30%;`} row pointer onClick={async () => {
+                            <Book key={index} date={i.timestamp} title={`Стирка`} image={require(`../../assets/images/laundry_selected.svg`)} onClick={() => {
+                                setSelectedDay(+moment(i.timestamp).startOf(`day`));
+                                setSelectedBook(i);
+                                setBookVisible(true)
+                                setReservationsVisible(false)
+                            }} >
+                                <MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle>
+                                <Flex extra={`width: 10%;`} row pointer onClick={async () => {
                                     await axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`)
                                     get_laundry().then((d) => { props.setLaundry(d.data) })
                                 }} >
-                                    <Text>{i.timestamp > +moment().tz(`Europe/Moscow`) ? `Продать` : `Удалить`}</Text>
                                     <MarginWrapper><Image src={require(`../../assets/images/money.svg`)} width={1.5} /></MarginWrapper>
                                 </Flex>
-                                <MarginWrapper><Image src={require(`../../assets/images/arrow.svg`)} pointer width={1.5} onClick={() => {
-                                    setSelectedDay(+moment(i.timestamp).startOf(`day`));
-                                    setSelectedBook(i);
-                                    setBookVisible(true)
-                                    setReservationsVisible(false)
-                                }} /></MarginWrapper>
-                            </BucketRow>
+                            </Book>
                         )
                     })
                 }
+                <Flex row extra={`width: 100%; justify-content: space-between;`} >
+                    <Text>Прошедшие</Text>
+                    <Text pointer color={props => props.theme.text.support} onClick={() => { set_history([]) }} >скрыть</Text>
+                </Flex>
+                {
+                    history.sort((a, b) => a.timestamp - b.timestamp).sort((a, b) => a.machine_id - b.machine_id).map((i, index) => {
+                        return (
+                            <Book key={index} date={i.timestamp} title={`Стирка`} image={require(`../../assets/images/laundry_selected.svg`)}>
+                                <MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle>
+                                <Flex extra={`width: 10%;`} row pointer onClick={async () => {
+                                    await axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`)
+                                    get_laundry().then((d) => { props.setLaundry(d.data) })
+                                }} >
+                                    <MarginWrapper><Image src={require(`../../assets/images/money.svg`)} width={1.5} /></MarginWrapper>
+                                </Flex>
+                            </Book>
+                        )
+                    })
+                }
+                <Bar row>
+                    <Button visible={history.length === 0} short={false} onClick={() => { get_history(props.user_id).then((d) => { set_history(d.data) }) }} >
+                        История
+                    </Button>
+                </Bar>
             </Bar>
             <ClosePopUp props={props} />
-        </BarWrapper>
+        </Wrapper>
     )
 }
 
 let mapStateToProps = (state) => {
     return {
         balance: state.user.balance,
+        user_id: state.user.user.objectId,
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -69,6 +93,12 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
+
+const Wrapper = styled(BarWrapper)`
+width: 21vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 100%;
+}`
 
 const MarginWrapper = styled(Flex)`
 padding: 0 0.5vw 0 0.5vw;

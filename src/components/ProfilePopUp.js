@@ -55,10 +55,10 @@ let main = (props) => {
                 <Text color={props => props.theme.text.support} >{user && get_user_status(user.last_seen)}</Text>
             </NameWrapper>
         </Bar>
-        <Bar row >
+        {/* <Bar row >
             <CardPopUp />
-        </Bar>
-        <Bar row >
+        </Bar> */}
+        {/* <Bar row >
             <Text size={1.5} bold >Оформление</Text>
         </Bar>
         <Flex extra={`align-items: flex-start; width: 100%;`} >
@@ -83,7 +83,7 @@ let main = (props) => {
                 }}
                 width={10}
             />
-        </Flex>
+        </Flex> */}
         <Bar row >
             <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
         </Bar>

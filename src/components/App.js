@@ -7,11 +7,12 @@ import Main from './Main'
 import Entry from './Entry'
 import { Flex, Image, Text, Rotor } from './UIKit/styled-templates'
 import mvConsts from '../constants/mvConsts'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { ThemeWrapper } from './UIKit/styled-templates'
 
 let GoogleWrapper = (props) => {
     let [init, setInit] = useState(false)
+    moment.tz.zone(`Europe/Moscow`)
     useEffect(() => {
         GoogleAPI.init()
             .then((d) => { setInit(true) })
