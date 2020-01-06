@@ -25,7 +25,7 @@ let main = (props) => {
     let [order_id, setOrderId] = useState(0)
     let { user, balance } = props
     return (
-        <BarWrapper extra={`align-items: flex-start;`} >
+        <BarWrapper>
             <Form array={[{ type: `title`, text: `Баланс` }]} />
             <Bar>
                 <Card>

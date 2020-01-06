@@ -22,7 +22,7 @@ export let darkTheme = {
     yellow: `#FFCC00`,
     accept: `#2DC76D`,
     purple: `#7540EE`,
-    lightblue: `#3FB6DC`,
+    lightblue: `#2F61D5`,
     vk: `#3A60A1`,
     WARM_ORANGE: `#FF7052`,
     background: {

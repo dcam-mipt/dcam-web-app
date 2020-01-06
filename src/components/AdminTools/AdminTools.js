@@ -133,7 +133,7 @@ transition: 0s;
 const Block = styled(Flex)`
 max-height: calc(91vh - ${props => props.subtrahend}vw);
 display: block;
-overflow: scroll;
+overflow-y: scroll;
 @media (min-width: 320px) and (max-width: 480px) {
     max-height: calc(91vh - ${props => props.subtrahend * 5}vw);
 }`
@@ -155,7 +155,7 @@ height: 89vh;
 background-color: ${props => props.theme.background.primary};
 padding: 1vw 1vw 0 1vw;
 margin-left: 1vw;
-border-radius: 0.5vw;
+border-radius: 1vw;
 justify-content: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.user_is_selected ? `none` : `flex`}

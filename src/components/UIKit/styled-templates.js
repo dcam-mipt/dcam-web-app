@@ -14,6 +14,7 @@ visibility: ${props => props.src ? `visible` : `hidden`}
 cursor: ${props => props.pointer ? `pointer` : `null`}
 ${props => props.round ? `object-fit: cover;` : null}
 ${props => props.extra};
+user-select: none;
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.width * 5}vw;
     height: ${props => props.width * 5}vw;
@@ -31,6 +32,7 @@ background-size: cover;
 background-repeat: no-repeat;
 background-position: 50% 50%;
 cursor: ${props => props.pointer ? `pointer` : `null`}
+user-select: none;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
     font-size: 4vw;
@@ -132,7 +134,7 @@ export const ThemeWrapper = (props) => {
     )
 }
 
-function convertHex(hex, opacity) {
+export function convertHex(hex, opacity) {
     hex = hex.replace('#', '');
     let r = parseInt(hex.substring(0, 2), 16);
     let g = parseInt(hex.substring(2, 4), 16);
@@ -144,7 +146,7 @@ export const Book = (props) => {
     const Wrapper = styled(Flex)`
     background: ${props => props.is_weekend ? props.theme.background.primary : props.theme.background.primary};
     cursor: pointer;
-    width: 19.5vw;
+    width: 18.5vw;
     border-radius: 1vw;
     margin: 0.25vw;
     padding: 0.75vw;
