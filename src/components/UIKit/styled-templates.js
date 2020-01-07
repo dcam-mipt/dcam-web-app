@@ -4,6 +4,7 @@ import styled, { keyframes, ThemeProvider } from 'styled-components'
 import mvConsts, { darkTheme, dayTheme } from '../../constants/mvConsts'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import uiActions from '../../redux/actions/UiActions'
 
 export const Image = styled.img`
 width: ${props => props.width}vw;
@@ -103,36 +104,43 @@ from { transform: rotate(0deg); }
 to { transform: rotate(360deg); }
 `;
 
-export const ThemeWrapper = (props) => {
-    let default_theme = dayTheme
-    if (localStorage.getItem(`theme`) === `system`) {
-        default_theme = window.matchMedia(`(prefers-color-scheme: dark)`).matches ? darkTheme : dayTheme
-    }
-    if (localStorage.getItem(`theme`) === `disabled`) {
-        default_theme = dayTheme
-    }
-    if (localStorage.getItem(`theme`) === `scheduled`) {
-        default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
-    }
-    if (localStorage.getItem(`theme`) === `automatic`) {
-        default_theme = +moment().format(`HH`) > 7 && +moment().format(`HH`) < 22 ? dayTheme : darkTheme
-    }
+const ThemeWrapper_ = (props) => {
+    let default_theme = props.theme === `light` ? dayTheme : darkTheme
     let [theme, setTheme] = useState(default_theme)
     useEffect(() => {
-        window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`, () => {
+        if (localStorage.getItem(`theme_shift`) === `system`) {
             if (window.matchMedia(`(prefers-color-scheme: dark)`).matches) {
-                setTheme(darkTheme)
+                props.set_theme(`dark`)
             } else {
-                setTheme(dayTheme)
+                props.set_theme(`light`)
             }
-        });
-    }, [])
+            window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`, () => {
+                if (localStorage.getItem(`theme_shift`) === `system`) {
+                    if (window.matchMedia(`(prefers-color-scheme: dark)`).matches) {
+                        props.set_theme(`dark`)
+                    } else {
+                        props.set_theme(`light`)
+                    }
+                }
+            });
+        }
+    }, [props.theme_shift])
+    useEffect(() => {
+        let new_theme = dayTheme
+        if (props.theme === `light`) new_theme = dayTheme
+        if (props.theme === `dark`) new_theme = darkTheme
+        setTheme(new_theme)
+    }, [props.theme])
     return (
         <ThemeProvider theme={theme} >
             {props.children}
         </ThemeProvider>
     )
 }
+
+let mapStateToProps = (state) => { return { theme: state.ui.theme, theme_shift: state.ui.theme_shift } }
+let mapDispatchToProps = (dispatch) => { return { set_theme: (data) => { return dispatch(uiActions.setTheme(data)) } } }
+export let ThemeWrapper = connect(mapStateToProps, mapDispatchToProps)(ThemeWrapper_)
 
 export function convertHex(hex, opacity) {
     hex = hex.replace('#', '');

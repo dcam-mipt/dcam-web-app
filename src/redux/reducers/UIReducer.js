@@ -4,6 +4,8 @@ import mvConsts from '../../constants/mvConsts'
 
 const initialState = {
     main_screen: mvConsts.screens.laundry,
+    theme: localStorage.getItem(`theme`),
+    theme_shift: localStorage.getItem(`theme_shift`),
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +15,16 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 main_screen: action.data,
+            };
+        case types.SET_THEME:
+            return {
+                ...state,
+                theme: action.data,
+            };
+        case types.SET_THEME_SHIFT:
+            return {
+                ...state,
+                theme_shift: action.data,
             };
 
         default:

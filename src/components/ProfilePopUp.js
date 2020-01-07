@@ -13,6 +13,7 @@ import io from 'socket.io-client';
 import Switch from './UIKit/Switch';
 import Selector from './UIKit/Selector';
 import userActions from '../redux/actions/UserActions'
+import uiActions from '../redux/actions/UiActions'
 // const socket = io('https://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
@@ -58,32 +59,27 @@ let main = (props) => {
         {/* <Bar row >
             <CardPopUp />
         </Bar> */}
-        {/* <Bar row >
+        <Bar row >
             <Text size={1.5} bold >Оформление</Text>
         </Bar>
         <Flex extra={`align-items: flex-start; width: 100%;`} >
             <Text extra={`margin: 0.5vw`} >Тема оформления</Text>
-            <Selector
-                bottom
-                left
-                array={[`Светлая`, `Темная`]}
-                selected={0}
-                onChange={(i) => { set_theme(theme) }}
-                width={10}
-            />
+            <Flex row>
+                <ThemeChooser disabled={props.theme_shift === `system`} light selected={props.theme === `light`} onClick={() => { if(props.theme_shift === `disabled`) props.set_theme(`light`) }}/>
+                <ThemeChooser disabled={props.theme_shift === `system`} dark selected={props.theme === `dark`} onClick={() => { if(props.theme_shift === `disabled`) props.set_theme(`dark`) }}/>
+            </Flex>
             <Text extra={`margin: 0.5vw`} >Автоматическая смена</Text>
             <Selector
                 bottom
                 left
-                array={Object.values(mvConsts.night_mode)}
-                selected={Object.keys(mvConsts.night_mode).indexOf(localStorage.getItem(`theme`))}
+                array={Object.values(mvConsts.theme_shift)}
+                selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
                 onChange={(i) => {
-                    localStorage.setItem(`theme`, Object.keys(mvConsts.night_mode)[i])
-                    set_theme(Object.keys(mvConsts.night_mode)[i])
+                    props.set_theme_shift(Object.keys(mvConsts.theme_shift)[i])
                 }}
                 width={10}
             />
-        </Flex> */}
+        </Flex>
         <Bar row >
             <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
         </Bar>
@@ -94,12 +90,20 @@ let mapStateToProps = (state) => {
     return {
         balance: state.user.balance,
         user: state.user.user,
+        theme: state.ui.theme,
+        theme_shift: state.ui.theme_shift,
     }
 }
 let mapDispatchToProps = (dispatch) => {
     return {
         setUserInfo: (data) => {
             return dispatch(userActions.setUserInfo(data))
+        },
+        set_theme: (data) => {
+            return dispatch(uiActions.setTheme(data))
+        },
+        set_theme_shift: (data) => {
+            return dispatch(uiActions.setThemeShift(data))
         },
     }
 }
@@ -110,6 +114,18 @@ padding-left: 1vw;
 align-items: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     padding-left: 5vw;
+}`
+
+const ThemeChooser = styled(Flex)`
+width: 4vw;
+height: 4vw;
+border-radius: 1vw;
+background: ${props => props.light ? mvConsts.light.background.secondary : mvConsts.dark.background.secondary};
+border: 0.2vw solid ${props => props.disabled ? `transparent` : props.selected ? props.theme.lightblue : props.light ? mvConsts.light.background.support : mvConsts.dark.background.support};
+margin: 0.5vw;
+${props => props.disabled ? null : `&:hover { transform: scale(1.02) rotate(2deg) }; cursor: pointer;`}
+@media (min-width: 320px) and (max-width: 480px) {
+    
 }`
 
 /*eslint-enable no-unused-vars*/

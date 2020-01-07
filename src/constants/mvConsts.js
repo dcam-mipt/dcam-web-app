@@ -44,6 +44,8 @@ export default {
         short: [`ПН`, `ВТ`, `СР`, `ЧТ`, `ПТ`, `СБ`, `ВС`],
         full: [`воскресенье`, `понедельник`, `вторник`, `среда`, `четверг`, `пятница`, `суббота`]
     },
+    light: dayTheme,
+    dark: darkTheme,
     month: [`Январь`, `Февраль`, `Март`, `Апрель`, `Май`, `Июнь`, `Июль`, `Август`, `Сентябрь`, `Октябрь`, `Ноябрь`, `Декабрь`,],
     screens: {
         laundry: `LAUNDRY`,
@@ -51,11 +53,11 @@ export default {
         event_spaces: `SPACES`,
         votes: `VOTES`,
     },
-    night_mode: {
+    theme_shift: {
         system: `Системная`,
         disabled: `Не использовать`,
-        scheduled: `По расписанию`,
-        automatic: `Автоматически`,
+        // scheduled: `По расписанию`,
+        // automatic: `Автоматически`,
     }
 }
 /*eslint-enable no-unused-vars*/

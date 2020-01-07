@@ -28,8 +28,6 @@ let useDetails = (default_value) => {
     }, id]
 }
 
-let Arrow = (props) => <Image {...props} src={require(`../../assets/images/arrow_white.svg`)} />
-
 let EventSpaces = (props) => {
     let { is_admin, user } = props
     let [selected_target, set_selected_target] = useState(``)
@@ -61,11 +59,14 @@ let EventSpaces = (props) => {
     }, [])
     let height_ = 6
     return (
-        <Flex extra={`position: relative; @supports (-webkit-overflow-scrolling: touch) { height: 75vh; }`} >
-            {/* <Flex extra={`width: 94vw; height: 10vh; background: blue;`} >
-
-            </Flex> */}
+        <Flex extra={`position: relative; @supports (-webkit-overflow-scrolling: touch) { height: 75vh; };`} >
             <Flex row extra={`width: 94vw; justify-content: space-around;`} >
+                <PopUp extra={`top: ${create_event_visible ? 0 : 1}vw; left: 22vw;`} ref={create_event_ref} visible={create_event_visible} >
+                    <CreateEventPopUp target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} />
+                </PopUp>
+                <PopUp extra={`top: ${details_visible ? 0 : 1}vw; left: 22vw;`} ref={details_ref} visible={details_visible} >
+                    <BookEventPopUp event={d} onDelete={() => { get_events().then(d => { set_events(d) }) }} />
+                </PopUp>
                 <LeftWrapper>
                     <Flex row extra={props => `width: 18vw; padding: 1vw; justify-content: space-between;`} >
                         <Flex row>
@@ -82,9 +83,9 @@ let EventSpaces = (props) => {
                         </Flex>
                     </Flex>
                     <Calendar header={false} month_start={month_start} onSelectDate={(e) => { set_week_start(+moment(e).startOf(`isoWeek`)) }} />
-                    {/* <Flex row extra={`width: 16vw; padding: 1vw 2vw 1vw 2vw; justify-content: space-between;`}>
-                        <Button short={false} backgroundColor={props => props.theme.accept} >Создать</Button>
-                    </Flex> */}
+                    <Flex row extra={`width: 16vw; padding: 1vw 2vw 1vw 2vw; justify-content: space-between;`}>
+                        <Button short={false} backgroundColor={props => props.theme.accept} onClick={() => { set_create_event_visible(true) }} >Создать</Button>
+                    </Flex>
                     <Flex>
                         <Flex row extra={`width: 16vw; padding: 1vw 2vw 1vw 2vw; justify-content: space-between;`} onClick={() => { set_dormitory_visible(!dormitory_visible) }} >
                             <Text bold size={1}>Общежитие</Text>
@@ -124,7 +125,7 @@ let EventSpaces = (props) => {
                     </Flex>
                 </LeftWrapper>
                 <RightWrapper>
-                    <Flex row extra={`width: 100%; height: 10%; background: rgba(255, 255, 255, 0.15);`} >
+                    <TitleRow>
                         <Flex extra={`width: 10%; height: 100%;`} >
 
                         </Flex>
@@ -138,7 +139,7 @@ let EventSpaces = (props) => {
                                 )
                             })
                         }
-                    </Flex>
+                    </TitleRow>
                     <Flex extra={`width: 100%; height: 90%; display: block; max-height: 90%; overflow-y: scroll;`} >
                         <Flex row extra={`width: 100%;`}>
                             <Flex extra={`width: 10%;`}>
@@ -155,26 +156,26 @@ let EventSpaces = (props) => {
                             <Flex row extra={`width: 90%; height: ${24 * height_}vh`}>
                                 {
                                     new Array(7).fill(0).map((item, index) => {
+                                        let events_for_day = events.filter(i => i.target_id === selected_target).filter(i => +moment(i.start_timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
                                         return (
-                                            <Flex extra={`width: calc(100% / 7); height: 100%; border-left: 0.1vw solid rgba(255, 255, 255, 0.1); position: relative;`} key={index} >
+                                            <Day key={index} >
                                                 {
-                                                    events.map((e, e_i) => {
+                                                    events_for_day.map((e, e_i) => {
                                                         let day_length = 24 * 60 * 60 * 1000
-                                                        let height = (+e.end_timestamp - +e.start_timestamp) / day_length * (24 * height_)
-                                                        let visible = (e.target_id === selected_target) && (+moment(e.start_timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
-                                                        height = visible ? height : 0
+                                                        let length_in_ms = (+e.end_timestamp - +e.start_timestamp)
+                                                        let height = length_in_ms / day_length * (24 * height_) * 0.98
                                                         let top = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * (24 * height_)
                                                         return (
-                                                            <Event key={e_i} is_selected={details_id === e.objectId && details_visible} accepted={e.accepted} height={height} top={top} id={`e_` + e.id} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
-                                                                <Flex extra={`height: ${visible ? 0.3 : 0}vw; justify-content: space-around; align-items: flex-start; margin-left: 0.5vw;`} >
-                                                                    <Text color={`white`} size={visible ? 0.8 : 0.0001} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
+                                                            <Event key={e_i} is_selected={details_id === e.objectId && details_visible} accepted={e.accepted} height={height} top={top} id={`e_` + e.id} day_length={day_length} length_in_ms={length_in_ms} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
+                                                                <Flex extra={`height: 0.3vw; justify-content: space-around; align-items: flex-start; margin: ${length_in_ms / day_length > 1 / 24 ? 1 : 0}vw 0 0 0.5vw;`} >
+                                                                    <Text color={`white`} >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
                                                                     {/* <Text color={`white`} >{moment(e.end_timestamp).format(`HH:mm`)}</Text> */}
                                                                 </Flex>
                                                             </Event>
                                                         )
                                                     })
                                                 }
-                                            </Flex>
+                                            </Day>
                                         )
                                     })
                                 }
@@ -198,9 +199,23 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EventSpaces)
 
+const Arrow = styled(Image).attrs({
+    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
+})``;
+
+const TitleRow = styled(Flex)`
+width: 100%;
+height: 10%;
+background: ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.04)` : `rgba(255, 255, 255, 0.15)`};
+flex-direction: row;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
 const Event = styled(Flex)`
 width: 95%;
 justify-content: flex-start;
+align-items: ${props => props.length_in_ms / props.day_length > 1 / 24 ? `flex-start` : `center`};
 height: ${props => props.height}vh;
 border-radius: 0.5vw;
 background: ${props => props.accepted ? props.theme.accept : props.theme.yellow};
@@ -233,9 +248,10 @@ cursor: pointer;
 }`
 
 const Day = styled(Flex)`
-width: calc(90% / 7);
+width: calc(60vw / 7);
 height: 100%;
-border-left: 0.1vw solid rgba(255, 255, 255, 0.1);
+border-left: 0.1vw solid ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.03)` : `rgba(255, 255, 255, 0.1)`};
+position: relative;
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`
@@ -253,6 +269,7 @@ max-height: 90vh;
 overflow-y: scroll;
 background: ${props => props.theme.background.primary};
 border-radius: 1vw;
+position: relative;
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`
@@ -263,6 +280,7 @@ height: 90vh;
 background: ${props => props.theme.background.primary};
 border-radius: 1vw;
 overflow: hidden;
+position: relative;
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`
