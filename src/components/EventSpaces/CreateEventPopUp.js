@@ -22,7 +22,18 @@ let CreateEventPopUp = (props) => {
         <Flex>
             <Flex extra={`align-items: flex-start; justify-content; flex-start;`} >
                 <Text bold size={1.5} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >Новая запись</Text>
-                <DatePicker date={day} onChange={(d) => { set_day(d) }} />
+                <Input
+                    type={`date`}
+                    autocomplete={true}
+                    value={moment(day).format(`YYYY-MM-DD`)}
+                    onChange={(e) => {
+                        let timestamp_ = +moment(e.target.value, `YYYY-MM-DD`);
+                        if (timestamp_ > 0) {
+                            set_day(timestamp_)
+                            props.onSelectDate && props.onSelectDate(timestamp_)
+                        }
+                    }}
+                />
                 <Flex row extra={`width: 100%; justify-content: space-between;`} >
                     <Text>начало</Text>
                     <Input type={`time`} value={start_timestamp} onChange={(e) => { set_start_timestamp(e.target.value) }} float />

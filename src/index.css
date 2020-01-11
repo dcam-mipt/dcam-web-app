@@ -9,6 +9,10 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
 ::-webkit-scrollbar {
   width: 0;
 }

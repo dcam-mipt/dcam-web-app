@@ -61,10 +61,6 @@ let Laundry = (props) => {
                                 </Bar> */}
                                 <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                             </Flex>
-                            <Flex extra={`width: 23vw; align-items: flex-start;`} >
-                                <CardPopUp />
-                                <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
-                            </Flex>
                             <Flex>
                                 {
                                     new Array(10).fill(0).map((day, day_index) => {
@@ -144,6 +140,10 @@ let Laundry = (props) => {
                                     })
                                 }
                             </Schedule>
+                            <Flex extra={`width: 23vw; align-items: flex-start;`} >
+                                <CardPopUp />
+                                <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                            </Flex>
                         </Wrapper>
                     </Flex>
                     : <Circles rotate />
