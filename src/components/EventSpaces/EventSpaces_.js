@@ -16,7 +16,7 @@ import axios from 'axios'
 import BookEventPopUp from './BookEventPopUp'
 
 let get_targets = () => axios.get(`${mvConsts.api}/targets/get`).then(d => d.data).catch(e => e)
-let get_events = () => axios.get(`${mvConsts.api}/events/get`).then(d => d.data).catch(e => e)
+let get_events = () => axios.get(`${mvConsts.api}/events/get`).then(d => d.data.sort((a, b) => a.start_timestamp - b.start_timestamp)).catch(e => e)
 let get_dormitories = () => axios.get(`${mvConsts.api}/dormitory/get`).then(d => d.data).catch(e => e)
 
 let useDetails = (default_value) => {
@@ -27,6 +27,8 @@ let useDetails = (default_value) => {
         set_id(id)
     }, id]
 }
+
+let cutter = (s) => s.length > 10 ? s.substring(0, 8) + `...` : s
 
 let EventSpaces = (props) => {
     let { is_admin, user } = props
@@ -57,15 +59,19 @@ let EventSpaces = (props) => {
         })
         get_events().then(d => { set_events(d) })
     }, [])
+    useEffect(() => { set_details_visible(false, details_id) }, [events])
     let height_ = 6
     return (
         <Flex extra={`position: relative; @supports (-webkit-overflow-scrolling: touch) { height: 75vh; };`} >
             <Flex row extra={`width: 94vw; justify-content: space-around;`} >
                 <PopUp extra={`top: ${create_event_visible ? 0 : 1}vw; left: 22vw;`} ref={create_event_ref} visible={create_event_visible} >
-                    <CreateEventPopUp target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} onSelectDate={(e) => { set_week_start(+moment(e).startOf(`isoWeek`)) }} />
+                    <CreateEventPopUp details={d} target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} onSelectDate={(e) => { set_week_start(+moment(e).startOf(`isoWeek`)) }} />
                 </PopUp>
                 <PopUp extra={`top: ${details_visible ? 0 : 1}vw; left: 22vw;`} ref={details_ref} visible={details_visible} >
-                    <BookEventPopUp event={d} onDelete={() => { get_events().then(d => { set_events(d) }) }} />
+                    <BookEventPopUp visible={details_visible} event={d} onDelete={() => { get_events().then(d => { set_events(d) }) }} onEdit={() => {
+                        set_details_visible(false, details_id)
+                        setTimeout(() => { set_create_event_visible(true) }, 200)
+                    }} />
                 </PopUp>
                 <LeftWrapper>
                     <Flex row extra={props => `width: 18vw; padding: 1vw; justify-content: space-between;`} >
@@ -120,44 +126,35 @@ let EventSpaces = (props) => {
                             }
                         </Flex>
                     </Flex>
-                    <Flex>
-                        <Flex row extra={`width: 16vw; padding: 1vw 2vw 1vw 2vw; justify-content: space-between;`} onClick={() => { set_requests_visible(!requests_visible) }} >
-                            <Text bold size={1}>Заявки</Text>
-                            <Arrow width={1} extra={`transform: rotate(${requests_visible ? 90 : 0}deg);`} />
+                    {
+                        is_admin && <Flex>
+                            <Flex row extra={`width: 16vw; padding: 1vw 2vw 1vw 2vw; justify-content: space-between;`} onClick={() => { set_requests_visible(!requests_visible) }} >
+                                <Text bold size={1}>Заявки</Text>
+                                <Arrow width={1} extra={`transform: rotate(${requests_visible ? 90 : 0}deg);`} />
+                            </Flex>
+                            <Flex extra={`align-items: flex-start; width: 16vw;`} >
+                                {
+                                    events && events.map((item, index) => {
+                                        let item_visible = requests_visible && item.target_id === selected_target && !item.accepted && item.end_timestamp > moment()
+                                        return (
+                                            <Flex row key={index} extra={`&:hover{ opacity: 0.75;`} onClick={() => { set_details_visible(false, details_id); setTimeout(() => { set_details_visible(true, item.objectId) }, 200) }} >
+                                                <Flex extra={props => `width: 0.5vw; height: ${+item_visible * 0.5}vw; border-radius: 2vw; background: ${details_id === item.objectId ? props.theme.accept : props.theme.background.support};`} />
+                                                <Text extra={`margin: ${+item_visible}vw; width: 1vw; align-items: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.start_timestamp).format(`DD.MM`)}</Text>
+                                                <Text extra={`margin: ${+item_visible}vw; width: 1vw; align-items: flex-start; justify-content: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.start_timestamp).format(`HH:mm`)}</Text>
+                                                <Text extra={`margin: ${+item_visible}vw; width: 1vw; align-items: flex-start; justify-content: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.end_timestamp).format(`HH:mm`)}</Text>
+                                                <Text extra={`margin: ${+item_visible}vw; width: 4vw; align-items: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{cutter(item.username.split(`@`)[0])}</Text>
+                                            </Flex>
+                                        )
+                                    })
+                                }
+                            </Flex>
                         </Flex>
-                        <Flex extra={`align-items: flex-start; width: 16vw;`} >
-                            {
-                                events && events.map((item, index) => {
-                                    let item_visible = requests_visible && item.target_id === selected_target && !item.accepted && item.end_timestamp > moment()
-                                    return (
-                                        <Flex row key={index} extra={`&:hover{ opacity: 0.75;`} onClick={() => { set_details_visible(false, item.objectId); setTimeout(() => { set_details_visible(true, item.objectId) }, 200) }} >
-                                            <Flex extra={props => `width: 0.5vw; height: ${+item_visible * 0.5}vw; border-radius: 2vw; background: ${details_id === item.objectId ? props.theme.accept : props.theme.background.support};`} />
-                                            <Text extra={`margin: ${+item_visible}vw; margin-right: 0.5vw; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.start_timestamp).format(`DD.MM`)}</Text>
-                                            <Text extra={`margin: ${+item_visible}vw; margin-right: 0; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.start_timestamp).format(`HH:mm`)}-</Text>
-                                            <Text extra={`margin: ${+item_visible}vw; margin-left: 0; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.end_timestamp).format(`HH:mm`)}</Text>
-                                            <LikeButton visible={item_visible} color={props => props.theme.accept} onClick={async () => {
-                                                await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/true`)
-                                                get_events().then(d => { set_events(d) })
-                                            }} >
-                                                <Image src={require(`../../assets/images/like.svg`)} width={item_visible ? 1 : 0} />
-                                            </LikeButton>
-                                            <LikeButton visible={item_visible} color={props => props.theme.WARM_ORANGE} onClick={async () => {
-                                                await axios.get(`${mvConsts.api}/events/accept/${item.objectId}/false`)
-                                                get_events().then(d => { set_events(d) })
-                                            }} >
-                                                <Image src={require(`../../assets/images/like.svg`)} width={item_visible ? 1 : 0} extra={`transform: rotate(180deg);`} />
-                                            </LikeButton>
-                                        </Flex>
-                                    )
-                                })
-                            }
-                        </Flex>
-                    </Flex>
+                    }
                 </LeftWrapper>
                 <RightWrapper>
                     <TitleRow>
                         <Flex extra={`width: 10.15vw; height: 100%;`} >
-                            <Button backgroundColor={props => props.theme.accept} onClick={() => { set_create_event_visible(true) }} >Создать</Button>
+                            <Button backgroundColor={props => props.theme.accept} onClick={() => { set_create_event_visible(true); set_details_visible(false, undefined) }} >Создать</Button>
                         </Flex>
                         {
                             new Array(7).fill(0).map((item, index) => {
@@ -171,7 +168,8 @@ let EventSpaces = (props) => {
                         }
                     </TitleRow>
                     <Flex extra={`width: 100%; height: 90%; display: block; max-height: 90%; overflow-y: scroll;`} >
-                        <Flex row extra={`width: 100%;`}>
+                        <Flex row extra={`width: 100%; position: relative;`}>
+                            <TimePointer visible={week_start === +moment().startOf(`isoWeek`)} />
                             <Flex extra={`width: 10vw;`}>
                                 {
                                     new Array(24).fill(0).map((item, index) => {
@@ -197,10 +195,10 @@ let EventSpaces = (props) => {
                                                         let top = (+e.start_timestamp - +moment(e.start_timestamp).startOf(`day`)) / day_length * (24 * height_)
                                                         let is_before = +e.end_timestamp < +moment()
                                                         return (
-                                                            <Event key={e_i} is_before={is_before} is_selected={details_id === e.objectId && details_visible} accepted={e.accepted} height={height} top={top} id={`e_` + e.id} day_length={day_length} length_in_ms={length_in_ms} onClick={() => { set_details_visible(false, e.objectId); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
+                                                            <Event key={e_i} is_before={is_before} is_selected={details_id === e.objectId && details_visible} accepted={e.accepted} height={height} top={top} id={`e_` + e.id} day_length={day_length} length_in_ms={length_in_ms} onClick={() => { set_details_visible(false, details_id); setTimeout(() => { set_details_visible(true, e.objectId) }, 200) }} >
                                                                 <Flex extra={`height: 0.3vw; justify-content: space-around; align-items: flex-start; margin: ${length_in_ms / day_length > 1 / 24 ? 1.5 : 0}vw 0 0 0.5vw;`} >
                                                                     <Text color={`white`} bold >{moment(e.start_timestamp).format(`HH:mm`)}</Text>
-                                                                    <Text color={`white`} >{e.username.split(`@`)[0]}</Text>
+                                                                    <Text color={`white`} >{cutter(e.username.split(`@`)[0])}</Text>
                                                                 </Flex>
                                                             </Event>
                                                         )
@@ -234,6 +232,43 @@ const Arrow = styled(Image).attrs({
     src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
 })``;
 
+let TimePointer = (props) => {
+    let { visible } = props
+    const TimeLine = styled(Flex)`
+    width: 60vw;
+    height: 1px;
+    background: ${props => props.theme.WARM_ORANGE};
+    box-shadow: 0 0.5vw 1vw ${props => props.theme.background.primary === `#fff` ? `transparent` : props.theme.WARM_ORANGE};
+    z-index: 1;
+    @media (min-width: 320px) and (max-width: 480px) {
+        
+    }`
+    const TimeCircle = styled(Flex)`
+    width: 0.5vw;
+    height: 0.5vw;
+    border-radius: 0.5vw;
+    background: ${props => props.theme.WARM_ORANGE};
+    box-shadow: 0 0vw 1vw ${props => props.theme.background.primary === `#fff` ? `transparent` : props.theme.WARM_ORANGE};
+    z-index: 1;
+    position: absolute;
+    left: ${(+moment().isoWeekday() - 1) * 60 / 7 + 3.75}vw;
+    @media (min-width: 320px) and (max-width: 480px) {
+        
+    }`
+    let [current_time, set_current_time] = useState(+moment())
+    useEffect(() => {
+        let timer = setInterval(() => { set_current_time(+moment()) }, 1000)
+        return () => { clearInterval(timer) }
+    }, [])
+    return (
+        <Flex row extra={`opacity: ${+visible}; transition: 0.5s; position: absolute; top: ${(+moment() - +moment().startOf(`day`)) / (24 * 60 * 60 * 1000) * 100}%; right: 0;`} >
+            <Text bold extra={`width: 4vw;`} color={props => props.theme.WARM_ORANGE} >{moment().format(`HH:mm`)}</Text>
+            <TimeLine />
+            <TimeCircle />
+        </Flex>
+    )
+}
+
 const LikeButton = styled(Flex)`
 cursor: pointer;
 width: ${props => +props.visible * 2}vw;
@@ -263,7 +298,6 @@ border-radius: 0.5vw;
 background: ${props => convertHex(props.accepted ? props.theme.accept : props.theme.yellow, props.is_before ? 0.5 : 1)};
 position: absolute;
 top: ${props => props.top}vh;
-z-index: 2;
 cursor: pointer;
 ${props => props.is_selected ? `box-shadow: 0 0 1vw ${props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.is_before ? `transparent` : props.accepted ? props.theme.accept : props.theme.yellow}; transform: scale(1.05);` : ``}
 &:hover {
