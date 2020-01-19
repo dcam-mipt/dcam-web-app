@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Image, PopUp, convertHex } from '../UIKit/styled-templates'
+import { Flex, Text, Image, PopUp, convertHex, Bar } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
 import Button from '../UIKit/Button'
 import Form from '../UIKit/Form'
@@ -65,8 +65,8 @@ let EventSpaces = (props) => {
     let height_ = 6
     return (
         <Flex extra={`position: relative; @supports (-webkit-overflow-scrolling: touch) { height: 75vh; };`} >
-            <PopUp extra={`top: ${create_event_visible ? 0 : 1}vw; left: 22vw;`} ref={create_event_ref} visible={create_event_visible} >
-                <CreateEventPopUp details={d} target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} onSelectDate={(e) => { set_week_start(+moment(e).startOf(`isoWeek`)) }} />
+            <PopUp extra={`top: ${create_event_visible ? 0 : 1}vw; left: 22vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0; };`} ref={create_event_ref} visible={create_event_visible} >
+                <CreateEventPopUp close={() => { set_create_event_visible(false) }} details={d} target_id={selected_target} onCreate={() => { get_events().then(d => { set_events(d); set_create_event_visible(false) }) }} onSelectDate={(e) => { set_week_start(+moment(e).startOf(`isoWeek`)) }} />
             </PopUp>
             <PopUp extra={`top: ${details_visible ? 0 : 1}vw; left: 22vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0; };`} ref={details_ref} visible={details_visible} >
                 <BookEventPopUp close={() => { set_details_visible(false) }} visible={details_visible} event={d} onDelete={() => { get_events().then(d => { set_events(d) }) }} onEdit={() => {
@@ -134,22 +134,30 @@ let EventSpaces = (props) => {
                                 <Text bold size={1}>Заявки</Text>
                                 <Arrow width={1} extra={`transform: rotate(${requests_visible ? 90 : 0}deg);`} />
                             </Flex>
-                            <Flex extra={`align-items: flex-start; width: 16vw;`} >
+                            <RequestsList>
                                 {
                                     events && events.map((item, index) => {
                                         let item_visible = requests_visible && item.target_id === selected_target && !item.accepted && item.end_timestamp > moment()
                                         return (
-                                            <Flex row key={index} extra={`&:hover{ opacity: 0.75;`} onClick={() => { set_details_visible(false, details_id); setTimeout(() => { set_details_visible(true, item.objectId) }, 200) }} >
+                                            <Flex row key={index} onClick={() => { set_details_visible(false, details_id); setTimeout(() => { set_details_visible(true, item.objectId) }, 200) }} >
                                                 <Flex extra={props => `width: 0.5vw; height: ${+item_visible * 0.5}vw; border-radius: 2vw; background: ${details_id === item.objectId ? props.theme.accept : props.theme.background.support};`} />
-                                                <Text extra={`margin: ${+item_visible}vw; width: 1vw; align-items: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.start_timestamp).format(`DD.MM`)}</Text>
-                                                <Text extra={`margin: ${+item_visible}vw; width: 1vw; align-items: flex-start; justify-content: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.start_timestamp).format(`HH:mm`)}</Text>
-                                                <Text extra={`margin: ${+item_visible}vw; width: 1vw; align-items: flex-start; justify-content: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{moment(item.end_timestamp).format(`HH:mm`)}</Text>
-                                                <Text extra={`margin: ${+item_visible}vw; width: 4vw; align-items: flex-start; cursor: pointer; };`} size={item_visible ? 0.8 : 0.0001} >{cutter(item.username.split(`@`)[0])}</Text>
+                                                <RequestItemText visible={+item_visible} >
+                                                    {moment(item.start_timestamp).format(`DD.MM`)}
+                                                </RequestItemText>
+                                                <RequestItemText visible={+item_visible} extra={`justify-content: flex-start; };`} >
+                                                    {moment(item.start_timestamp).format(`HH:mm`)}
+                                                </RequestItemText>
+                                                <RequestItemText visible={+item_visible} extra={`justify-content: flex-start; };`} >
+                                                    {moment(item.end_timestamp).format(`HH:mm`)}
+                                                </RequestItemText>
+                                                <RequestItemText visible={+item_visible} >
+                                                    {cutter(item.username.split(`@`)[0])}
+                                                </RequestItemText>
                                             </Flex>
                                         )
                                     })
                                 }
-                            </Flex>
+                            </RequestsList>
                         </Flex>
                     }
                 </LeftWrapper>
@@ -216,9 +224,32 @@ let EventSpaces = (props) => {
                 </RightWrapper>
             </Flex>
             <Flex only_mobile extra={`position: relative; height: 100vh;`} >
+                <MobileLowerLayer visible={!mobile_workspace_visible} >
+                    <CentredBar>
+                        <Text size={1.5} bold >Добрый вечер</Text>
+                        <Flex extra={props => `width: 10vw; height: 10vw; border-radius: 3vw; background: ${props.theme.background.primary};`} onClick={() => { set_create_event_visible(true) }} >
+                            <Image src={require(`../../assets/images/cros.svg`)} extra={`transform: rotate(45deg);`} width={1} />
+                        </Flex>
+                    </CentredBar>
+                    <Bar row>
+                        <Text size={1.5} bold >Общежитие</Text>
+                    </Bar>
+                    <Bar row>
+                        {
+                            dormitories && dormitories.map((item, index) => {
+                                return (
+                                    <Flex row key={index} extra={props => `width: 20vw; height: 27vw; border-radius: 5vw; background: ${props.theme.background.primary}; margin: 2vw;`} >
+                                        <Text size={2} >{item.number}</Text>
+                                    </Flex>
+                                )
+                            })
+                        }
+                    </Bar>
+                </MobileLowerLayer>
                 <Flex extra={props => `width: 100vw; border-radius: 6vw; background: ${props.theme.background.primary}; position: absolute; bottom: 0; padding-bottom: 8vh;`} >
+                    <Flex extra={props => `opacity: ${+mobile_workspace_visible}; width: 30vw; height: 1.5vw; border-radius: 2vw; background: ${props.theme.background.primary}; position: absolute; top: -4vw;`} onClick={() => { set_mobile_workspace_visible(!mobile_workspace_visible) }} />
                     <Flex row extra={`padding: 8vw; width: 92.5vw; justify-content: space-between;`} >
-                        <Flex row extra={`margin-left: 4vw;`} onClick={() => { set_week_start(+moment().startOf(`isoWeel`)) }} >
+                        <Flex row extra={`margin-left: 4vw;`} onClick={() => { set_week_start(+moment().startOf(`isoWeek`)) }} >
                             <Text extra={`width: 10vw; padding-left: 1vw; align-items: flex-start; cursor: pointer; &:hover { transform: scale(1.1); };`} bold size={1}>{mvConsts.month[+moment(week_start).month()].substr(0, 3)}</Text>
                             <Text extra={`width: 20vw;`} bold size={1} color={props => props.theme.text.support}>{moment(week_start).format(`DD`)} - {moment(week_start).add(6, `day`).format(`DD`)}</Text>
                         </Flex>
@@ -241,9 +272,11 @@ let EventSpaces = (props) => {
                             new Array(7).fill(0).map((item, index) => {
                                 let is_selected_day = +moment(week_start).add(index, `day`).isoWeekday() === week_day + 1
                                 let is_today = +moment().isoWeekday() === index + 1
+                                let events_for_day = events.filter(i => i.target_id === selected_target).filter(i => +moment(i.start_timestamp).startOf(`day`) === +moment(week_start).add(index, `day`))
+                                let percantage = 1 - events_for_day.reduce((a, b) => a + b.end_timestamp - b.start_timestamp, 0) / (24 * 3600 * 1000)
                                 return (
                                     <Flex key={index} extra={props => `width: calc(80vw / 7); margin: 1vw; padding: 4vw 0 4vw 0; border-radius: 3vw; background: ${is_selected_day ? props.theme.background.support : `transparent`}; position: relative;`} onClick={() => { set_week_day(index) }} >
-                                        <Flex extra={props => `position: absolute; width: 3vw; height: 3vw; border-radius: 3vw; background: ${props.theme.accept}; top: 0; right: 0;`} />
+                                        <Flex extra={props => `position: absolute; width: 3vw; height: 3vw; border-radius: 3vw; background: ${percantage > 2 / 3 ? props.theme.accept : percantage > 1 / 3 ? props.theme.yellow : props.theme.WARM_ORANGE}; top: 0; right: 0;`} />
                                         <Text color={props => props.theme.text.primary} size={1} bold={is_selected_day} extra={`opacity: 50%;`} >
                                             {mvConsts.weekDays.short[index][0]}
                                         </Text>
@@ -255,9 +288,9 @@ let EventSpaces = (props) => {
                             })
                         }
                     </Flex>
-                    <Flex extra={`display: block; max-height: 65vh; opacity: ${+mobile_workspace_visible}; overflow-y: scroll;`} >
-                        <Flex row extra={`width: 100vw; position: relative;`}>
-                            <TimePointer visible={week_start === +moment().startOf(`isoWeek`)} />
+                    <Flex extra={`display: block; max-height: ${+mobile_workspace_visible * 65}vh; opacity: ${+mobile_workspace_visible}; overflow-y: scroll;`} >
+                        <Flex row extra={`width: 100vw; position: relative; padding: ${height_ * 14}vh 0 0 0;`}>
+                            <TimePointer visible={+moment().isoWeekday() - 1 === week_day} />
                             <Flex extra={`width: 20vw;`}>
                                 {
                                     new Array(24).fill(0).map((item, index) => {
@@ -319,6 +352,43 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventSpaces)
 const Arrow = styled(Image).attrs({
     src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
 })``;
+
+const CentredBar = styled(Bar)`
+flex-direction: row;
+justify-content: space-between;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const RequestItemText = styled(Text)`
+margin: ${props => +props.visible}vw;
+width: 1vw;
+align-items: flex-start;
+cursor: pointer;
+font-size: ${props => props.visible ? 0.8 : 0.0001}vw;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const RequestsList = styled(Flex)`
+align-items: flex-start;
+width: 16vw;
+> * {
+    &:hover{ opacity: 0.75 };
+}
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
+const MobileLowerLayer = styled(Flex)`
+width: 90vw;
+height: 100vh;
+justify-content: flex-start;
+filter: blur(${props => +!props.visible * 8}px);
+transition: ${props => props.visible ? 1 : 0.2}s;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
 
 let TimePointer = (props) => {
     let { visible } = props

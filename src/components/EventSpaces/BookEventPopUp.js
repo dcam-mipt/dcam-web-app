@@ -77,11 +77,34 @@ let BookEventPopUp = (props) => {
                 }
             </Flex>
             <Flex extra={`justify-content; flex-start;`} >
-                <Form array={[{ type: `title`, text: `Запись` }]} />
+                <Bar row onClick={() => { props.close && props.close() }} >
+                    <Flex only_mobile >
+                        <Arrow only_mobile width={2} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
+                    </Flex>
+                    <Text size={1.5} bold >Запись</Text>
+                </Bar>
                 <Bar row >
                     <Flex extra={props => `width: 0.5vw; height: 0.5vw; border-radius: 2vw; background: ${event ? event.accepted ? props.theme.accept : props.theme.yellow : props.theme.background.support}; @media (min-width: 320px) and (max-width: 480px) { width: 2vw; height: 2vw; };`} />
                     <Text extra={`width: 9vw; align-items: flex-start; margin-left: 1vw; cursor: pointer; @media (min-width: 320px) and (max-width: 480px) { width: 20vw; };`} >{event ? event.accepted ? `одобрено` : `в очереди` : `загрузка`}</Text>
                 </Bar>
+                {
+                    (is_admin && event && !event.accepted) && <Bar row >
+                        <Flex only_mobile row extra={`width: 18vw; justify-content: space-between;`} >
+                            <LikeButton visible={visible} color={props => props.theme.accept} onClick={async () => {
+                                await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
+                                props.onDelete && props.onDelete()
+                            }} >
+                                <Image src={require(`../../assets/images/like.svg`)} width={1} />
+                            </LikeButton>
+                            <LikeButton visible={visible} color={props => props.theme.WARM_ORANGE} onClick={async () => {
+                                await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
+                                props.onDelete && props.onDelete()
+                            }} >
+                                <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
+                            </LikeButton>
+                        </Flex>
+                    </Bar>
+                }
                 <Bar row >
                     <Image src={owner_data && owner_data.avatar} round width={3} />
                     <NameWrapper>
@@ -112,13 +135,13 @@ let BookEventPopUp = (props) => {
                 </Bar>
                 {
                     (is_admin || event && event.user_id === my_user_id) && <Flex>
-                        <Bar row >
+                        <CentredBar>
                             <Button backgroundColor={props => props.theme.WARM_ORANGE} short={event && !event.accepted} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >Удалить</Button>
                             {event && !event.accepted && <Button backgroundColor={props => props.theme.accept} shaped onClick={() => { event && props.onEdit && props.onEdit(event.objectId) }} >Редактировать</Button>}
-                        </Bar>
+                        </CentredBar>
                         <Bar row >
                             <Flex extra={`width: 100%;`} >
                                 <Image src={qr_url} size={1} />
@@ -127,7 +150,6 @@ let BookEventPopUp = (props) => {
                     </Flex>
                 }
             </Flex>
-            <ClosePopUp props={props} />
         </Flex>
     )
 }
@@ -141,6 +163,17 @@ let mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps)(BookEventPopUp)
 
+const Arrow = styled(Image).attrs({
+    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
+})``;
+
+const CentredBar = styled(Bar)`
+flex-direction: row;
+justify-content: space-around;
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
+
 const LikeButton = styled(Flex)`
 cursor: pointer;
 width: ${props => +props.visible * 2}vw;
@@ -148,7 +181,9 @@ height: ${props => +props.visible * 2}vw;
 border-radius: 0.5vw;
 background: ${props => props.color}
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    width: ${props => +props.visible * 8}vw;
+    height: ${props => +props.visible * 8}vw;
+    border-radius: 2vw;
 }`
 
 const NameWrapper = styled(Flex)`

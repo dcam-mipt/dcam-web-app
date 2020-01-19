@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Image, PopUp, ClosePopUp } from '../UIKit/styled-templates'
+import { Flex, Text, Image, PopUp, ClosePopUp, Bar } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
 import Button from '../UIKit/Button'
 import DatePicker from '../UIKit/DatePicker'
@@ -31,7 +31,12 @@ let CreateEventPopUp = (props) => {
     return (
         <Flex>
             <Flex extra={`align-items: flex-start; justify-content; flex-start;`} >
-                <Text bold size={1.5} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >{details ? `Редактированиe` : `Новая запись`}</Text>
+                <Bar row onClick={() => { props.close && props.close() }} >
+                    <Flex only_mobile >
+                        <Arrow only_mobile width={2} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
+                    </Flex>
+                    <Text size={1.5} bold >{details ? `Редактированиe` : `Новая запись`}</Text>
+                </Bar>
                 <Input
                     type={`date`}
                     autocomplete={true}
@@ -74,10 +79,13 @@ let CreateEventPopUp = (props) => {
                     set_end_timestamp(+moment().startOf(`hour`).add(2, `hour`))
                 }} >{details ? `Изменить` : `Записаться`}</Button>
             </Flex>
-            <ClosePopUp props={props} />
         </Flex>
     )
 }
+
+const Arrow = styled(Image).attrs({
+    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
+})``;
 
 export default CreateEventPopUp;
 /*eslint-enable no-unused-vars*/
