@@ -62,24 +62,26 @@ let main = (props) => {
         <Bar row >
             <Text size={1.5} bold >Оформление</Text>
         </Bar>
-        <Flex extra={`align-items: flex-start; width: 100%;`} >
-            <Text extra={`margin: 0.5vw`} >Тема оформления</Text>
-            <Flex row>
-                <ThemeChooser disabled={props.theme_shift === `system`} light selected={props.theme === `light`} onClick={() => { if(props.theme_shift === `disabled`) props.set_theme(`light`) }}/>
-                <ThemeChooser disabled={props.theme_shift === `system`} dark selected={props.theme === `dark`} onClick={() => { if(props.theme_shift === `disabled`) props.set_theme(`dark`) }}/>
+        <Bar row>
+            <Flex extra={`align-items: flex-start; width: 100%;`} >
+                <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Тема оформления</Text>
+                <Flex row>
+                    <ThemeChooser disabled={props.theme_shift === `system`} light selected={props.theme === `light`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`light`) }} />
+                    <ThemeChooser disabled={props.theme_shift === `system`} dark selected={props.theme === `dark`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`dark`) }} />
+                </Flex>
+                <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Автоматическая смена</Text>
+                <Selector
+                    bottom
+                    left
+                    array={Object.values(mvConsts.theme_shift)}
+                    selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
+                    onChange={(i) => {
+                        props.set_theme_shift(Object.keys(mvConsts.theme_shift)[i])
+                    }}
+                    width={10}
+                />
             </Flex>
-            <Text extra={`margin: 0.5vw`} >Автоматическая смена</Text>
-            <Selector
-                bottom
-                left
-                array={Object.values(mvConsts.theme_shift)}
-                selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
-                onChange={(i) => {
-                    props.set_theme_shift(Object.keys(mvConsts.theme_shift)[i])
-                }}
-                width={10}
-            />
-        </Flex>
+        </Bar>
         <Bar row >
             <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
         </Bar>
@@ -125,7 +127,11 @@ border: 0.2vw solid ${props => props.disabled ? `transparent` : props.selected ?
 margin: 0.5vw;
 ${props => props.disabled ? null : `&:hover { transform: scale(1.02) rotate(2deg) }; cursor: pointer;`}
 @media (min-width: 320px) and (max-width: 480px) {
-    
+    width: 16vw;
+    height: 16vw;
+    border-radius: 4vw;
+    border: 1vw solid ${props => props.disabled ? `transparent` : props.selected ? props.theme.lightblue : props.light ? mvConsts.light.background.support : mvConsts.dark.background.support};
+    margin: 2vw;
 }`
 
 /*eslint-enable no-unused-vars*/

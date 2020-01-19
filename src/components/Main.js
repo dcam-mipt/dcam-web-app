@@ -83,7 +83,7 @@ let Main = (props) => {
         return (
             <HashRouter>
                 <Wrapper>
-                    <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw;`} ref={profileRef} visible={profileVisible} >
+                    <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={profileVisible} >
                         <ProfilePopUp signOut={signOut} />
                     </PopUp>
                     <Menu>
@@ -167,7 +167,7 @@ border-radius: 1.5vw;
 margin: 0.5vw;
 background: ${props => props.theme.background.primary};
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
-z-index: 2;
+z-index: 3;
 justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 96vw;
@@ -196,8 +196,9 @@ display: ${props => props.only_mobile ? `none` : `block`}
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `block`}
-    width: 5vh;
-    height: 5vh;
+    width: 4vh;
+    height: 4vh;
+    &:hover { width: 4vh; height: 4vh; margin: 0.25vw; }
 }`
 
 const Workspace = styled(Flex)`
@@ -210,32 +211,5 @@ overflow; hidden;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;
-}`
-
-const Header = styled(Flex)`
-width: 94vw;
-height: 8vh;
-padding: 0 2vw 0 0;
-@media (min-width: 320px) and (max-width: 480px) {
-    display: none;
-}`
-
-const Space = styled(Flex)`
-width: 94vw;
-height: 92vh;
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 100vw;
-}`
-
-const MenuButton = styled(Flex)`
-width: 3.5vw;
-height: 3.5vw;
-border-radius: 0.5vw;
-background: ${props => props.selected && props.theme.background.primary};
-margin-left: 0.5vw;
-position: relative;
-&:hover { background-color: ${props => props.theme.background.primary}; }
-@media (min-width: 320px) and (max-width: 480px) {
-    
 }`
 /*eslint-enable no-unused-vars*/

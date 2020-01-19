@@ -65,7 +65,7 @@ box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
     top: 0;
     right: 0;
     display: block;
-    height: 90%;
+    height: 100%;
     overflow: scroll;
     transition: 0s;
     box-shadow: 0 0 0 rgba(0, 0, 0, 0);
@@ -114,15 +114,19 @@ const ThemeWrapper_ = (props) => {
             } else {
                 props.set_theme(`light`)
             }
-            window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`, () => {
-                if (localStorage.getItem(`theme_shift`) === `system`) {
-                    if (window.matchMedia(`(prefers-color-scheme: dark)`).matches) {
-                        props.set_theme(`dark`)
-                    } else {
-                        props.set_theme(`light`)
+            try {
+                window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`, () => {
+                    if (localStorage.getItem(`theme_shift`) === `system`) {
+                        if (window.matchMedia(`(prefers-color-scheme: dark)`).matches) {
+                            props.set_theme(`dark`)
+                        } else {
+                            props.set_theme(`light`)
+                        }
                     }
-                }
-            });
+                }, false);
+            } catch (error) {
+                console.log(error)
+            }
         }
     }, [props.theme_shift])
     useEffect(() => {

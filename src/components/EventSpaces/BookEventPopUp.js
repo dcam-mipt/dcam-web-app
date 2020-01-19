@@ -56,29 +56,31 @@ let BookEventPopUp = (props) => {
     }, [event])
     return (
         <Flex extra={`position: relative;`} >
-            {
-                (is_admin && event && !event.accepted) && <PopUp extra={`top: -1.5vw; left: ${visible ? 20 : 18}vw;`} ref={tools_ref} visible={visible} >
-                    <Flex row extra={`margin: -1vw; width: 4.5vw; justify-content: space-between;`} >
-                        <LikeButton visible={visible} color={props => props.theme.accept} onClick={async () => {
-                            await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
-                            props.onDelete && props.onDelete()
-                        }} >
-                            <Image src={require(`../../assets/images/like.svg`)} width={1} />
-                        </LikeButton>
-                        <LikeButton visible={visible} color={props => props.theme.WARM_ORANGE} onClick={async () => {
-                            await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
-                            props.onDelete && props.onDelete()
-                        }} >
-                            <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
-                        </LikeButton>
-                    </Flex>
-                </PopUp>
-            }
+            <Flex only_desktop >
+                {
+                    (is_admin && event && !event.accepted) && <PopUp extra={`top: -1.5vw; left: ${visible ? 20 : 18}vw;`} ref={tools_ref} visible={visible} >
+                        <Flex row extra={`margin: -1vw; width: 4.5vw; justify-content: space-between;`} >
+                            <LikeButton visible={visible} color={props => props.theme.accept} onClick={async () => {
+                                await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
+                                props.onDelete && props.onDelete()
+                            }} >
+                                <Image src={require(`../../assets/images/like.svg`)} width={1} />
+                            </LikeButton>
+                            <LikeButton visible={visible} color={props => props.theme.WARM_ORANGE} onClick={async () => {
+                                await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
+                                props.onDelete && props.onDelete()
+                            }} >
+                                <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
+                            </LikeButton>
+                        </Flex>
+                    </PopUp>
+                }
+            </Flex>
             <Flex extra={`justify-content; flex-start;`} >
                 <Form array={[{ type: `title`, text: `Запись` }]} />
                 <Bar row >
-                    <Flex extra={props => `width: 0.5vw; height: 0.5vw; border-radius: 2vw; background: ${event ? event.accepted ? props.theme.accept : props.theme.yellow : props.theme.background.support};`} />
-                    <Text extra={`width: 9vw; align-items: flex-start; margin-left: 1vw; cursor: pointer;`} >{event ? event.accepted ? `одобрено` : `в очереди` : `загрузка`}</Text>
+                    <Flex extra={props => `width: 0.5vw; height: 0.5vw; border-radius: 2vw; background: ${event ? event.accepted ? props.theme.accept : props.theme.yellow : props.theme.background.support}; @media (min-width: 320px) and (max-width: 480px) { width: 2vw; height: 2vw; };`} />
+                    <Text extra={`width: 9vw; align-items: flex-start; margin-left: 1vw; cursor: pointer; @media (min-width: 320px) and (max-width: 480px) { width: 20vw; };`} >{event ? event.accepted ? `одобрено` : `в очереди` : `загрузка`}</Text>
                 </Bar>
                 <Bar row >
                     <Image src={owner_data && owner_data.avatar} round width={3} />
