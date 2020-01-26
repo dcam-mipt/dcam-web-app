@@ -14,6 +14,7 @@ import CreateEventPopUp from './CreateEventPopUp'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import BookEventPopUp from './BookEventPopUp'
+// import Selector from '../UIKit/Selector'
 
 let get_targets = () => axios.get(`${mvConsts.api}/targets/get`).then(d => d.data).catch(e => e)
 let get_events = () => axios.get(`${mvConsts.api}/events/get`).then(d => d.data.sort((a, b) => a.start_timestamp - b.start_timestamp)).catch(e => e)
@@ -38,14 +39,12 @@ let EventSpaces = (props) => {
     let [dormitories, set_dormitories] = useState([])
     let [selected_dormitory, set_selected_dormitory] = useState(`RPv7Xk9mfv`)
     let [week_start, set_week_start] = useState(+moment().startOf(`isoWeek`))
-    let [week_selector_ref, week_selector_visible, set_week_selector_visible] = useComponentVisible(false);
     let [create_event_ref, create_event_visible, set_create_event_visible] = useComponentVisible(false);
-    let [create_target_ref, create_target_visible, set_create_target_visible] = useComponentVisible(false);
     let [dormitory_ref, dormitory_visible, set_dormitory_visible] = useComponentVisible(false);
     let [targets_ref, targets_visible, set_targets_visible] = useComponentVisible(true);
     let [requests_ref, requests_visible, set_requests_visible] = useComponentVisible(false);
-    let [my_books_ref, my_books_visible, set_my_books_visible] = useComponentVisible(false);
     let [mobile_workspace_ref, mobile_workspace_visible, set_mobile_workspace_visible] = useComponentVisible(false);
+    let [selector_ref, selector_visible, set_selector_visible] = useComponentVisible(false);
     let [week_day, set_week_day] = useState(+moment().isoWeekday() - 1)
     let [details_ref, details_visible, set_details_visible, details_id] = useDetails(false);
     let selected_dormitory_number = dormitories.filter(i => i.objectId === selected_dormitory)[0] && dormitories.filter(i => i.objectId === selected_dormitory)[0].number
@@ -223,27 +222,14 @@ let EventSpaces = (props) => {
                     </Flex>
                 </RightWrapper>
             </Flex>
-            <Flex only_mobile extra={`position: relative; height: 100vh;`} >
-                <MobileLowerLayer visible={!mobile_workspace_visible} >
-                    <CentredBar>
-                        <Text size={1.5} bold >Добрый вечер</Text>
-                        <Flex extra={props => `width: 10vw; height: 10vw; border-radius: 3vw; background: ${props.theme.background.primary};`} onClick={() => { set_create_event_visible(true) }} >
-                            <Image src={require(`../../assets/images/cros.svg`)} extra={`transform: rotate(45deg);`} width={1} />
-                        </Flex>
-                    </CentredBar>
+            <Flex only_mobile extra={`position: relative; height: 100vh; width: 100vw;`} >
+                <Selector onChoose={() => { set_selector_visible(false) }} visible={selector_visible} ref={selector_ref} array={dormitories && dormitories.map(i => `Общежитие № ${i.number}`)} />
+                <MobileLowerLayer visible={!mobile_workspace_visible && !selector_visible} >
                     <Bar row>
                         <Text size={1.5} bold >Общежитие</Text>
                     </Bar>
                     <Bar row>
-                        {
-                            dormitories && dormitories.map((item, index) => {
-                                return (
-                                    <Flex row key={index} extra={props => `width: 20vw; height: 27vw; border-radius: 5vw; background: ${props.theme.background.primary}; margin: 2vw;`} >
-                                        <Text size={2} >{item.number}</Text>
-                                    </Flex>
-                                )
-                            })
-                        }
+                        <Button backgroundColor={props => props.theme.background.support} onClick={() => { set_selector_visible(!selector_visible) }} >{dormitories.length && dormitories[0].number}</Button>
                     </Bar>
                 </MobileLowerLayer>
                 <Flex extra={props => `width: 100vw; border-radius: 6vw; background: ${props.theme.background.primary}; position: absolute; bottom: 0; padding-bottom: 8vh;`} >
@@ -349,9 +335,49 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EventSpaces)
 
+let Selector = (props) => {
+    let { visible, ref, onChoose, array } = props
+    return (
+        <PopUpA visible={visible} ref={ref} >
+            <Flex row extra={`height: 10vh; width: 100vw;`} >
+                <Cros width={1} onClick={() => { onChoose() }} />
+                <Text size={1.4} extra={`width: 80%`} >Выберите общежитие</Text>
+            </Flex>
+            {
+                array.map((item, index) => <Text
+                    key={index}
+                    size={1}
+                    extra={props => `height: 6vh; width: 80vw; border-radius: 3vw; &:hover { background: ${convertHex(props.theme.background.support, 0.5)}; };`}
+                    color={props => index === 0 ? props.theme.text.primary : props.theme.text.support}
+                    onClick={() => { onChoose() }}
+                >
+                    {`Общежитие №${item}`}
+                </Text>)
+            }
+        </PopUpA>
+    )
+}
+
+const Cros = styled(Image).attrs({
+    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/cros_black.svg`) : require(`../../assets/images/cros.svg`),
+})``;
+
 const Arrow = styled(Image).attrs({
     src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
 })``;
+
+const PopUpA = styled(PopUp)`
+@media (min-width: 320px) and (max-width: 480px) {
+    width: 96.5vw;
+    height: 50vh;
+    border-radius: 6vw;
+    transition: 0.2s;
+    top: ${props => props.visible ? 50 : 150}vh;
+    box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-start;
+}
+`
 
 const CentredBar = styled(Bar)`
 flex-direction: row;
