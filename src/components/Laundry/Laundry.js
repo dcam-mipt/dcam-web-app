@@ -13,6 +13,7 @@ import BookPopUp from './BookPopUp'
 import BucketPopUp from './BucketPopUp'
 import ReservationsPopUp from './ReservationsPopUp'
 import { Flex, Image, Text, PopUp, convertHex } from '../UIKit/styled-templates'
+import Switcher from '../UIKit/Switcher'
 import Circles from '../UIKit/Circles'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
@@ -50,23 +51,20 @@ let Laundry = (props) => {
     }, [])
     let header = (
         <CalendarHeader>
-            <Button backgroundColor={props => props.theme.accept} only_desktop onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
+            <Button only_desktop backgroundColor={props => props.theme.accept} onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
                 Сегодня
             </Button>
-            <Button disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
+            <Button only_desktop disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
                 Мои стирки
                 <PopUp extra={`top: ${reservationsVisible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible} >
                     <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
                 </PopUp>
             </Button>
-            <Button backgroundColor={props => props.theme.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
+            <Button only_desktop backgroundColor={props => props.theme.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
                 Корзина {selectedSlots.length && `(${selectedSlots.length})`}
                 <PopUp extra={`top: ${bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={bucket_ref} visible={bucket_visible} >
                     <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
                 </PopUp>
-            </Button>
-            <Button backgroundColor={props => props.theme.accept} only_mobile onClick={() => { setMobileCalendar(!mobileCalendar) }} >
-                {mobileCalendar ? `Расписание` : moment(+selectedDay).format(`DD.MM`)}
             </Button>
         </CalendarHeader>
     )
@@ -76,8 +74,24 @@ let Laundry = (props) => {
                 props.laundry
                     ? <Flex>
                         <Wrapper>
+                            <PopUp only_mobile extra={`top: ${reservationsVisible || bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible || bucket_visible} >
+                                <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
+                                <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                            </PopUp>
+                            <Switcher
+                                only_mobile
+                                width={90}
+                                array={[`Мои стирки`, `Расписание`, `Календарь`]}
+                                onChange={(index) => {
+                                    if (index === 0) { setReservationsVisible(!reservationsVisible) }
+                                    if (index > 0) {
+                                        setMobileCalendar(index === 2)
+                                    }
+                                }}
+                                selected={reservationsVisible ? 0 : +mobileCalendar + 1}
+                            />
                             <Calendar mobileCalendar={mobileCalendar} >
-                                <Flex only_desktop > {header} </Flex>
+                                <Flex> {header} </Flex>
                                 {
                                     new Array(4).fill(0).map((week, week_index) => {
                                         return (
@@ -193,7 +207,7 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
         return (
             <Flex extra={``} row>
                 <Flex extra={`width: 30vw;`} row >
-                    <Text size={1} color={props => is_week_end ? props.theme.WARM_ORANGE : null} >
+                    <Text size={1} color={props => is_week_end ? props.theme.WARM_ORANGE : props.theme.text.primary} >
                         {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
                     </Text>
                 </Flex>
@@ -201,7 +215,7 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
                     <Text extra={`margin-right: 2vw;`} >Свободно:</Text>
                     <Text color={color} >{machines_number * 12 - booked}</Text>
                 </Flex>
-                <Flex extra={`width: 5vw;`} ><Image src={require(`../../assets/images/arrow.svg`)} width={1.5} /></Flex>
+                <Flex extra={`width: 5vw;`} ><Arrow width={1.5} /></Flex>
             </Flex>
         )
     }
@@ -227,17 +241,14 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
     )
 }
 
-const TimeNode = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const Arrow = styled(Image).attrs({
+    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
+})``;
+
+const TimeNode = styled(Text)`
 width: 5vw;
-font-size: 0.8vw;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 15vw;
-    font-size: 4vw;
 }`
 
 const Wrapper = styled.div`
@@ -346,7 +357,7 @@ box-sizing: border-box;
 -webkit-box-sizing: border-box;
 width: 8.5vw;
 height: 8.5vw;
-background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? `white` : props.is_weekend ? convertHex(props.theme.background.support, 0.7) : convertHex(props.theme.background.support, 0.5) };
+background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? props.theme.background.primary : props.is_weekend ? convertHex(props.theme.background.support, 0.7) : convertHex(props.theme.background.support, 0.5)};
 border-top-left-radius: ${props => +(props.week_index === 0 && props.day_index === 0) * 1}vw;
 border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index === 6) * 1}vw;
 border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
@@ -360,7 +371,7 @@ cursor: ${props => !props.is_before ? `default` : `pointer`};
     padding: 2vw;
     margin: 1vw;
     border-radius: 4vw;
-    background-color: white;
+    background-color: ${props => props.theme.background.primary};
     border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
 }`
 
@@ -388,8 +399,9 @@ flex-direction: row
 transition: 0.2s
 width: 60vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    background-color: white;
-    height: 8vh;
+    // background-color: white;
+    // height: 8vh;
     width: 100vw;
+    justify-content: center;
 }`
 /*eslint-enable no-unused-vars*/

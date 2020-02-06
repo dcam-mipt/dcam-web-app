@@ -1,6 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import React, { useState, useEffect } from 'react'
 import { Flex, Image, Text, Bar, BarWrapper, PopUp } from './UIKit/styled-templates'
+import Switcher from './UIKit/Switcher'
 import moment from 'moment'
 import Button from './UIKit/Button'
 import axios from 'axios'
@@ -56,9 +57,19 @@ let main = (props) => {
                 <Text color={props => props.theme.text.support} >{user && get_user_status(user.last_seen)}</Text>
             </NameWrapper>
         </Bar>
-        {/* <Bar row >
+        <Bar row >
+            <Text size={1.5} bold >Общежитие</Text>
+        </Bar>
+        <Switcher
+            width={80}
+            reversed={true}
+            array={[`2`, `7`, `12`]}
+            onChange={(index) => { }}
+            selected={0}
+        />
+        <Bar row >
             <CardPopUp />
-        </Bar> */}
+        </Bar>
         <Bar row >
             <Text size={1.5} bold >Оформление</Text>
         </Bar>
@@ -70,19 +81,18 @@ let main = (props) => {
                     <ThemeChooser disabled={props.theme_shift === `system`} dark selected={props.theme === `dark`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`dark`) }} />
                 </Flex>
                 <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Автоматическая смена</Text>
-                <Selector
-                    bottom
-                    left
-                    array={Object.values(mvConsts.theme_shift)}
-                    selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
-                    onChange={(i) => {
-                        props.set_theme_shift(Object.keys(mvConsts.theme_shift)[i])
-                    }}
-                    width={10}
-                />
             </Flex>
         </Bar>
-        <Bar row >
+        <Switcher
+            width={80}
+            reversed={true}
+            array={Object.values(mvConsts.theme_shift)}
+            onChange={(index) => {
+                props.set_theme_shift(Object.keys(mvConsts.theme_shift)[index])
+            }}
+            selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
+        />
+        <Bar row extra={`@media (min-width: 320px) and (max-width: 480px) { margin-bottom: 10vh; }`} >
             <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
         </Bar>
     </BarWrapper >

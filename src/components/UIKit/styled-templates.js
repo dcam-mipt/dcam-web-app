@@ -50,7 +50,7 @@ flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
 background-color: ${props => props.theme.background.primary};
-z-index: ${props => props.visible ? 3 : 0};
+z-index: ${props => props.visible ? 4 : 0};
 position: absolute;
 visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
@@ -201,6 +201,39 @@ export const Book = (props) => {
             <Flex extra={`align-items: flex-start; margin-left: 0.5vw;`} >
                 <Text size={1.2} bold >{moment(props.date).format(`HH:mm`)}</Text>
             </Flex>
+        </Wrapper>
+    )
+}
+
+export let Switcher = (props) => {
+    let Wrapper = styled(Flex)`
+    border-radius: 5vw;
+    margin: 4vw;
+    width: 90vw;
+    position: relative;
+    background: ${props => props.theme.background.primary};
+    `
+    const Pointer = styled(Flex)`
+    position: absolute;
+    width: ${(90 - 4 * 3) / 3 + 2}vw;
+    height: 10vw;
+    border-radius: 4vw;
+    left: ${props => ((90 - 4 * 3) / 3 + 4) * props.index + 2}vw;
+    background: ${props => props.theme.background.support};
+    transition: 0.5s;
+    `
+    return (
+        <Wrapper row only_mobile >
+            <Pointer index={props.selected} />
+            {
+                props.array.map((item, index) => {
+                    return (
+                        <Flex key={index} extra={`margin: 4vw; width: ${(90 - 4 * 3) / 3}vw; z-index: 1;`} onClick={() => { props.onChange(index) }} >
+                            <Text>{item}</Text>
+                        </Flex>
+                    )
+                })
+            }
         </Wrapper>
     )
 }

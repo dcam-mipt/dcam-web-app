@@ -167,7 +167,7 @@ border-radius: 1.5vw;
 margin: 0.5vw;
 background: ${props => props.theme.background.primary};
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
-z-index: 3;
+z-index: 4;
 justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 96vw;
