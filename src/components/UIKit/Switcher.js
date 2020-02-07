@@ -76,7 +76,6 @@ top: 10%;
 left: ${props => props.left / 4}vw;
 border-radius: 0.5vw;
 position: absolute;
-transition: 0.5s;
 background: ${props => props.reversed ? props.theme.background.primary : props.theme.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.width}vw;

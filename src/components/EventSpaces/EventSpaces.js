@@ -57,7 +57,11 @@ let EventSpaces = (props) => {
         })
         get_events().then(d => { set_events(d) })
     }, [])
-    useEffect(() => { set_selected_target(targets.length && targets.filter(i => i.dormitory_id === selected_dormitory)[0].objectId) }, [selected_dormitory])
+    useEffect(() => {
+        if (targets.length && targets.filter(i => i.dormitory_id === selected_dormitory).length) {
+            set_selected_target(targets.length && targets.filter(i => i.dormitory_id === selected_dormitory)[0].objectId)
+        }
+    }, [selected_dormitory])
     useEffect(() => { set_details_visible(false, details_id) }, [events])
     let height_ = 6
     return (
@@ -90,9 +94,9 @@ let EventSpaces = (props) => {
                     <Flex only_desktop >
                         <Calendar header={false} month_start={month_start} onSelectDate={(e) => { set_week_start(+moment(e).startOf(`isoWeek`)) }} />
                     </Flex>
-                    <Flex>
+                    <Flex only_desktop >
                         <LeftListItemTitle onClick={() => { set_targets_visible(!targets_visible) }} >
-                            <Text bold size={1}>Юнит</Text>
+                            <Text bold size={1}>Юниты</Text>
                             <Arrow width={1} extra={`transform: rotate(${targets_visible ? 90 : 0}deg);`} />
                         </LeftListItemTitle>
                         <RequestsList>
@@ -108,6 +112,45 @@ let EventSpaces = (props) => {
                                 })
                             }
                         </RequestsList>
+                    </Flex>
+                    <Flex only_mobile >
+                        <LeftListItemTitle onClick={() => { set_targets_visible(!targets_visible) }} >
+                            <Text bold size={1}>Юниты</Text>
+                        </LeftListItemTitle>
+                        <Flex>
+                            {
+                                targets && targets.map((item, index) => {
+                                    let item_visible = targets_visible && item.dormitory_id === selected_dormitory
+                                    return (
+                                        <Flex
+                                            key={index}
+                                            onClick={() => { set_selected_target(item.objectId); set_mobile_workspace_visible(true) }}
+                                            extra={props => `
+                                                flex-direction: row;
+                                                justify-content: space-between;
+                                                width: 74vw;
+                                                padding: ${item_visible ? 8 : 0}vw;
+                                                margin: ${item_visible ? 2 : 0}vw;
+                                                height: ${item_visible ? 35 : 0}vw;
+                                                border-radius: 5vw;
+                                                overflow: hidden;
+                                                background: ${props.theme.background.primary};
+                                                overflow: hidden;
+                                                position: relative;
+                                                box-shadow: 0 0vw 4vw rgba(0, 0, 0, 0.05);
+                                            `}
+                                        >
+                                            <Image src={require(`../../assets/images/pattern.svg`)} extra={`height: 53vw; position: absolute; right: -4vw; bottom: -4vw;`} />
+                                            <Flex extra={`align-items: flex-start; height: 100%; justify-content: space-between;`} >
+                                                <Text bold size={1} >{item.name}</Text>
+                                                <Image width={3} src={item.avatar.url} extra={props => `background: ${convertHex(props.theme.background.secondary, 0.5)}; border-radius: 100%; padding: 5vw;`} />
+                                            </Flex>
+                                            <Flex></Flex>
+                                        </Flex>
+                                    )
+                                })
+                            }
+                        </Flex>
                     </Flex>
                     {
                         is_admin && <Flex>
@@ -174,8 +217,8 @@ let EventSpaces = (props) => {
                                             <Arrow width={1} />
                                         </CalendarArrowWrapper>
                                     </Flex>
-                                    <Flex row extra={props => `margin-left: 6vw; width: 10vw; height: 10vw; border-radius: 3vw; background: ${props.theme.background.support};`} onClick={() => { set_mobile_workspace_visible(!mobile_workspace_visible) }} >
-                                        <Arrow width={0.8} extra={`transform: rotate(${mobile_workspace_visible ? `` : `-`}90deg);`} />
+                                    <Flex row extra={props => `margin-left: ${+mobile_workspace_visible * 6}vw; width: ${+mobile_workspace_visible * 10}vw; height: ${+mobile_workspace_visible * 10}vw; border-radius: 3vw; background: ${props.theme.background.support};`} onClick={() => { set_mobile_workspace_visible(!mobile_workspace_visible) }} >
+                                        <Arrow width={+mobile_workspace_visible * 0.8} extra={`transform: rotate(${mobile_workspace_visible ? `` : `-`}90deg);`} />
                                     </Flex>
                                 </Flex>
                             </Flex>
@@ -247,6 +290,9 @@ let EventSpaces = (props) => {
                         </Flex>
                     </Flex>
                 </RightWrapper>
+                <AddButton visible={mobile_workspace_visible} onClick={() => { set_create_event_visible(true) }} >
+                    <Image width={1.5} src={require(`../../assets/images/plus_white.svg`)} />
+                </AddButton>
             </WorkspaceWrapper>
         </Flex>
     )
@@ -264,6 +310,22 @@ let mapDispatchToProps = (dispatch) => {
     return {}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EventSpaces)
+
+const AddButton = styled(Flex).attrs({
+    only_mobile: true,
+})`
+padding: 4vw;
+width: 8vw;
+height: 8vw;
+border-radius: 5vw;
+position: absolute;
+bottom: 20vw;
+right: ${props => props.visible ? 2 : -20}vw;
+background: ${props => props.theme.accept};
+box-shadow: 0 0vw 4vw ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.theme.accept};
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
 
 const EventsField = styled(Flex)`
 width: 60vw;
@@ -296,29 +358,6 @@ background: ${props => props.selected ? props.theme.accept : props.theme.backgro
     border-radius: 2vw;
 }`
 
-let Selector = (props) => {
-    let { visible, ref, onChoose, array } = props
-    return (
-        <PopUpA visible={visible} ref={ref} >
-            <Flex row extra={`height: 10vh; width: 100vw;`} >
-                <Cros width={1} onClick={() => { onChoose() }} />
-                <Text size={1.4} extra={`width: 80%`} >Выберите общежитие</Text>
-            </Flex>
-            {
-                array.map((item, index) => <Text
-                    key={index}
-                    size={1}
-                    extra={props => `height: 6vh; width: 80vw; border-radius: 3vw; &:hover { background: ${convertHex(props.theme.background.support, 0.5)}; };`}
-                    color={props => index === 0 ? props.theme.text.primary : props.theme.text.support}
-                    onClick={() => { onChoose(index) }}
-                >
-                    {`Общежитие №${item}`}
-                </Text>)
-            }
-        </PopUpA>
-    )
-}
-
 const WorkspaceWrapper = styled(Flex)`
 width: 94vw;
 justify-content: space-around;
@@ -344,19 +383,6 @@ flex-direction: row;
     width: 80vw;
     margin: 4vw;
 }`
-
-const PopUpA = styled(PopUp)`
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 96.5vw;
-    height: 50vh;
-    border-radius: 6vw;
-    transition: 0.2s;
-    top: ${props => props.visible ? 50 : 150}vh;
-    box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: flex-start;
-}
-`
 
 const CentredBar = styled(Bar)`
 flex-direction: row;
@@ -541,6 +567,7 @@ position: relative;
     height: 100%;
     background: transparent;
     filter: blur(${props => +!props.visible * 8}px);
+    transform: scale(${props => props.visible ? 1 : 0.8});
 }`
 
 const RightWrapper = styled(Flex)`
@@ -553,6 +580,8 @@ position: relative;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     border-radius: 6vw;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     position: fixed;
     bottom: 0;
     padding-bottom: 8vh;
