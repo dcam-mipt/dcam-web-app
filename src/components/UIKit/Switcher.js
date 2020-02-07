@@ -19,7 +19,7 @@ let Switcher = (props) => {
                     return (
                         <Variant
                             key={index}
-                            onClick={() => { onChange(index) }}
+                            onClick={() => { onChange(index); window.navigator.vibrate(20) }}
                             {...props}
                             width={width / array.length}
                             reversed={props.reversed}

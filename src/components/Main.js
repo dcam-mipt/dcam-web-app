@@ -87,7 +87,7 @@ let Main = (props) => {
     if (axios_is_ready) {
         return (
             <HashRouter>
-                <PopUp extra={`bottom: ${dormitoryVisible ? 15 : 18}vh; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={dormitoryRef} visible={dormitoryVisible} >
+                <PopUp extra={`top: ${dormitoryVisible ? 12 : 15}vh; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={dormitoryRef} visible={dormitoryVisible} >
                     <DormitoryPopUp />
                 </PopUp>
                 <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={profileVisible} >
@@ -95,31 +95,19 @@ let Main = (props) => {
                 </PopUp>
                 <Wrapper>
                     <Menu>
-                        <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
+                        <Flex only_desktop >
+                            <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
+                            <DormitoryButton error={props.selected_dormitory === 0} onClick={() => { setDormitoryVisible(true) }} >
+                                <Flex>
+                                    <Text color={`white`} bold size={1} >{props.selected_dormitory === 0 ? `!` : props.selected_dormitory}</Text>
+                                </Flex>
+                            </DormitoryButton>
+                        </Flex>
                         <Flex>
                             {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
                             <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                         </Flex>
-                        <Flex>
-                            <Flex extra={props => `
-                                width: 3vw;
-                                height: 3vw;
-                                background: ${convertHex(props.theme.accept, 0.3)};
-                                cursor: pointer;
-                                border-radius: 1vw;
-                                > * {
-                                    width: 2.5vw;
-                                    height: 2.5vw;
-                                    background: ${props.theme.accept};
-                                    border-radius: ${2.5 / 3}vw;
-                                }
-                            `} >
-                                <Flex>
-                                    <Text color={`white`} >{props.selected_dormitory}</Text>
-                                </Flex>
-                            </Flex>
-                            <MenuItemImage only_desktop onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
-                        </Flex>
+                        <MenuItemImage only_desktop onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                     </Menu>
                     <Workspace blur={dormitoryVisible || profileVisible} >
                         <Switch>
@@ -177,6 +165,21 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
+
+const DormitoryButton = styled(Flex)`
+width: 3vw;
+height: 3vw;
+background: ${props => convertHex(props.error ? props.theme.WARM_ORANGE : props.theme.yellow, 0.3)};
+cursor: pointer;
+border-radius: 1vw;
+&:hover { transform: scale(1.2); }
+> * {
+    width: 2.25vw;
+    height: 2.25vw;
+    background: ${props => props.error ? props.theme.WARM_ORANGE : props.theme.yellow};
+    border-radius: ${2.25 / 3}vw;
+}
+`
 
 const Wrapper = styled(Flex)`
 flex-direction: row;

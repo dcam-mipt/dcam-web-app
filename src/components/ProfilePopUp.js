@@ -49,6 +49,7 @@ let main = (props) => {
             <Bar row >
                 <Text size={1.5} bold >Общежитие</Text>
             </Bar>
+            <ErrorText bold error={selected_dormitory === null} >Выберите общежитие</ErrorText>
             <Switcher
                 width={80}
                 reversed={true}
@@ -125,6 +126,15 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
+
+const ErrorText = styled(Text).attrs({
+    bold: true,
+    color: props => props.theme.WARM_ORANGE
+})`
+@media (min-width: 320px) and (max-width: 480px) {
+    font-size: ${props => props.error ? 4 : 0.0001}vw;
+}
+`
 
 const NameWrapper = styled(Flex)`
 padding-left: 1vw;

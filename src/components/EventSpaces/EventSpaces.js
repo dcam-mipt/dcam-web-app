@@ -50,7 +50,10 @@ let EventSpaces = (props) => {
     useEffect(() => {
         get_targets().then(d => {
             set_targets(d)
-            set_selected_target(d.filter(i => i.dormitory_id === selected_dormitory)[0].objectId)
+            if (d.filter(i => i.dormitory_id === selected_dormitory).length) {
+                set_selected_target(d.filter(i => i.dormitory_id === selected_dormitory)[0].objectId)
+            }
+
         })
         get_events().then(d => { set_events(d) })
     }, [])

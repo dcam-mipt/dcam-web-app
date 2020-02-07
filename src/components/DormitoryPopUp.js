@@ -30,11 +30,12 @@ let get_user_status = (timestamp) => {
 
 
 let main = (props) => {
-    let { user, signOut, dormitories, selected_dormitory, set_selected_dormitory } = props
+    let { dormitories, selected_dormitory, set_selected_dormitory } = props
     return <BarWrapper>
         <Bar row >
             <Text size={1.5} bold >Общежитие</Text>
         </Bar>
+        <ErrorText error={selected_dormitory === null} >Выберите общежитие</ErrorText>
         <Switcher
             width={80}
             reversed={true}
@@ -73,27 +74,11 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
 
-const NameWrapper = styled(Flex)`
-padding-left: 1vw;
-align-items: flex-start;
-@media (min-width: 320px) and (max-width: 480px) {
-    padding-left: 5vw;
-}`
-
-const ThemeChooser = styled(Flex)`
-width: 4vw;
-height: 4vw;
-border-radius: 1vw;
-background: ${props => props.light ? mvConsts.light.background.secondary : mvConsts.dark.background.secondary};
-border: 0.2vw solid ${props => props.disabled ? `transparent` : props.selected ? props.theme.lightblue : props.light ? mvConsts.light.background.support : mvConsts.dark.background.support};
-margin: 0.5vw;
-${props => props.disabled ? null : `&:hover { transform: scale(1.02) rotate(2deg) }; cursor: pointer;`}
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 16vw;
-    height: 16vw;
-    border-radius: 4vw;
-    border: 1vw solid ${props => props.disabled ? `transparent` : props.selected ? props.theme.lightblue : props.light ? mvConsts.light.background.support : mvConsts.dark.background.support};
-    margin: 2vw;
-}`
+const ErrorText = styled(Text).attrs({
+    bold: true,
+    color: props => props.theme.WARM_ORANGE
+})`
+font-size: ${props => props.error ? 0.8 : 0.0001}vw;
+`
 
 /*eslint-enable no-unused-vars*/
