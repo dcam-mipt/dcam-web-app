@@ -31,7 +31,7 @@ let useSlots = (initialIsVisible) => {
 }
 
 let cutter = (s) => s.length > 11 ? s.substring(0, 8) + `...` : s
-let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Laundry = (props) => {
     let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
@@ -178,8 +178,8 @@ let Laundry = (props) => {
 
 let mapStateToProps = (state) => {
     return {
-        machines: state.machines.machines,
-        laundry: state.laundry.laundry,
+        machines: state.machines.machines.filter(i => i.dormitory_id === state.dormitories.selected_dormitory),
+        laundry: state.laundry.laundry === null ? null : state.laundry.laundry === null ? null : state.laundry.laundry.filter(i => state.machines.machines.filter(j => j.objectId === i.machine_id).map(i => i.dormitory_id)[0] === state.dormitories.selected_dormitory),
         user: state.user.user,
         is_admin: state.user.is_admin,
     }

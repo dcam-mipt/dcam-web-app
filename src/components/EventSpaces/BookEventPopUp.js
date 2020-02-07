@@ -47,7 +47,7 @@ let BookEventPopUp = (props) => {
     useEffect(() => {
         if (event) {
             set_loading(true)
-            axios.get(`https://dcam.pro/api/users/get_user/${event.user_id}`)
+            axios.get(`${mvConsts.api}/users/get_user/${event.user_id}`)
                 .then((d) => { set_owner_data(d.data); set_loading(false) })
                 .catch((d) => { console.log(d) })
         } else {

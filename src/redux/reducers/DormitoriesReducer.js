@@ -2,16 +2,22 @@
 import types from '../ActionTypes.js'
 
 const initialState = {
-    laundry: null,
+    dormitories: [],
+    selected_dormitory: localStorage.getItem(`selected_dormitory`),
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
 
-        case types.SET_LAUNDRY:
+        case types.SET_DORMITORIES:
             return {
                 ...state,
-                laundry: action.data,
+                dormitories: action.data,
+            };
+        case types.SET_SELECTED_DORMITORY:
+            return {
+                ...state,
+                selected_dormitory: action.data,
             };
 
         default:

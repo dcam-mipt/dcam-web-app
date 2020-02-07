@@ -22,7 +22,7 @@ let get_user_status = (timestamp) => {
 
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 let calc_hours = (timestamp) => +(((+moment(timestamp).tz(`Europe/Moscow`) - +moment().tz(`Europe/Moscow`)) / 3600000 + ``).split(`.`)[0])
-let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
     let { setBookVisible } = props
@@ -31,7 +31,7 @@ let main = (props) => {
     useEffect(() => {
         if (props.selectedBook) {
             setLoading(true)
-            axios.get(`https://dcam.pro/api/users/get_user/${props.selectedBook.user_id}`)
+            axios.get(`${mvConsts.api}/users/get_user/${props.selectedBook.user_id}`)
                 .then((d) => { setOwnerData(d.data); setLoading(false) })
                 .catch((d) => { console.log(d) })
         }
@@ -79,7 +79,7 @@ let main = (props) => {
                                         src={require(`../../assets/images/money.svg`)}
                                         width={2}
                                         onClick={async () => {
-                                            await axios.get(`https://dcam.pro/api/laundry/unbook/${props.selectedBook.objectId}`)
+                                            await axios.get(`${mvConsts.api}/laundry/unbook/${props.selectedBook.objectId}`)
                                             setBookVisible(false)
                                             get_laundry().then((d) => { props.setLaundry(d.data) })
                                         }}

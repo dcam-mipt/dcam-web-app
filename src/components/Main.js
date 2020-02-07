@@ -5,18 +5,20 @@ import { connect } from 'react-redux'
 import userActions from '../redux/actions/UserActions'
 import uiActions from '../redux/actions/UiActions'
 import machinesActions from '../redux/actions/MachinesActions'
+import dormitoryActions from '../redux/actions/DormitoryActions'
 import laundryActions from '../redux/actions/LaundryActions'
 import Laundry from './Laundry/Laundry'
 // import EventSpaces from './EventSpaces/EventSpaces'
-import EventSpaces from './EventSpaces/EventSpaces_'
+import EventSpaces from './EventSpaces/EventSpaces'
 import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
 import useComponentVisible from './UIKit/useComponentVisible'
 import AdminTools from './AdminTools/AdminTools';
 import GoogleAPI from '../API/GoogleAPI'
-import { Flex, Image, Text, PopUp } from './UIKit/styled-templates'
+import { Flex, Image, Text, PopUp, convertHex } from './UIKit/styled-templates'
 import ProfilePopUp from './ProfilePopUp';
+import DormitoryPopUp from './DormitoryPopUp';
 import CardPopUp from './CardPopUp';
 import { HashRouter, BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 
@@ -44,17 +46,19 @@ let screens = [
     },
 ]
 
-let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_machines = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_machines = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/machines/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_my_roles = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/roles/get_my_roles/`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/balance/get_my_balance`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_dormitories = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/dormitory/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Main = (props) => {
     let [axios_is_ready, set_axios_is_ready] = useState(false)
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
+    let [dormitoryRef, dormitoryVisible, setDormitoryVisible] = useComponentVisible(false);
     let signOut = () => new Promise((resolve, reject) => {
         props.setToken(undefined);
-        axios.get(`https://dcam.pro/api/auth/sign_out`)
+        axios.get(`${mvConsts.api}/auth/sign_out`)
             .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
     })
@@ -62,15 +66,16 @@ let Main = (props) => {
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
         set_axios_is_ready(true)
-        axios.get(`https://dcam.pro/api/user/get_my_info`)
+        axios.get(`${mvConsts.api}/user/get_my_info`)
             .then((d) => {
                 props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
-                axios.post(`https://dcam.pro/api/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
+                axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
 
                 get_machines().then((d) => { props.setMachines(d.data) })
                 get_laundry().then((d) => { props.setLaundry(d.data) })
                 get_my_roles().then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
                 get_my_balance().then((d) => { props.setBalance(+d.data) })
+                get_dormitories().then(d => { props.setDormitories(d.data) })
             })
             .catch((d) => { signOut() })
         return () => { axios.defaults.headers.common.Authorization = undefined }
@@ -82,19 +87,41 @@ let Main = (props) => {
     if (axios_is_ready) {
         return (
             <HashRouter>
+                <PopUp extra={`bottom: ${dormitoryVisible ? 15 : 18}vh; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={dormitoryRef} visible={dormitoryVisible} >
+                    <DormitoryPopUp />
+                </PopUp>
+                <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={profileVisible} >
+                    <ProfilePopUp signOut={signOut} />
+                </PopUp>
                 <Wrapper>
-                    <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={profileVisible} >
-                        <ProfilePopUp signOut={signOut} />
-                    </PopUp>
                     <Menu>
                         <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
                         <Flex>
                             {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
                             <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                         </Flex>
-                        <MenuItemImage only_desktop onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
+                        <Flex>
+                            <Flex extra={props => `
+                                width: 3vw;
+                                height: 3vw;
+                                background: ${convertHex(props.theme.accept, 0.3)};
+                                cursor: pointer;
+                                border-radius: 1vw;
+                                > * {
+                                    width: 2.5vw;
+                                    height: 2.5vw;
+                                    background: ${props.theme.accept};
+                                    border-radius: ${2.5 / 3}vw;
+                                }
+                            `} >
+                                <Flex>
+                                    <Text color={`white`} >{props.selected_dormitory}</Text>
+                                </Flex>
+                            </Flex>
+                            <MenuItemImage only_desktop onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
+                        </Flex>
                     </Menu>
-                    <Workspace>
+                    <Workspace blur={dormitoryVisible || profileVisible} >
                         <Switch>
                             <Route path="/" exact component={Laundry} />
                             {
@@ -118,6 +145,7 @@ let mapStateToProps = (state) => {
         main_screen: state.ui.main_screen,
         balance: state.user.balance,
         user: state.user.user,
+        selected_dormitory: state.dormitories.dormitories.length ? state.dormitories.dormitories.filter(i => i.objectId === state.dormitories.selected_dormitory).length && state.dormitories.dormitories.filter(i => i.objectId === state.dormitories.selected_dormitory)[0].number : null,
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -142,6 +170,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         setBalance: (data) => {
             return dispatch(userActions.setBalance(data))
+        },
+        setDormitories: (data) => {
+            return dispatch(dormitoryActions.setDormitories(data))
         },
     }
 }
@@ -205,6 +236,7 @@ const Workspace = styled(Flex)`
 width: 94vw;
 height: 100vh;
 overflow; hidden;
+filter: blur(${props => +props.blur * 8}px);
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;

@@ -26,6 +26,7 @@ export default (state = initialState, action) => {
                 ...state,
                 theme_shift: action.data,
             };
+        
 
         default:
             return state;

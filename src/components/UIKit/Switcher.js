@@ -11,7 +11,7 @@ let Switcher = (props) => {
         >
             <Pointer
                 left={width / array.length * selected + 1.2}
-                width={width / array.length}
+                width={selected >= 0 ? width / array.length : 0}
                 reversed={props.reversed}
             />
             {
@@ -71,7 +71,8 @@ background: ${props => props.reversed ? props.theme.background.secondary : props
 
 const Pointer = styled(Flex)`
 width: ${props => props.width / 4}vw;
-height: 2.5vw;
+height: 80%;
+top: 10%;
 left: ${props => props.left / 4}vw;
 border-radius: 0.5vw;
 position: absolute;
@@ -79,7 +80,6 @@ transition: 0.5s;
 background: ${props => props.reversed ? props.theme.background.primary : props.theme.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: ${props => props.width}vw;
-    height: 10vw;
     left: ${props => props.left}vw;
     border-radius: 2vw;
 }

@@ -12,8 +12,8 @@ import laundryActions from '../../redux/actions/LaundryActions'
 
 let days_of_week_short = [`пн`, `вт`, `ср`, `чт`, `пт`, `сб`, `вс`]
 let calc_hours = (timestamp) => +(((+moment(timestamp).tz(`Europe/Moscow`) - +moment().tz(`Europe/Moscow`)) / 3600000 + ``).split(`.`)[0])
-let get_laundry = () => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
-let get_history = (user_id) => new Promise((resolve, reject) => { axios.get(`https://dcam.pro/api/laundry/get_users_history/${user_id}`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_laundry = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
+let get_history = (user_id) => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get_users_history/${user_id}`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
     let { my_reservations, setSelectedDay, setSelectedBook, setBookVisible, setReservationsVisible } = props
@@ -40,7 +40,7 @@ let main = (props) => {
                             }} >
                                 <MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle>
                                 <Flex extra={`width: 10%;`} row pointer onClick={async () => {
-                                    await axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`)
+                                    await axios.get(`${mvConsts.api}/laundry/unbook/${i.objectId}`)
                                     get_laundry().then((d) => { props.setLaundry(d.data) })
                                 }} >
                                     <MarginWrapper><Image src={require(`../../assets/images/money.svg`)} width={1.5} /></MarginWrapper>
@@ -59,7 +59,7 @@ let main = (props) => {
                             <Book key={index} date={i.timestamp} title={`Стирка`} image={require(`../../assets/images/laundry_selected.svg`)}>
                                 <MachineCircle>{props.machines.map(i => i.objectId).indexOf(i.machine_id) + 1}</MachineCircle>
                                 <Flex extra={`width: 10%;`} row pointer onClick={async () => {
-                                    await axios.get(`https://dcam.pro/api/laundry/unbook/${i.objectId}`)
+                                    await axios.get(`${mvConsts.api}/laundry/unbook/${i.objectId}`)
                                     get_laundry().then((d) => { props.setLaundry(d.data) })
                                 }} >
                                     <MarginWrapper><Image src={require(`../../assets/images/money.svg`)} width={1.5} /></MarginWrapper>

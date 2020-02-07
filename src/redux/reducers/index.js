@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import UIReducer from './UIReducer.js';
 import UserReducer from './UserReducer.js';
 import MachinesReducer from './MachinesReducer';
+import DormitoriesReducer from './DormitoriesReducer';
 import LaundryReducer from './LaundryReducer';
 
 export const reducer = combineReducers({
@@ -11,5 +12,6 @@ export const reducer = combineReducers({
     user: UserReducer,
     machines: MachinesReducer,
     laundry: LaundryReducer,
+    dormitories: DormitoriesReducer,
 });
 /*eslint-enable no-unused-vars*/

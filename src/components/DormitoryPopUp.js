@@ -33,68 +33,15 @@ let main = (props) => {
     let { user, signOut, dormitories, selected_dormitory, set_selected_dormitory } = props
     return <BarWrapper>
         <Bar row >
-            <Text size={1.5} bold >Профиль</Text>
+            <Text size={1.5} bold >Общежитие</Text>
         </Bar>
-        <Bar row >
-            <Image src={user && user.avatar} width={3} round />
-            <NameWrapper>
-                <Flex row>
-                    <Text>{user && user.username.split(`@`)[0]}</Text>
-                    <Text color={props => props.theme.text.support} >@{user && user.username.split(`@`)[1]}</Text>
-                </Flex>
-                <Text color={props => props.theme.text.support} >{user && get_user_status(user.last_seen)}</Text>
-            </NameWrapper>
-        </Bar>
-        <Flex only_mobile >
-            <Bar row >
-                <Text size={1.5} bold >Общежитие</Text>
-            </Bar>
-            <Switcher
-                width={80}
-                reversed={true}
-                array={dormitories.map(i => i.number)}
-                onChange={(index) => { set_selected_dormitory(dormitories[index].objectId) }}
-                selected={dormitories.map(i => i.objectId).indexOf(selected_dormitory)}
-            />
-        </Flex>
-        <Bar row >
-            <CardPopUp />
-        </Bar>
-        <Bar row >
-            <Text size={1.5} bold >Оформление</Text>
-        </Bar>
-        {/* <Bar row>
-            <Flex extra={`align-items: flex-start; width: 100%;`} >
-                <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Тема оформления</Text>
-                <Flex row>
-                    <ThemeChooser disabled={props.theme_shift === `system`} light selected={props.theme === `light`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`light`) }} />
-                    <ThemeChooser disabled={props.theme_shift === `system`} dark selected={props.theme === `dark`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`dark`) }} />
-                </Flex>
-                <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Автоматическая смена</Text>
-            </Flex>
-        </Bar> */}
         <Switcher
             width={80}
             reversed={true}
-            array={[`Светлая`, `Темная`]}
-            onChange={(index) => {
-                let array = [`light`, `dark`]
-                if (props.theme_shift === `disabled`) props.set_theme(array[index])
-            }}
-            selected={[`light`, `dark`].indexOf(props.theme)}
+            array={dormitories.map(i => i.number)}
+            onChange={(index) => { set_selected_dormitory(dormitories[index].objectId) }}
+            selected={dormitories.map(i => i.objectId).indexOf(selected_dormitory)}
         />
-        <Switcher
-            width={80}
-            reversed={true}
-            array={Object.values(mvConsts.theme_shift)}
-            onChange={(index) => {
-                props.set_theme_shift(Object.keys(mvConsts.theme_shift)[index])
-            }}
-            selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
-        />
-        <Bar row extra={`@media (min-width: 320px) and (max-width: 480px) { margin-bottom: 10vh; }`} >
-            <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
-        </Bar>
     </BarWrapper >
 }
 
