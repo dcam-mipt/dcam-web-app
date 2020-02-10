@@ -31,6 +31,7 @@ let get_user_status = (timestamp) => {
 
 let main = (props) => {
     let { user, signOut, dormitories, selected_dormitory, set_selected_dormitory } = props
+    let is_apple_device = navigator.appVersion.toLocaleLowerCase().indexOf(`apple`)
     return <BarWrapper>
         <Bar row >
             <Text size={1.5} bold >Профиль</Text>
@@ -80,19 +81,23 @@ let main = (props) => {
             array={[`Светлая`, `Темная`]}
             onChange={(index) => {
                 let array = [`light`, `dark`]
-                if (props.theme_shift === `disabled`) props.set_theme(array[index])
+                // if (props.theme_shift === `disabled`) props.set_theme(array[index])
+                props.set_theme(array[index])
+                props.set_theme_shift(`disabled`)
             }}
             selected={[`light`, `dark`].indexOf(props.theme)}
         />
-        <Switcher
-            width={80}
-            reversed={true}
-            array={Object.values(mvConsts.theme_shift)}
-            onChange={(index) => {
-                props.set_theme_shift(Object.keys(mvConsts.theme_shift)[index])
-            }}
-            selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
-        />
+        {
+            is_apple_device && <Switcher
+                width={80}
+                reversed={true}
+                array={Object.values(mvConsts.theme_shift)}
+                onChange={(index) => {
+                    props.set_theme_shift(Object.keys(mvConsts.theme_shift)[index])
+                }}
+                selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
+            />
+        }
         <Bar row extra={`@media (min-width: 320px) and (max-width: 480px) { margin-bottom: 10vh; }`} >
             <Button background={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
         </Bar>

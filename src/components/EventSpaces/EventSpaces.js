@@ -214,7 +214,7 @@ let EventSpaces = (props) => {
                             </Flex>
                         </Flex>
                     </TitleRow>
-                    <Flex extra={`width: 100%; height: 90%; display: block; max-height: 90%; overflow-y: scroll; @media (min-width: 320px) and (max-width: 480px) { display: block; max-height: ${+mobile_workspace_visible * 48}vh; opacity: ${+mobile_workspace_visible}; overflow-y: scroll; };`} >
+                    <Flex extra={`width: 100%; height: 90%; display: block; max-height: 90%; overflow-y: scroll; @media (min-width: 320px) and (max-width: 480px) { display: block; max-height: ${+mobile_workspace_visible * 50}vh; opacity: ${+mobile_workspace_visible}; overflow-y: scroll; };`} >
                         <Flex row extra={`width: 100%; position: relative;`}>
                             <TimePointer visible={week_start === +moment().startOf(`isoWeek`)} />
                             <Flex extra={`width: 10vw; @media (min-width: 320px) and (max-width: 480px) { width: 25vw; }; `}>
@@ -284,7 +284,7 @@ const TargetCard = styled(Flex)`
 flex-direction: row;
 justify-content: space-between;
 width: 74vw;
-padding: ${props => +props.visible * 8}vw;
+padding: ${props => +props.visible * 28}vw;
 margin: ${props => +props.visible * 2}vw;
 height: ${props => +props.visible * 35}vw;
 border-radius: 5vw;
