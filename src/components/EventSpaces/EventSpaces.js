@@ -532,7 +532,7 @@ position: relative;
     bottom: 0;
     padding-bottom: 8vh;
     height: auto;
-    box-shadow: 0 0 1vw ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.is_before ? `transparent` : props.accepted ? props.theme.accept : props.theme.yellow};
+    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2);
 }`
 
 /*eslint-enable no-unused-vars*/
