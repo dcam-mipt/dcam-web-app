@@ -284,7 +284,7 @@ const TargetCard = styled(Flex)`
 flex-direction: row;
 justify-content: space-between;
 width: 74vw;
-padding: ${props => +props.visible * 28}vw;
+padding: ${props => +props.visible * 8}vw;
 margin: ${props => +props.visible * 2}vw;
 height: ${props => +props.visible * 35}vw;
 border-radius: 5vw;
@@ -532,6 +532,7 @@ position: relative;
     bottom: 0;
     padding-bottom: 8vh;
     height: auto;
+    box-shadow: 0 0 1vw ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.is_before ? `transparent` : props.accepted ? props.theme.accept : props.theme.yellow};
 }`
 
 /*eslint-enable no-unused-vars*/
