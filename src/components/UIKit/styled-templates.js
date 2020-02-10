@@ -50,7 +50,7 @@ flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
 background: ${props => props.theme.background.primary};
-z-index: ${props => props.visible ? 5 : 0};
+z-index: ${props => props.visible ? 4 : 0};
 position: absolute;
 visibility: ${props => props.visible ? `visible` : `hidden`}
 opacity: ${props => +props.visible};
