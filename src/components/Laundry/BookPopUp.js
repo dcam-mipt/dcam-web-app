@@ -25,7 +25,7 @@ let calc_hours = (timestamp) => +(((+moment(timestamp).tz(`Europe/Moscow`) - +mo
 let get_laundry = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let main = (props) => {
-    let { setBookVisible } = props
+    let { set_book_visible } = props
     let [owner_data, setOwnerData] = useState(undefined)
     let [loading, setLoading] = useState(false)
     useEffect(() => {
@@ -49,39 +49,44 @@ let main = (props) => {
                             <Image src={require(`../../assets/images/bookmark.svg`)} width={2} />
                             <Text size={1.5} >Запись в стиралку</Text>
                         </Bar> */}
-                        <Form array={[{ type: `title`, text: `Запись в стиралку` }]} />
+                        <Bar row onClick={() => { props.close && props.close() }} >
+                            <Flex only_mobile >
+                                <Arrow only_mobile width={1.5} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
+                            </Flex>
+                            <Text size={1.5} bold >Запись в стиралку</Text>
+                        </Bar>
                         <Bar row >
                             <Image src={owner_data.avatar} width={3} round />
                             <NameWrapper>
                                 <Text size={1} >{props.selectedBook.email.split(`@`)[0]}</Text>
-                                <Text color={props => props.theme.text.support} >{get_user_status(owner_data.last_seen)}</Text>
+                                <Text text_color={props => props.theme.text.support} >{get_user_status(owner_data.last_seen)}</Text>
                             </NameWrapper>
                             <ImageWrapper><Image width={3} /></ImageWrapper>
                         </Bar>
                         <Bar clear >
                             <Flex extra={`width: 100%; `} row >
-                                <Half><Text color={props => props.theme.text.support} >Время</Text></Half>
+                                <Half><Text text_color={props => props.theme.text.support} >Время</Text></Half>
                                 <Half>
-                                    <Text color={props => props.theme.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
+                                    <Text text_color={props => props.theme.text.support} >{days_of_week_short[moment(props.selectedBook.timestamp).isoWeekday() - 1].toUpperCase()} {moment(props.selectedBook.timestamp).format(`DD.MM.YY`)}</Text>
                                     <Text size={1.4} >{moment(props.selectedBook.timestamp).format(`HH:mm`)}</Text>
                                 </Half>
                             </Flex>
                             <Flex extra={`width: 100%; `} row >
-                                <Half><Text color={props => props.theme.text.support} >Машина</Text></Half>
+                                <Half><Text text_color={props => props.theme.text.support} >Машина</Text></Half>
                                 <Half><MachineCircle>{props.machines.map(i => i.objectId).indexOf(props.selectedBook.machine_id) + 1}</MachineCircle></Half>
                             </Flex>
                             {
                                 (props.is_admin || props.user.objectId === props.selectedBook.user_id) &&
                                 <Flex extra={`width: 100%; `} row >
-                                    <Half><Text color={props => props.theme.text.support} >{calc_hours(props.selectedBook.timestamp) > 2 ? `Продать` : `Удалить`}</Text></Half>
+                                    <Half><Text text_color={props => props.theme.text.support} >{calc_hours(props.selectedBook.timestamp) > 2 ? `Продать` : `Удалить`}</Text></Half>
                                     <Half><Image
                                         pointer
                                         src={require(`../../assets/images/money.svg`)}
                                         width={2}
                                         onClick={async () => {
                                             await axios.get(`${mvConsts.api}/laundry/unbook/${props.selectedBook.objectId}`)
-                                            setBookVisible(false)
-                                            get_laundry().then((d) => { props.setLaundry(d.data) })
+                                            set_book_visible(false)
+                                            get_laundry().then((d) => { props.set_laundry(d.data) })
                                         }}
                                     /></Half>
                                 </Flex>
@@ -89,7 +94,6 @@ let main = (props) => {
                         </Bar>
                     </BarWrapper>
             }
-            <ClosePopUp props={props} />
         </Flex>
     )
 }
@@ -102,12 +106,15 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = (dispatch) => {
     return {
-        setLaundry: (data) => {
-            return dispatch(laundryActions.setLaundry(data))
+        set_laundry: (data) => {
+            return dispatch(laundryActions.set_laundry(data))
         },
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
+
+const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
+
 
 const Half = styled(Flex)`
 width: 50%;
@@ -131,17 +138,12 @@ align-items: flex-end;
     width: 35vw;
 }`
 
-const MachineCircle = styled.div`
-display: flex
-justify-content: center
-align-items: center
-flex-direction: column
-transition: 0.2s
+const MachineCircle = styled(Flex)`
 width: 2vw;
 height: 2vw;
 border-radius: 2vw;
 font-size: 0.8vw;
-background-color: ${props => props.theme.accept};
+background: ${props => props.theme.accept};
 color: white;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 10vw;

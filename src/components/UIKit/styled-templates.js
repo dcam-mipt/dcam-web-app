@@ -49,7 +49,7 @@ justify-content: center;
 flex-direction: column;
 transition: 0.2s;
 border-radius: 1vw;
-background-color: ${props => props.theme.background.primary};
+background: ${props => props.theme.background.primary};
 z-index: ${props => props.visible ? 4 : 0};
 position: absolute;
 visibility: ${props => props.visible ? `visible` : `hidden`}
@@ -73,7 +73,7 @@ box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 
 export const Text = styled(Flex)`
 font-size: ${props => props.size ? props.size : 0.8}vw;
-color: ${props => props.color ? props.color : props.theme.text.primary};
+color: ${props => props.text_color ? props.text_color : props.theme.text.primary};
 font-family: ${props => props.bold ? `Bold` : `Regular`};
 @media (min-width: 320px) and (max-width: 480px) {
     font-size: ${props => (props.size ? props.size : 0.8) * 4}vw;
@@ -163,26 +163,26 @@ export const Book = (props) => {
     margin: 0.25vw;
     padding: 0.75vw;
     flex-direction: row;
-    border: 0.2vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : props.theme.background.secondary}
+    // border: 0.2vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : props.theme.background.secondary}
     justify-content: space-between;
-    &:hover {
-        transform: scale(1.05)
-    }
+    // &:hover {
+    //     transform: scale(1.05)
+    // }
     @media (min-width: 320px) and (max-width: 480px) {
         width: 92vw;
         height: 20vw;
         padding: 2vw;
         margin: 1vw;
         border-radius: 4vw;
-        background-color: white;
-        border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
+        // border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
     }`
     const ImageWrapper = styled(Flex)`
     padding: 0.75vw;
     border-radius: 1vw;
     background: ${props => convertHex(props.theme.accept, 0.75)};
     @media (min-width: 320px) and (max-width: 480px) {
-        
+        padding: 3vw;
+        border-radius: 4vw;
     }`
     return (
         <Wrapper {...props} >
@@ -190,17 +190,17 @@ export const Book = (props) => {
                 <ImageWrapper>
                     <Image width={1.5} src={props.image} />
                 </ImageWrapper>
-                <Flex extra={`align-items: flex-start; margin-left: 1.5vw;`} >
+                <Flex extra={`align-items: flex-start; margin: 0 1vw 0 1vw; @media (min-width: 320px) and (max-width: 480px) { margin: 0 6vw 0 6vw; };`} >
                     <Text size={1} bold >{props.title}</Text>
-                    <Text color={props => props.theme.text.support} >{moment(props.date).format(`DD.MM.YY`)}</Text>
+                    <Text text_color={props => props.theme.text.support} >{moment(props.date).format(`DD.MM.YY`)}</Text>
                 </Flex>
+            </Flex>
+            <Flex extra={`align-items: flex-start;`} >
+                <Text size={1.2} bold >{moment(props.date).format(`HH:mm`)}</Text>
             </Flex>
             {
                 props.children
             }
-            <Flex extra={`align-items: flex-start; margin-left: 0.5vw;`} >
-                <Text size={1.2} bold >{moment(props.date).format(`HH:mm`)}</Text>
-            </Flex>
         </Wrapper>
     )
 }
@@ -238,7 +238,7 @@ export let Switcher = (props) => {
     )
 }
 
-export const Rotor = styled.div`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
+export const Rotor = styled(Flex)`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
 
 export const ClosePopUp = (props) => <Text onClick={() => { if (props.props.close !== undefined) { props.props.close() } }} size={1.5} only_mobile extra={`width: 85vw; align-items: flex-start; margin-top: 10%; cursor: pointer;`} >Закрыть</Text>
 /*eslint-enable no-unused-vars*/

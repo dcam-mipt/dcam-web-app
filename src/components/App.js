@@ -28,9 +28,9 @@ let GoogleWrapper = (props) => {
 
 let Sorry = () => {
     return (
-        <Flex extra={`width: 100vw; height: 100vh; background-color: ${props => props.theme.purple}`} >
-            <Text color={`white`} size={1.2} > Извините, сайт временно находится на обслуживании, зайдите утречком ещё раз.</Text>
-            <Text color={`white`} bold extra={`margin-top: 2vh;`} >{moment().startOf(`day`).format(`DD.MM.YY`)}</Text>
+        <Flex extra={`width: 100vw; height: 100vh; background: ${props => props.theme.purple}`} >
+            <Text text_color={`white`} size={1.2} > Извините, сайт временно находится на обслуживании, зайдите утречком ещё раз.</Text>
+            <Text text_color={`white`} bold extra={`margin-top: 2vh;`} >{moment().startOf(`day`).format(`DD.MM.YY`)}</Text>
         </Flex>
     )
 }
@@ -49,7 +49,7 @@ let LoadingPage = (props) => {
 const LoadingPageWrapper = styled(Flex)`
 width: 100vw;
 height: 100vh;
-background-color: ${props => props.theme.background.primary};
+background: ${props => props.theme.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`

@@ -31,23 +31,23 @@ width: ${props => props.short ? 6.25 : 15}vw;
 height: ${props => +props.visible}vw;
 padding: ${props => +props.visible}vw;
 border-radius: 0.5vw;
-background-color: ${props => props.shaped ? `transparent` : props.disabled ? props.theme.background.support : props.backgroundColor ? props.backgroundColor : props.theme.yellow};
+background: ${props => props.shaped ? `transparent` : props.disabled ? props.theme.background.support : props.background ? props.background : props.theme.yellow};
 margin: ${props => +props.visible / 6}vw;
-color: ${props => props.shaped ? props.backgroundColor : `white`};
+color: ${props => props.shaped ? props.background : `white`};
 font-size: 0.8vw;
 cursor: ${props => props.disabled ? null : `pointer`};
 opacity: ${props => +props.visible};
 transition: 0.2s;
-border: ${props => +props.shaped * 0.1}vw solid ${props => props.backgroundColor}
+border: ${props => +props.shaped * 0.1}vw solid ${props => props.background}
 outline-offset: 0.25vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    width: ${props => props.short ? 33 : 68}vw;
-    height: ${props => +props.visible * 12}vw;
-    padding: ${props => +props.visible * 0.4}vw;
+    width: ${props => props.float ? null :  props.short ? 27 : 68}vw;
+    height: ${props => +props.visible * 5}vw;
+    padding: ${props => +props.visible * 4}vw;
     border-radius: 2vw;
     margin: ${props => +props.visible}vw;
-    border: ${props => +props.shaped * 0.4}vw solid ${props => props.backgroundColor}
     font-size: 4vw;
+    border: ${props => +props.shaped * 0.4}vw solid ${props => props.background}
     display: ${props => props.only_desktop ? `none` : `flex`}
 }
 `

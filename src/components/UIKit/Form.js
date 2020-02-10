@@ -29,7 +29,7 @@ let Form = (props) => {
                         case `title`: return <Text key={question_index} bold size={1.5} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >{question.text}</Text>
                         case `sub_title`: return <Text key={question_index} size={1} extra={`margin: 0.5vw 0 0.5vw 0.25vw;`} >{question.text}</Text>
                         case `select`: return <Selector width={2} key={question_index} array={question.array} selected={question.array.indexOf(question.value) >= 0 ? question.array.indexOf(question.value) : 0} onChange={(new_value) => { question.value = question.array[new_value]; set_temp(!temp) }} />
-                        case `button`: return <Button key={question_index} disabled={question.disabled} backgroundColor={question.color} onClick={() => { question.action() }} >{question.text}</Button>
+                        case `button`: return <Button key={question_index} disabled={question.disabled} background={question.color} onClick={() => { question.action() }} >{question.text}</Button>
                         case `picture`: return <input key={question_index} style={{ margin: `1vw` }} type="file" id="input" multiple onChange={(e) => {
                             let file = document.querySelector('input[type=file]').files[0];
                             let reader = new FileReader();

@@ -80,7 +80,7 @@ const Box = styled(Flex)`
 padding: 1vw;
 width: ${props => props.width}vw;
 border-radius: 0.5vw;
-background-color: ${props => props.theme.backgroundColor ? props.theme.backgroundColor : props.theme.background.secondary};
+background: ${props => props.theme.backgroundColor ? props.theme.backgroundColor : props.theme.background.secondary};
 margin: 0.25vw;
 color: ${props => props.color ? props.color : props.theme.text.primary};
 cursor: pointer;

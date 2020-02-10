@@ -60,13 +60,13 @@ let BookEventPopUp = (props) => {
                 {
                     (is_admin && event && !event.accepted) && <PopUp extra={`top: -1.5vw; left: ${visible ? 20 : 18}vw;`} ref={tools_ref} visible={visible} >
                         <Flex row extra={`margin: -1vw; width: 4.5vw; justify-content: space-between;`} >
-                            <LikeButton visible={visible} color={props => props.theme.accept} onClick={async () => {
+                            <LikeButton visible={visible} text_color={props => props.theme.accept} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
                                 props.onDelete && props.onDelete()
                             }} >
                                 <Image src={require(`../../assets/images/like.svg`)} width={1} />
                             </LikeButton>
-                            <LikeButton visible={visible} color={props => props.theme.WARM_ORANGE} onClick={async () => {
+                            <LikeButton visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >
@@ -79,7 +79,7 @@ let BookEventPopUp = (props) => {
             <Flex extra={`justify-content; flex-start;`} >
                 <Bar row onClick={() => { props.close && props.close() }} >
                     <Flex only_mobile >
-                        <Arrow only_mobile width={2} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
+                        <Arrow only_mobile width={1.5} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
                     </Flex>
                     <Text size={1.5} bold >Запись</Text>
                 </Bar>
@@ -90,13 +90,13 @@ let BookEventPopUp = (props) => {
                 {
                     (is_admin && event && !event.accepted) && <Bar row >
                         <Flex only_mobile row extra={`width: 18vw; justify-content: space-between;`} >
-                            <LikeButton visible={visible} color={props => props.theme.accept} onClick={async () => {
+                            <LikeButton visible={visible} text_color={props => props.theme.accept} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
                                 props.onDelete && props.onDelete()
                             }} >
                                 <Image src={require(`../../assets/images/like.svg`)} width={1} />
                             </LikeButton>
-                            <LikeButton visible={visible} color={props => props.theme.WARM_ORANGE} onClick={async () => {
+                            <LikeButton visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >
@@ -109,18 +109,18 @@ let BookEventPopUp = (props) => {
                     <Image src={owner_data && owner_data.avatar} round width={3} />
                     <NameWrapper>
                         <Text size={1} >{owner_data && owner_data.username.split(`@`)[0]}</Text>
-                        <Text color={props => props.theme.text.support} >{owner_data && get_user_status(owner_data.last_seen)}</Text>
+                        <Text text_color={props => props.theme.text.support} >{owner_data && get_user_status(owner_data.last_seen)}</Text>
                     </NameWrapper>
                     <ImageWrapper><Image width={3} /></ImageWrapper>
                 </Bar>
                 <Bar row >
                     <Flex extra={`width: 45%;`} >
-                        <Text color={props => props.theme.text.support} >{event && moment(event.start_timestamp).format(`DD.MM.YY`) + ` ` + mvConsts.weekDays.short[moment(event.start_timestamp).isoWeekday() - 1]}</Text>
+                        <Text text_color={props => props.theme.text.support} >{event && moment(event.start_timestamp).format(`DD.MM.YY`) + ` ` + mvConsts.weekDays.short[moment(event.start_timestamp).isoWeekday() - 1]}</Text>
                         <Text bold size={2} >{event && moment(event.start_timestamp).format(`HH:mm`)}</Text>
                     </Flex>
                     <Text bold size={2} extra={`width: 10%; margin-top: 0.8vw;`} >-</Text>
                     <Flex extra={`width: 45%;`} >
-                        <Text color={props => props.theme.text.support} >{event && moment(event.end_timestamp).format(`DD.MM.YY`) + ` ` + mvConsts.weekDays.short[moment(event.end_timestamp).isoWeekday() - 1]}</Text>
+                        <Text text_color={props => props.theme.text.support} >{event && moment(event.end_timestamp).format(`DD.MM.YY`) + ` ` + mvConsts.weekDays.short[moment(event.end_timestamp).isoWeekday() - 1]}</Text>
                         <Text bold size={2} >{event && moment(event.end_timestamp).format(`HH:mm`)}</Text>
                     </Flex>
                 </Bar>
@@ -134,13 +134,13 @@ let BookEventPopUp = (props) => {
                     <Text extra={`width: 20%; align-items: flex-start;`} size={1} >{event && event.number_of_people}</Text>
                 </Bar>
                 {
-                    (is_admin || event && event.user_id === my_user_id) && <Flex>
+                    (is_admin || (event && event.user_id) === my_user_id) && <Flex>
                         <CentredBar>
-                            <Button backgroundColor={props => props.theme.WARM_ORANGE} short={event && !event.accepted} onClick={async () => {
+                            <Button background={props => props.theme.WARM_ORANGE} short={event && !event.accepted} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >Удалить</Button>
-                            {event && !event.accepted && <Button backgroundColor={props => props.theme.accept} shaped onClick={() => { event && props.onEdit && props.onEdit(event.objectId) }} >Редактировать</Button>}
+                            {event && !event.accepted && <Button background={props => props.theme.accept} shaped onClick={() => { event && props.onEdit && props.onEdit(event.objectId) }} >Редактировать</Button>}
                         </CentredBar>
                         <Bar row >
                             <Flex extra={`width: 100%;`} >
@@ -163,9 +163,7 @@ let mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps)(BookEventPopUp)
 
-const Arrow = styled(Image).attrs({
-    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
-})``;
+const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
 
 const CentredBar = styled(Bar)`
 flex-direction: row;

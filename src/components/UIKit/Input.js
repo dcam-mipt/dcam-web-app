@@ -20,14 +20,14 @@ const Input = styled.input`
     height: ${props => +props.visible}vw;
     padding: ${props => +props.visible}vw;
     border-radius: 0.5vw;
-    background-color: ${props => props.backgroundColor ? props.backgroundColor : props.theme.background.secondary};
+    background: ${props => props.background ? props.background : props.theme.background.secondary};
     margin: ${props => +props.visible * 0.25}vw;
-    color: ${props => props.color ? props.color : props.theme.text.primary};
+    color: ${props => props.text_color ? props.text_color : props.theme.text.primary};
     font-size: 1vw;
     opacity: ${props => +props.visible};
     transition: visibility 0.2s, opaicty 0.2s, height 0.2s; 
     ::placeholder {
-        color: ${props => props.color ? props.color : props.theme.text.support};
+        color: ${props => props.text_color ? props.text_color : props.theme.text.support};
     }
     @media (min-width: 320px) and (max-width: 480px) {
         width: ${props => props.float ? null :  props.short ? 27 : 68}vw;

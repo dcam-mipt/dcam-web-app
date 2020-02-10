@@ -40,9 +40,9 @@ let main = (props) => {
             <NameWrapper>
                 <Flex row>
                     <Text>{user && user.username.split(`@`)[0]}</Text>
-                    <Text color={props => props.theme.text.support} >@{user && user.username.split(`@`)[1]}</Text>
+                    <Text text_color={props => `${props.theme.text.support}`} >@{user && user.username.split(`@`)[1]}</Text>
                 </Flex>
-                <Text color={props => props.theme.text.support} >{user && get_user_status(user.last_seen)}</Text>
+                <Text text_color={props => `${props.theme.text.support}`} >{user && get_user_status(user.last_seen)}</Text>
             </NameWrapper>
         </Bar>
         <Flex only_mobile >
@@ -94,7 +94,7 @@ let main = (props) => {
             selected={Object.keys(mvConsts.theme_shift).indexOf(props.theme_shift)}
         />
         <Bar row extra={`@media (min-width: 320px) and (max-width: 480px) { margin-bottom: 10vh; }`} >
-            <Button backgroundColor={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
+            <Button background={props => props.theme.WARM_ORANGE} onClick={() => { signOut() }} >Выйти</Button>
         </Bar>
     </BarWrapper >
 }
@@ -127,10 +127,10 @@ let mapDispatchToProps = (dispatch) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(main)
 
-const ErrorText = styled(Text).attrs({
+const ErrorText = styled(Text).attrs(props => ({
     bold: true,
-    color: props => props.theme.WARM_ORANGE
-})`
+    text_color: props.theme.WARM_ORANGE
+}))`
 @media (min-width: 320px) and (max-width: 480px) {
     font-size: ${props => props.error ? 4 : 0.0001}vw;
 }

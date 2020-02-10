@@ -19,7 +19,7 @@ let Switcher = (props) => {
                     return (
                         <Variant
                             key={index}
-                            onClick={() => { onChange(index); window.navigator.vibrate(20) }}
+                            onClick={() => { onChange(index) }}
                             {...props}
                             width={width / array.length}
                             reversed={props.reversed}
@@ -60,12 +60,15 @@ width: ${props => props.width / 4}vw;
 position: relative;
 flex-direction: row;
 padding: 0.25vw;
+z-index: 0;
 background: ${props => props.reversed ? props.theme.background.secondary : props.theme.background.primary};
+border: 0.1vw solid ${props => props.selected < 0 ? props.theme.WARM_ORANGE : `transparent`};
 @media (min-width: 320px) and (max-width: 480px) {
     border-radius: 3vw;
     margin: 4vw;
     width: ${props => props.width}vw;
     padding: 1vw;
+    border: 0.4vw solid ${props => props.selected < 0 ? props.theme.WARM_ORANGE : `transparent`};
 }
 `
 

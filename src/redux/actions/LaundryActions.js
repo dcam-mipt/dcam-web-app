@@ -1,7 +1,7 @@
 /*eslint-disable no-unused-vars*/
 import types from '../ActionTypes.js'
 export default {
-    setLaundry: (data) => {
+    set_laundry: (data) => {
         return {
             type: types.SET_LAUNDRY,
             data: data

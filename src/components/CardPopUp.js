@@ -29,15 +29,15 @@ let main = (props) => {
             <Form array={[{ type: `title`, text: `Баланс` }]} />
             <Bar>
                 <Card>
-                    <Text color={`white`} >Стиралка</Text>
+                    <Text text_color={`white`} >Стиралка</Text>
                     <Flex row >
-                        <Text bold color={`white`} size={1.2} >{balance}</Text>
-                        <Text color={`white`} >р</Text>
+                        <Text bold text_color={`white`} size={1.2} >{balance}</Text>
+                        <Text text_color={`white`} >р</Text>
                     </Flex>
                     <Flex row >
                         <Input
-                            backgroundColor={`rgba(255, 255, 255, 0.5)`}
-                            color={`white`}
+                            background={`rgba(255, 255, 255, 0.5)`}
+                            text_color={`white`}
                             placeholder={`Введите сумму`}
                             short
                             number
@@ -88,7 +88,7 @@ const Card = styled(Flex)`
 width: ${card_width}vw;
 height: ${card_width / 86 * 54}vw;
 border-radius: ${card_width / 20}vw;
-background-color: ${props => props.theme.purple};
+background: ${props => props.theme.purple};
 justify-content: space-around;
 align-items: flex-start;
 > * {

@@ -18,7 +18,7 @@ width: ${3.5 * k}vw
 height: ${2 * k}vw
 border-radius: ${2 * k}vw
 position: relative;
-background-color: ${props => props.checked ? props.theme.accept : props.theme.background.support}
+background: ${props => props.checked ? props.theme.accept : props.theme.background.support}
 cursor: pointer;
 `
 
@@ -29,7 +29,7 @@ position: absolute;
 top: ${0.25 * k}vw;
 left: ${props => (props.checked ? 1.75 : 0.25) * k}vw;
 border-radius: ${1.5 * k}vw
-background-color: ${props => props.theme.background.primary}
+background: ${props => props.theme.background.primary}
 transform: rotate(${props => props.checked ? 0 : 45}deg);
 cursor: pointer;
 `

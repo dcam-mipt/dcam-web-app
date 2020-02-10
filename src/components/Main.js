@@ -72,7 +72,7 @@ let Main = (props) => {
                 axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
 
                 get_machines().then((d) => { props.setMachines(d.data) })
-                get_laundry().then((d) => { props.setLaundry(d.data) })
+                get_laundry().then((d) => { props.set_laundry(d.data) })
                 get_my_roles().then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
                 get_my_balance().then((d) => { props.setBalance(+d.data) })
                 get_dormitories().then(d => { props.setDormitories(d.data) })
@@ -90,7 +90,7 @@ let Main = (props) => {
                 <PopUp extra={`top: ${dormitoryVisible ? 12 : 15}vh; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={dormitoryRef} visible={dormitoryVisible} >
                     <DormitoryPopUp />
                 </PopUp>
-                <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={profileVisible} >
+                <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={props.selected_dormitory < 1 || profileVisible} >
                     <ProfilePopUp signOut={signOut} />
                 </PopUp>
                 <Wrapper>
@@ -99,7 +99,7 @@ let Main = (props) => {
                             <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
                             <DormitoryButton error={props.selected_dormitory === 0} onClick={() => { setDormitoryVisible(true) }} >
                                 <Flex>
-                                    <Text color={`white`} bold size={1} >{props.selected_dormitory === 0 ? `!` : props.selected_dormitory}</Text>
+                                    <Text text_color={`white`} bold size={1} >{props.selected_dormitory === 0 ? `!` : props.selected_dormitory}</Text>
                                 </Flex>
                             </DormitoryButton>
                         </Flex>
@@ -150,8 +150,8 @@ let mapDispatchToProps = (dispatch) => {
         setMachines: (data) => {
             return dispatch(machinesActions.setMachines(data))
         },
-        setLaundry: (data) => {
-            return dispatch(laundryActions.setLaundry(data))
+        set_laundry: (data) => {
+            return dispatch(laundryActions.set_laundry(data))
         },
         setMainScreen: (data) => {
             return dispatch(uiActions.setMainScreen(data))
@@ -165,6 +165,19 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
+
+const Error = styled(Flex).attrs(props => ({
+    only_mobile: true,
+}))`
+position: fixed;
+top: 0;
+width: 100vw;
+padding: 5vw 0 5vw 0;
+z-index: 2;
+background: ${props => props.theme.WARM_ORANGE};
+@media (min-width: 320px) and (max-width: 480px) {
+    
+}`
 
 const DormitoryButton = styled(Flex)`
 width: 3vw;

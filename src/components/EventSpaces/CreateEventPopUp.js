@@ -33,7 +33,7 @@ let CreateEventPopUp = (props) => {
             <Flex extra={`align-items: flex-start; justify-content; flex-start;`} >
                 <Bar row onClick={() => { props.close && props.close() }} >
                     <Flex only_mobile >
-                        <Arrow only_mobile width={2} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
+                        <Arrow only_mobile width={1.5} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
                     </Flex>
                     <Text size={1.5} bold >{details ? `Редактированиe` : `Новая запись`}</Text>
                 </Bar>
@@ -49,21 +49,21 @@ let CreateEventPopUp = (props) => {
                         }
                     }}
                 />
-                <Flex row extra={`width: 100%; justify-content: space-between;`} >
-                    <Text>начало</Text>
+                <Flex row extra={`width: 92%; justify-content: space-between;`} >
+                    <Text extra={`padding-left: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { padding-left: 2vw; };`} >начало</Text>
                     <Input type={`time`} value={moment(start_timestamp).format(`HH:mm`)} onChange={(e) => { set_start_timestamp(+moment(day).add(e.target.value.split(`:`)[0], `hours`).add(e.target.value.split(`:`)[1], `minutes`)) }} float />
                 </Flex>
-                <Flex row extra={`width: 100%; justify-content: space-between;`} >
-                    <Text>конец</Text>
+                <Flex row extra={`width: 92%; justify-content: space-between;`} >
+                    <Text extra={`padding-left: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { padding-left: 2vw; };`} >конец</Text>
                     <Input type={`time`} value={moment(end_timestamp).format(`HH:mm`)} onChange={(e) => { set_end_timestamp(+moment(day).add(e.target.value.split(`:`)[0], `hours`).add(e.target.value.split(`:`)[1], `minutes`)) }} float />
                 </Flex>
-                <Flex row extra={`width: 100%; justify-content: space-between;`} >
-                    <Text>количество людей</Text>
+                <Flex row extra={`width: 92%; justify-content: space-between;`} >
+                    <Text extra={`padding-left: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { padding-left: 2vw; };`} >количество людей</Text>
                     <Input type={`number`} short extra={`width: 5.2vw;`} value={number_of_people} onChange={(e) => { set_number_of_people(`` + +e.target.value) }} integer />
                 </Flex>
-                <Text>цель визита</Text>
+                <Text extra={`padding-left: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { padding-left: 2vw; };`} >цель визита</Text>
                 <Input type={`textarea`} value={aim} onChange={(e) => { set_aim(e.target.value) }} />
-                <Button backgroundColor={props => props.theme.accept} short={false} onClick={async () => {
+                <Button background={props => props.theme.accept} short={false} onClick={async () => {
                     let start = start_timestamp
                     let end = end_timestamp
                     await axios.post(`${mvConsts.api}/events/${details ? `edit` : `create`}/`, {
@@ -83,9 +83,8 @@ let CreateEventPopUp = (props) => {
     )
 }
 
-const Arrow = styled(Image).attrs({
-    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
-})``;
+const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
+
 
 export default CreateEventPopUp;
 /*eslint-enable no-unused-vars*/

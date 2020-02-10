@@ -37,7 +37,7 @@ let CreateSpacePopUp = (props) => {
         {
             type: `button`,
             text: `Создать`,
-            color: props => props.theme.accept,
+            color: props.theme.accept,
             disabled: q !== undefined ? !q[1].value || !q[3].value : false,
             action: async () => {
                 await axios.post(`${mvConsts.api}/targets/create/${q[1].value}/${props.dormitory_id}`, q[3].value, { headers: { 'Content-Type': q[3].value.type } })

@@ -10,61 +10,48 @@ import Button from '../UIKit/Button'
 import useComponentVisible from '../UIKit/useComponentVisible'
 import mvConsts from '../../constants/mvConsts';
 import BookPopUp from './BookPopUp'
-import BucketPopUp from './BucketPopUp'
-import ReservationsPopUp from './ReservationsPopUp'
 import { Flex, Image, Text, PopUp, convertHex } from '../UIKit/styled-templates'
 import Switcher from '../UIKit/Switcher'
 import Circles from '../UIKit/Circles'
+import PurchasesPopUp from './PurchasesPopUp'
 
 let compareObjects = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
 let useSlots = (initialIsVisible) => {
-    const [selectedSlots, setSelectedSlots] = useState(initialIsVisible);
-    let setSlots = (slot) => {
-        if (selectedSlots.filter(i => compareObjects(i, slot)).length) {
-            setSelectedSlots(selectedSlots.filter(i => !compareObjects(i, slot)))
+    const [selected_slots, set_selected_slots] = useState(initialIsVisible);
+    let set_slots = (slot) => {
+        if (selected_slots.filter(i => compareObjects(i, slot)).length) {
+            set_selected_slots(selected_slots.filter(i => !compareObjects(i, slot)))
         } else {
-            setSelectedSlots(selectedSlots.concat([slot]))
+            set_selected_slots(selected_slots.concat([slot]))
         }
     }
-    return [selectedSlots, setSlots, setSelectedSlots];
+    return [selected_slots, set_slots, set_selected_slots];
 }
 
 let cutter = (s) => s.length > 11 ? s.substring(0, 8) + `...` : s
 let get_laundry = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/laundry/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Laundry = (props) => {
-    let [selectedDay, setSelectedDay] = useState(+moment().startOf(`day`))
+    let [selectedDay, set_selected_day] = useState(+moment().startOf(`day`))
     let [mobileCalendar, setMobileCalendar] = useState(false)
-    let [selectedSlots, selectSlot, setSelectedSlots] = useSlots([])
-    let [bucket_ref, bucket_visible, set_bucket_visible, close_bucket] = useComponentVisible(false);
-    let [reservationsRef, reservationsVisible, setReservationsVisible, close_reservations] = useComponentVisible(false);
-    let [selectedBook, setSelectedBook] = useState(undefined)
-    let [bookRef, bookVisible, setBookVisible, close_book] = useComponentVisible(false);
+    let [selected_slots, select_slot, set_selected_slots] = useSlots([])
+    let [purchases_ref, purchases_visible, set_purchases_visible, close_purchases, PurchasesWrapper] = useComponentVisible(false);
+    let [selectedBook, set_selected_book] = useState(undefined)
+    let [bookRef, book_visible, set_book_visible, close_book] = useComponentVisible(false);
     let my_reservations = props.user && props.laundry ? props.laundry.filter(i => i.user_id === props.user.objectId && i.timestamp > +moment().add(-2, `hour`)) : []
-    useEffect(() => { !selectedSlots.length && set_bucket_visible(false) })
-    useEffect(() => { !my_reservations.length && setReservationsVisible(false) })
-    useEffect(() => { if (!bookVisible) setSelectedBook(undefined) })
-    useEffect(() => {
-        let i = setInterval(() => { get_laundry().then((d) => { props.setLaundry(d.data) }) }, 10000)
-        return () => { clearInterval(i) }
-    }, [])
+    useEffect(() => { if (!book_visible) set_selected_book(undefined) }, [book_visible])
+    // useEffect(() => {
+    //     let i = setInterval(() => { get_laundry().then((d) => { props.set_laundry(d.data) }) }, 10000)
+    //     return () => { clearInterval(i) }
+    // }, [])
     let header = (
         <CalendarHeader>
-            <Button only_desktop backgroundColor={props => props.theme.accept} onClick={() => { setSelectedDay(+moment().startOf(`day`)) }} >
+            <Button only_desktop background={props => props.theme.accept} onClick={() => { set_selected_day(+moment().startOf(`day`)) }} >
                 Сегодня
             </Button>
-            <Button only_desktop disabled={!my_reservations.length} onClick={() => { setReservationsVisible(!reservationsVisible) }} >
-                Мои стирки
-                <PopUp extra={`top: ${reservationsVisible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible} >
-                    <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
-                </PopUp>
-            </Button>
-            <Button only_desktop backgroundColor={props => props.theme.lightblue} disabled={!selectedSlots.length} onClick={() => { set_bucket_visible(!bucket_visible) }} >
-                Корзина {selectedSlots.length && `(${selectedSlots.length})`}
-                <PopUp extra={`top: ${bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={bucket_ref} visible={bucket_visible} >
-                    <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
-                </PopUp>
+            <Button only_desktop background={props => props.theme.lightblue} disabled={selected_slots.length + my_reservations.length < 1} onClick={() => { set_purchases_visible(!purchases_visible) }} >
+                Покупки
             </Button>
         </CalendarHeader>
     )
@@ -74,21 +61,32 @@ let Laundry = (props) => {
                 props.laundry
                     ? <Flex>
                         <Wrapper>
-                            <PopUp only_mobile extra={`top: ${reservationsVisible || bucket_visible ? 3.5 : 2}vw; right: 0vw;`} ref={reservationsRef} visible={reservationsVisible || bucket_visible} >
-                                <ReservationsPopUp close={close_reservations} {...props} my_reservations={my_reservations} setReservationsVisible={setReservationsVisible} setSelectedDay={setSelectedDay} setSelectedBook={setSelectedBook} setBookVisible={setBookVisible} />
-                                <BucketPopUp close={close_bucket} {...props} selectedSlots={selectedSlots} selectSlot={selectSlot} days_of_week_full setSelectedSlots={setSelectedSlots} />
+                            <PopUp ref={purchases_ref} visible={purchases_visible} extra={`top: ${purchases_visible ? 10.25 : 11.5}vw; right: 32vw;`} >
+                                <PurchasesPopUp
+                                    {...props}
+                                    close={close_purchases}
+                                    days_of_week_full
+                                    my_reservations={my_reservations}
+                                    select_slot={select_slot}
+                                    selected_slots={selected_slots}
+                                    set_book_visible={set_book_visible}
+                                    set_selected_book={set_selected_book}
+                                    set_selected_day={set_selected_day}
+                                    set_selected_slots={set_selected_slots}
+                                    set_purchases_visible={set_purchases_visible}
+                                />
                             </PopUp>
                             <Switcher
                                 only_mobile
                                 width={90}
-                                array={[`Мои стирки`, `Расписание`, `Календарь`]}
+                                array={[`Покупки`, `Расписание`, `Календарь`]}
                                 onChange={(index) => {
-                                    if (index === 0) { setReservationsVisible(!reservationsVisible) }
+                                    if (index === 0) { set_purchases_visible(!purchases_visible) }
                                     if (index > 0) {
                                         setMobileCalendar(index === 2)
                                     }
                                 }}
-                                selected={reservationsVisible ? 0 : +mobileCalendar + 1}
+                                selected={purchases_visible ? 0 : +mobileCalendar + 1}
                             />
                             <Calendar mobileCalendar={mobileCalendar} >
                                 <Flex> {header} </Flex>
@@ -104,7 +102,7 @@ let Laundry = (props) => {
                                                             key={day_index}
                                                             day_index={day_index}
                                                             week_index={week_index}
-                                                            onClick={() => { !is_before && setSelectedDay(start_of_day); setMobileCalendar(false) }}
+                                                            onClick={() => { !is_before && set_selected_day(start_of_day); setMobileCalendar(false) }}
                                                             is_selected_day={selectedDay === +moment(start_of_day).startOf(`day`)}
                                                             is_today={+moment().startOf(`day`) === +moment(start_of_day).startOf(`day`)}
                                                             is_before={is_before}
@@ -120,8 +118,8 @@ let Laundry = (props) => {
                                 }
                             </Calendar>
                             <Schedule mobileCalendar={mobileCalendar} >
-                                <PopUp extra={`top: ${bookVisible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={bookVisible && selectedBook} setBookVisible={setBookVisible} >
-                                    <BookPopUp close={close_book} {...props} selectedBook={selectedBook} setBookVisible={setBookVisible} />
+                                <PopUp extra={`top: ${book_visible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={book_visible && selectedBook} set_book_visible={set_book_visible} >
+                                    <BookPopUp close={close_book} {...props} selectedBook={selectedBook} set_book_visible={set_book_visible} />
                                 </PopUp>
                                 {
                                     <TwoHourRow>
@@ -145,17 +143,17 @@ let Laundry = (props) => {
                                                         let book = is_book && props.laundry.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId)[0]
                                                         let is_my_book = my_reservations.filter(i => compar_dates(i.timestamp, timestamp)).filter(i => i.machine_id === machine.objectId).length
                                                         let is_before = slot_data.timestamp < +moment().add(-2, `hour`)
-                                                        let unselectable = is_before || machine.is_broken
+                                                        let no_selection_prop = is_before || machine.is_broken
                                                         return (
                                                             <Machine
                                                                 index={machine_index}
                                                                 width={props.machines.length}
                                                                 key={machine_index}
-                                                                onClick={() => { if (!unselectable) { !is_book ? selectSlot(slot_data) : setSelectedBook(book); setBookVisible(true) } }}
-                                                                is_selected={selectedSlots.filter((i, index) => compareObjects(i, slot_data)).length}
+                                                                onClick={() => { if (!no_selection_prop) { !is_book ? select_slot(slot_data) : set_selected_book(book); set_book_visible(true) } }}
+                                                                is_selected={selected_slots.filter((i, index) => compareObjects(i, slot_data)).length}
                                                                 is_book={is_book}
                                                                 is_my_book={is_my_book}
-                                                                unselectable={unselectable}
+                                                                no_selection_prop={no_selection_prop}
                                                             >
                                                                 {cutter(is_book ? book.email.split(`@`)[0].split(`.`)[0] : `-`)}
                                                             </Machine>
@@ -189,8 +187,8 @@ let mapDispatchToProps = (dispatch) => {
         setToken: (data) => {
             return dispatch(userActions.setToken(data))
         },
-        setLaundry: (data) => {
-            return dispatch(laundryActions.setLaundry(data))
+        set_laundry: (data) => {
+            return dispatch(laundryActions.set_laundry(data))
         },
     }
 }
@@ -207,13 +205,13 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
         return (
             <Flex extra={``} row>
                 <Flex extra={`width: 30vw;`} row >
-                    <Text size={1} color={props => is_week_end ? props.theme.WARM_ORANGE : props.theme.text.primary} >
+                    <Text size={1} text_color={props => is_week_end ? props.theme.WARM_ORANGE : props.theme.text.primary} >
                         {days_of_week_short[moment(start_of_day).isoWeekday() - 1].toUpperCase()}, {moment(start_of_day).format(`DD.MM`)}
                     </Text>
                 </Flex>
                 <Flex extra={`width: 40vw;`} row >
                     <Text extra={`margin-right: 2vw;`} >Свободно:</Text>
-                    <Text color={color} >{machines_number * 12 - booked}</Text>
+                    <Text text_color={color} >{machines_number * 12 - booked}</Text>
                 </Flex>
                 <Flex extra={`width: 5vw;`} ><Arrow width={1.5} /></Flex>
             </Flex>
@@ -221,16 +219,16 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
     }
     let desktop_cell = () => {
         return (
-            <Flex>
+            <Text>
                 <Flex row >
-                    <Flex only_desktop extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`DD`)}</Flex>
+                    <Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`DD`)}</Flex>
                     .<Flex extra={`width: 2vw; height: 2vw;`} >{moment(start_of_day).format(`MM`)}</Flex>
                 </Flex>
                 <Flex row >
-                    <Flex extra={`width: 2vw; height: 2vw; color: ${color}`} >{machines_number * 12 - booked}</Flex>
+                    <Flex extra={props => `width: 2vw; height: 2vw; color: ${color(props)}`} >{machines_number * 12 - booked}</Flex>
                     /<Flex extra={`width: 2vw; height: 2vw;`} >{machines_number * 12}</Flex>
                 </Flex>
-            </Flex>
+            </Text>
         )
     }
     return (
@@ -241,9 +239,8 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
     )
 }
 
-const Arrow = styled(Image).attrs({
-    src: props => props.theme.background.primary === `#fff` ? require(`../../assets/images/arrow.svg`) : require(`../../assets/images/arrow_white.svg`),
-})``;
+const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
+
 
 const TimeNode = styled(Text)`
 width: 5vw;
@@ -251,12 +248,8 @@ width: 5vw;
     width: 15vw;
 }`
 
-const Wrapper = styled.div`
-display: flex
-justify-content: center
-align-items: center
+const Wrapper = styled(Flex)`
 flex-direction: row;
-transition: 0.2s;
 width: 94vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -268,14 +261,13 @@ height: 92vh;
     height: 85vh;
 }`
 
-const Calendar = styled.div`
+const Calendar = styled(Flex)`
 display: flex
-justify-content: center
-align-items: center
 flex-direction: column;
 transition: 0.2s;
 width: 64vw;
 height: 92vh;
+position: relative;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.mobileCalendar ? `block` : `none`}
     width: 100vw;
@@ -287,10 +279,8 @@ height: 92vh;
     height: 85vh;
 }`
 
-const Schedule = styled.div`
+const Schedule = styled(Flex)`
 display: flex
-justify-content: center
-align-items: center
 flex-direction: column;
 transition: 0.2s;
 width: 30vw;
@@ -306,10 +296,8 @@ height: 92vh;
     height: 85vh;
 }`
 
-const TwoHourRow = styled.div`
+const TwoHourRow = styled(Flex)`
 display: flex
-justify-content: center
-align-items: center
 flex-direction: row
 transition: 0.2s
 width: 30vw;
@@ -319,16 +307,14 @@ height: 3.2vw;
     height: 13vw;
 }`
 
-const Machine = styled.div`
+const Machine = styled(Flex)`
 display: flex
-justify-content: center
-align-items: center
 flex-direction: column
 transition: 0.2s
 width: ${props => 20 / props.width}vw;
 height: 3vw;
 cursor: pointer;
-background-color: ${props => props.unselectable ? `none` : props.is_my_book ? props.theme.accept : props.is_book ? props.theme.WARM_ORANGE : props.is_selected ? props.theme.lightblue : props.theme.background.support};
+background: ${props => props.no_selection_prop ? `transparent` : props.is_my_book ? props.theme.accept : props.is_book ? props.theme.WARM_ORANGE : props.is_selected ? props.theme.lightblue : props.theme.background.support};
 color: white;
 font-size: 0.8vw;
 margin: 0 0.08vw 0 0;
@@ -341,10 +327,8 @@ border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index
     border-width: 0.2vw;
 }`
 
-const WeekRow = styled.div`
+const WeekRow = styled(Flex)`
 display: flex
-justify-content: center
-align-items: center
 flex-direction: row;
 transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
@@ -357,7 +341,7 @@ box-sizing: border-box;
 -webkit-box-sizing: border-box;
 width: 8.5vw;
 height: 8.5vw;
-background-color: ${props => props.is_before ? `transparent` : props.is_selected_day ? props.theme.background.primary : props.is_weekend ? convertHex(props.theme.background.support, 0.7) : convertHex(props.theme.background.support, 0.5)};
+background: ${props => props.is_before ? `transparent` : props.is_selected_day ? props.theme.background.primary : props.is_weekend ? convertHex(props.theme.background.support, 0.7) : convertHex(props.theme.background.support, 0.5)};
 border-top-left-radius: ${props => +(props.week_index === 0 && props.day_index === 0) * 1}vw;
 border-top-right-radius: ${props => +(props.week_index === 0 && props.day_index === 6) * 1}vw;
 border-bottom-left-radius: ${props => +(props.week_index === 3 && props.day_index === 0) * 1}vw;
@@ -371,14 +355,12 @@ cursor: ${props => !props.is_before ? `default` : `pointer`};
     padding: 2vw;
     margin: 1vw;
     border-radius: 4vw;
-    background-color: ${props => props.theme.background.primary};
+    background: ${props => props.theme.background.primary};
     border: 1vw solid ${props => props.is_selected_day ? props.theme.purple : props.is_today ? props.theme.accept : `transparent`}
 }`
 
-const GlobalWrapper = styled.div`
+const GlobalWrapper = styled(Flex)`
 display: flex
-justify-content: center
-align-items: center
 flex-direction: column
 transition: 0.2s
 width: 94vw;
@@ -391,17 +373,15 @@ height: 94vh;
 }
 `
 
-const CalendarHeader = styled.div`
+const CalendarHeader = styled(Flex)`
 display: flex
 justify-content: flex-end
-align-items: center
 flex-direction: row
 transition: 0.2s
 width: 60vw;
 @media (min-width: 320px) and (max-width: 480px) {
-    // background-color: white;
+    // background: white;
     // height: 8vh;
     width: 100vw;
-    justify-content: center;
 }`
 /*eslint-enable no-unused-vars*/

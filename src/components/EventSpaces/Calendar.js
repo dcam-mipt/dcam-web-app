@@ -38,7 +38,7 @@ let main = (props) => {
                                     let is_selected = selected_date === date
                                     return (
                                         <Day key={day_index} is_selected={is_selected} is_today={is_today} onClick={() => { set_selected_date_connected(date) }} >
-                                            <Text color={props => (is_selected || is_today) ? `white` : the_same_month ? props.theme.text.primary : props.theme.text.support} >
+                                            <Text text_color={props => (is_selected || is_today) ? `white` : the_same_month ? props.theme.text.primary : props.theme.text.support} >
                                                 {moment(date).format(`D`)}
                                             </Text>
                                         </Day>
@@ -56,7 +56,7 @@ let main = (props) => {
 export default main;
 
 const Wrapper = styled(Flex)`
-background-color: ${props => props.theme.background.primary};
+background: ${props => props.theme.background.primary};
 border-radius: 1vw; 
 @media (min-width: 320px) and (max-width: 480px) {
     

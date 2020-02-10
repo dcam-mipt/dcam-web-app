@@ -48,7 +48,7 @@ let Entry = (props) => {
                     <Text size={2} bold>Войти</Text>
                     <Text>при помощи почты @phystech.edu</Text>
                     <MarginWrapper>
-                        <Button backgroundColor={props => props.theme.purple} onClick={() => { signIn() }} >Авторизация</Button>
+                        <Button background={props => props.theme.purple} onClick={() => { signIn() }} >Авторизация</Button>
                     </MarginWrapper>
                 </Flex>
             </Right>
@@ -100,14 +100,14 @@ height: 100vh;
 const Left = styled(Flex)`
 width: 70vw;
 height: 100vh;
-background-color: rgba(0, 0, 0, 0.02);
+background: rgba(0, 0, 0, 0.02);
 @media (min-width: 320px) and (max-width: 480px) {
     display: none;
 }`
 const Right = styled(Flex)`
 width: 30vw;
 height: 100vh;
-background-color: ${props => props.theme.background.primary};
+background: ${props => props.theme.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;

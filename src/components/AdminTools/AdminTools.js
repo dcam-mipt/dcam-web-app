@@ -47,7 +47,7 @@ let AdminTools = (props) => {
                                     <Image src={user.avatar} width={3} round />
                                     <NameWrapper>
                                         <Text size={0.8} >{user.username.split(`@`)[0]}</Text>
-                                        <Text color={props => props.theme.text.support} >{get_user_status(user.last_seen)}</Text>
+                                        <Text text_color={props => props.theme.text.support} >{get_user_status(user.last_seen)}</Text>
                                     </NameWrapper>
                                 </User>
                             )
@@ -60,16 +60,16 @@ let AdminTools = (props) => {
                 {
                     selected_user ? <Flex>
                         <Card>
-                            <Text color={`white`} >Стиралка</Text>
+                            <Text text_color={`white`} >Стиралка</Text>
                             <Flex row >
-                                <Text bold color={`white`} size={1.2} >{selected_user.money}</Text>
-                                <Text color={`white`} >р</Text>
-                                {+new_balance !== 0 && <Text bold extra={`margin-left: 1vw;`} color={props => money_delta > 0 ? props.theme.accept : props.theme.WARM_ORANGE} size={1} >{money_delta > 0 && `+`}{money_delta}р</Text>}
+                                <Text bold text_color={`white`} size={1.2} >{selected_user.money}</Text>
+                                <Text text_color={`white`} >р</Text>
+                                {+new_balance !== 0 && <Text bold extra={`margin-left: 1vw;`} text_color={props => money_delta > 0 ? props.theme.accept : props.theme.WARM_ORANGE} size={1} >{money_delta > 0 && `+`}{money_delta}р</Text>}
                             </Flex>
                             <Flex row >
                                 <Input
-                                    backgroundColor={`rgba(255, 255, 255, 0.5)`}
-                                    color={`white`}
+                                    background={`rgba(255, 255, 255, 0.5)`}
+                                    text_color={`white`}
                                     placeholder={`Сумма`}
                                     short
                                     onChange={(d) => { set_new_balance(d.target.value) }}
@@ -78,7 +78,7 @@ let AdminTools = (props) => {
                                 />
                                 <Button
                                     disabled={+new_balance === selected_user.money || new_balance === ``}
-                                    backgroundColor={props => loading ? props.theme.background.support : props.theme.accept}
+                                    background={props => loading ? props.theme.background.support : props.theme.accept}
                                     onClick={async () => {
                                         try {
                                             set_loading(true)
@@ -94,7 +94,7 @@ let AdminTools = (props) => {
                         </Card>
                     </Flex> : null
                 }
-                <Button only_mobile backgroundColor={props => props.theme.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
+                <Button only_mobile background={props => props.theme.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
             </TransactionsWrapper>
             <Flex only_desktop extra={`width: 25vw; `} >
 
@@ -120,11 +120,11 @@ let mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(AdminTools)
 
 const User = styled(Flex)`
-background-color: ${props => props.is_selected_user ? props.theme.background.secondary : `transparent`};
+background: ${props => props.is_selected_user ? props.theme.background.secondary : `transparent`};
 padding: 0.5vw;
 border-radius: 0.5vw;
 transition: 0s;
-&:hover { background-color: ${props => props.theme.background.secondary} };
+&:hover { background: ${props => props.theme.background.secondary} };
 @media (min-width: 320px) and (max-width: 480px) {
     padding: 2.5vw;
     border-radius: 2.5vw;
@@ -152,7 +152,7 @@ justify-content: flex-start;
 
 const UsersWrapper = styled(Flex)`
 height: 89vh;
-background-color: ${props => props.theme.background.primary};
+background: ${props => props.theme.background.primary};
 padding: 1vw 1vw 0 1vw;
 margin-left: 1vw;
 border-radius: 1vw;
@@ -190,7 +190,7 @@ const Card = styled(Flex)`
 width: ${card_width}vw;
 height: ${card_width / 86 * 54}vw;
 border-radius: ${card_width / 20}vw;
-background-color: ${props => props.theme.purple};
+background: ${props => props.theme.purple};
 justify-content: space-around;
 align-items: flex-start;
 > * {
