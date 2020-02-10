@@ -214,7 +214,7 @@ let EventSpaces = (props) => {
                             </Flex>
                         </Flex>
                     </TitleRow>
-                    <Flex extra={`width: 100%; height: 90%; display: block; max-height: 90%; overflow-y: scroll; @media (min-width: 320px) and (max-width: 480px) { display: block; max-height: ${+mobile_workspace_visible * 65}vh; opacity: ${+mobile_workspace_visible}; overflow-y: scroll; };`} >
+                    <Flex extra={`width: 100%; height: 90%; display: block; max-height: 90%; overflow-y: scroll; @media (min-width: 320px) and (max-width: 480px) { display: block; max-height: ${+mobile_workspace_visible * 50}vh; opacity: ${+mobile_workspace_visible}; overflow-y: scroll; };`} >
                         <Flex row extra={`width: 100%; position: relative;`}>
                             <TimePointer visible={week_start === +moment().startOf(`isoWeek`)} />
                             <Flex extra={`width: 10vw; @media (min-width: 320px) and (max-width: 480px) { width: 25vw; }; `}>
@@ -365,13 +365,6 @@ flex-direction: row;
     margin: 4vw;
 }`
 
-const CentredBar = styled(Bar)`
-flex-direction: row;
-justify-content: space-between;
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
 const RequestItemText = styled(Text)`
 margin: ${props => +props.visible}vw;
 width: 1vw;
@@ -433,17 +426,6 @@ let TimePointer = (props) => {
     )
 }
 
-const LikeButton = styled(Flex)`
-cursor: pointer;
-width: ${props => +props.visible * 2}vw;
-height: ${props => +props.visible * 2}vw;
-margin-left: ${props => +props.visible * 0.5}vw;
-border-radius: 0.5vw;
-background: ${props => props.color}
-@media (min-width: 320px) and (max-width: 480px) {
-    
-}`
-
 const TitleRow = styled(Flex)`
 width: 100%;
 height: 10%;
@@ -453,26 +435,6 @@ flex-direction: row;
     background: ${props => props.theme.background.primary};
     width: 100vw;
 }`
-
-const EventSupport = styled(Flex)`
-width: 75vw;
-justify-content: flex-start;
-align-items: ${props => props.length_in_ms / props.day_length > 1 / 24 ? `flex-start` : `center`};
-height: ${props => props.height}vh;
-border-radius: 0.5vw;
-background: ${props => convertHex(props.accepted ? props.theme.accept : props.theme.yellow, props.is_before ? 0.5 : 1)};
-cursor: pointer;
-${props => props.is_selected ? `box-shadow: 0 0 1vw ${props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.is_before ? `transparent` : props.accepted ? props.theme.accept : props.theme.yellow}; transform: scale(1.05);` : ``}
-&:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 1vw ${props => props.theme.background.primary === `#fff` ? `rgba(0, 0, 0, 0.2)` : props.is_before ? `transparent` : props.accepted ? props.theme.accept : props.theme.yellow};
-};
-flex-direction: row;
-@media (min-width: 320px) and (max-width: 480px) {
-    border-radius: 2vw;
-    margin: ${props => +props.visible * 2}vw;
-}
-`
 
 const Event = styled(Flex)`
 width: 95%;
