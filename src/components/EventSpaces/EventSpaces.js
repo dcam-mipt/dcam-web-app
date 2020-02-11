@@ -535,7 +535,7 @@ position: relative;
     bottom: 0;
     padding-bottom: 8vh;
     height: auto;
-    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5vw rgba(0, 0, 0, 0.2);
 }`
 
 /*eslint-enable no-unused-vars*/

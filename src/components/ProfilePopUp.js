@@ -4,19 +4,13 @@ import { Flex, Image, Text, Bar, BarWrapper, PopUp } from './UIKit/styled-templa
 import Switcher from './UIKit/Switcher'
 import moment from 'moment-timezone'
 import Button from './UIKit/Button'
-import axios from 'axios'
 import mvConsts from '../constants/mvConsts'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import Input from './UIKit/Input'
 import CardPopUp from './CardPopUp';
-import io from 'socket.io-client';
-import Switch from './UIKit/Switch';
-import Selector from './UIKit/Selector';
 import userActions from '../redux/actions/UserActions'
 import uiActions from '../redux/actions/UiActions'
 import dormitoryActions from '../redux/actions/DormitoryActions'
-// const socket = io('https://dcam.pro:3000');
 
 let get_user_status = (timestamp) => {
     if (+moment().tz(`Europe/Moscow`) - +timestamp < 5 * 6000) {
@@ -65,16 +59,6 @@ let main = (props) => {
         <Bar row >
             <Text size={1.5} bold >Оформление</Text>
         </Bar>
-        {/* <Bar row>
-            <Flex extra={`align-items: flex-start; width: 100%;`} >
-                <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Тема оформления</Text>
-                <Flex row>
-                    <ThemeChooser disabled={props.theme_shift === `system`} light selected={props.theme === `light`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`light`) }} />
-                    <ThemeChooser disabled={props.theme_shift === `system`} dark selected={props.theme === `dark`} onClick={() => { if (props.theme_shift === `disabled`) props.set_theme(`dark`) }} />
-                </Flex>
-                <Text extra={`margin: 0.5vw; @media (min-width: 320px) and (max-width: 480px) { margin: 2vw; }; `} >Автоматическая смена</Text>
-            </Flex>
-        </Bar> */}
         <Switcher
             width={80}
             reversed={true}
@@ -146,22 +130,6 @@ padding-left: 1vw;
 align-items: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
     padding-left: 5vw;
-}`
-
-const ThemeChooser = styled(Flex)`
-width: 4vw;
-height: 4vw;
-border-radius: 1vw;
-background: ${props => props.light ? mvConsts.light.background.secondary : mvConsts.dark.background.secondary};
-border: 0.2vw solid ${props => props.disabled ? `transparent` : props.selected ? props.theme.lightblue : props.light ? mvConsts.light.background.support : mvConsts.dark.background.support};
-margin: 0.5vw;
-${props => props.disabled ? null : `&:hover { transform: scale(1.02) rotate(2deg) }; cursor: pointer;`}
-@media (min-width: 320px) and (max-width: 480px) {
-    width: 16vw;
-    height: 16vw;
-    border-radius: 4vw;
-    border: 1vw solid ${props => props.disabled ? `transparent` : props.selected ? props.theme.lightblue : props.light ? mvConsts.light.background.support : mvConsts.dark.background.support};
-    margin: 2vw;
 }`
 
 /*eslint-enable no-unused-vars*/
