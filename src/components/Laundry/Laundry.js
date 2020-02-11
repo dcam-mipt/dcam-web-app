@@ -76,9 +76,6 @@ let Laundry = (props) => {
                                     set_purchases_visible={set_purchases_visible}
                                 />
                             </PopUp>
-                            <PopUp extra={`top: ${book_visible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={book_visible && selectedBook} set_book_visible={set_book_visible} >
-                                <BookPopUp close={close_book} {...props} selectedBook={selectedBook} set_book_visible={set_book_visible} />
-                            </PopUp>
                             <Switcher
                                 only_mobile
                                 width={90}
@@ -121,6 +118,9 @@ let Laundry = (props) => {
                                 }
                             </Calendar>
                             <Schedule mobileCalendar={mobileCalendar} >
+                                <PopUp extra={`top: ${book_visible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={book_visible && selectedBook} set_book_visible={set_book_visible} >
+                                    <BookPopUp close={close_book} {...props} selectedBook={selectedBook} set_book_visible={set_book_visible} />
+                                </PopUp>
                                 {
                                     <TwoHourRow>
                                         <TimeNode />
