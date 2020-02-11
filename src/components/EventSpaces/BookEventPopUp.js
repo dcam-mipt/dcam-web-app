@@ -64,13 +64,13 @@ let BookEventPopUp = (props) => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
                                 props.onDelete && props.onDelete()
                             }} >
-                                <Image src={require(`../../assets/images/like.svg`)} width={1} />
+                                <Like/>
                             </LikeButton>
                             <LikeButton visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >
-                                <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
+                                <Like extra={`transform: rotate(180deg);`} />
                             </LikeButton>
                         </Flex>
                     </PopUp>
@@ -94,13 +94,13 @@ let BookEventPopUp = (props) => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
                                 props.onDelete && props.onDelete()
                             }} >
-                                <Image src={require(`../../assets/images/like.svg`)} width={1} />
+                                <Like/>
                             </LikeButton>
                             <LikeButton visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >
-                                <Image src={require(`../../assets/images/like.svg`)} width={1} extra={`transform: rotate(180deg);`} />
+                                <Like extra={`transform: rotate(180deg);`} />
                             </LikeButton>
                         </Flex>
                     </Bar>
@@ -164,6 +164,8 @@ let mapStateToProps = (state) => {
 export default connect(mapStateToProps)(BookEventPopUp)
 
 const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
+
+const Like = (props) => <Image {...props} src={require(`../../assets/images/like.svg`)} width={1} />
 
 const CentredBar = styled(Bar)`
 flex-direction: row;

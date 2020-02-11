@@ -219,13 +219,14 @@ z-index: 4;
 justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 96vw;
-    height: 6vh;
-    border-radius: 1.2vh;
+    height: 8vh;
+    border-radius: ${8 / 3}vh;
     bottom: 0.5vh;
     position: fixed;
     margin: 0;
     flex-direction: row
     justify-content: space-around;
+    box-shadow: 0 0 8vw rgba(0, 0, 0, 0.1);
     > * {
         width: 100%;
         flex-direction: row;
@@ -244,8 +245,8 @@ display: ${props => props.only_mobile ? `none` : `block`}
 transition: 0.2s;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `block`}
-    width: 4vh;
-    height: 4vh;
+    width: 5vh;
+    height: 5vh;
     &:hover { width: 4vh; height: 4vh; margin: 0.25vw; }
 }`
 
