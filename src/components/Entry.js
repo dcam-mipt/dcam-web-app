@@ -94,7 +94,7 @@ height: 100vh;
     height: 100vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 
 const Left = styled(Flex)`
@@ -113,6 +113,6 @@ background: ${props => props.theme.background.primary};
     height: 100vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 /*eslint-enable no-unused-vars*/

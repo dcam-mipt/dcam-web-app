@@ -205,7 +205,7 @@ background: ${props => props.theme.background.secondary};
     height: 100vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 
 const Menu = styled(Flex)`
@@ -260,6 +260,6 @@ filter: blur(${props => +props.blur * 8}px);
     height: 100vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 /*eslint-enable no-unused-vars*/

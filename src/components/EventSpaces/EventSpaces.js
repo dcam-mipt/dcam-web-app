@@ -516,7 +516,7 @@ position: relative;
     transform: scale(${props => props.visible ? 1 : 0.8});
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 
 const RightWrapper = styled(Flex)`

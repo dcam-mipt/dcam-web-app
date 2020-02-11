@@ -61,6 +61,7 @@ let Laundry = (props) => {
                 props.laundry
                     ? <Flex>
                         <Wrapper>
+                            <Flex only_mobile extra={`height: 30vw;`} /> 
                             <PopUp extra={`top: ${book_visible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={book_visible && selectedBook} set_book_visible={set_book_visible} >
                                 <BookPopUp close={close_book} {...props} selectedBook={selectedBook} set_book_visible={set_book_visible} />
                             </PopUp>
@@ -79,7 +80,7 @@ let Laundry = (props) => {
                                     set_purchases_visible={set_purchases_visible}
                                 />
                             </PopUp>
-                            <Flex extra={`position: absolute; top: -1vh; z-index: 1;`} >
+                            <Flex extra={`position: absolute; top: -1vh; z-index: 1; background: transparnt;`} >
                                 <Switcher
                                     only_mobile
                                     width={90}
@@ -259,10 +260,9 @@ height: 92vh;
     width: 100vw;
     height: 100vh;
     flex-direction: column;
-    padding-top: 15vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 
 const Calendar = styled(Flex)`
@@ -280,7 +280,7 @@ position: relative;
     padding: 1vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 
 const Schedule = styled(Flex)`
@@ -297,7 +297,7 @@ height: 92vh;
     padding: 1vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }`
 
 const TwoHourRow = styled(Flex)`
@@ -373,7 +373,7 @@ height: 94vh;
     height: 100vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
-    height: 85vh;
+    height: 88vh;
 }
 `
 
