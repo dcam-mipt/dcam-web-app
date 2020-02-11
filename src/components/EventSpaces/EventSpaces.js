@@ -293,6 +293,9 @@ background: ${props => props.theme.background.primary};
 overflow: hidden;
 position: relative;
 box-shadow: 0 0vw 4vw rgba(0, 0, 0, 0.01);
+@supports (-webkit-overflow-scrolling: touch) {
+    padding: ${props => +props.visible * 16}vw ${props => +props.visible * 8}vw ${props => +props.visible * 16}vw ${props => +props.visible * 8}vw;
+}
 `
 
 const AddButton = styled(Flex).attrs(props => ({
