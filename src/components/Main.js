@@ -56,6 +56,7 @@ let Main = (props) => {
     let [axios_is_ready, set_axios_is_ready] = useState(false)
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
     let [dormitoryRef, dormitoryVisible, setDormitoryVisible] = useComponentVisible(false);
+    dormitoryVisible = dormitoryVisible || props.selected_dormitory < 1
     let signOut = () => new Promise((resolve, reject) => {
         props.setToken(undefined);
         axios.get(`${mvConsts.api}/auth/sign_out`)
@@ -90,7 +91,7 @@ let Main = (props) => {
                 <PopUp extra={`top: ${dormitoryVisible ? 12 : 15}vh; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={dormitoryRef} visible={dormitoryVisible} >
                     <DormitoryPopUp />
                 </PopUp>
-                <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={props.selected_dormitory < 1 || profileVisible} >
+                <PopUp extra={`bottom: ${profileVisible ? 1 : 2}vw; left: 6vw; @media (min-width: 320px) and (max-width: 480px) { top: 0; left: 0;};`} ref={profileRef} visible={profileVisible} >
                     <ProfilePopUp signOut={signOut} />
                 </PopUp>
                 <Wrapper>
