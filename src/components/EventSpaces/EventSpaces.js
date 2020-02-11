@@ -294,7 +294,7 @@ overflow: hidden;
 position: relative;
 box-shadow: 0 0vw 4vw rgba(0, 0, 0, 0.01);
 @supports (-webkit-overflow-scrolling: touch) {
-    padding: ${props => +props.visible * 16}vw ${props => +props.visible * 8}vw ${props => +props.visible * 16}vw ${props => +props.visible * 8}vw;
+    
 }
 `
 
@@ -508,7 +508,7 @@ border-radius: 1vw;
 position: relative;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
-    // height: 100%;
+    display: block;
     max-height: 90vh;
     justify-content: flex-start;
     background: transparent;
