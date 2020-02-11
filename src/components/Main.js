@@ -247,7 +247,7 @@ transition: 0.2s;
     display: ${props => props.only_desktop ? `none` : `block`}
     width: 5vh;
     height: 5vh;
-    &:hover { width: 4vh; height: 4vh; margin: 0.25vw; }
+    &:hover { width: 5vh; height: 5vh; margin: 0.25vw; }
 }`
 
 const Workspace = styled(Flex)`
