@@ -276,7 +276,7 @@ position: relative;
     width: 100vw;
     max-height: 92vh;
     overflow: scroll;
-    padding: 12vh 0 16vh 0;
+    padding: 8vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 88vh;
@@ -293,7 +293,7 @@ height: 92vh;
     width: 100vw;
     max-height: ${13 * 14}vw;
     overflow: scroll;
-    padding: 12vh 0 16vh 0;
+    padding: 8vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 88vh;
