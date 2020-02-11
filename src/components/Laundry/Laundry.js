@@ -79,18 +79,21 @@ let Laundry = (props) => {
                                     set_purchases_visible={set_purchases_visible}
                                 />
                             </PopUp>
-                            <Switcher
-                                only_mobile
-                                width={90}
-                                array={[`Покупки`, `Расписание`, `Календарь`]}
-                                onChange={(index) => {
-                                    if (index === 0) { set_purchases_visible(!purchases_visible) }
-                                    if (index > 0) {
-                                        setMobileCalendar(index === 2)
-                                    }
-                                }}
-                                selected={purchases_visible ? 0 : +mobileCalendar + 1}
-                            />
+                            <Flex extra={`position: absolute; top: -1vh; z-index: 1;`} >
+                                <Switcher
+                                    only_mobile
+                                    width={90}
+                                    array={[`Покупки`, `Расписание`, `Календарь`]}
+                                    onChange={(index) => {
+                                        if (index === 0) { set_purchases_visible(!purchases_visible) }
+                                        if (index > 0) {
+                                            setMobileCalendar(index === 2)
+                                        }
+                                    }}
+                                    selected={purchases_visible ? 0 : +mobileCalendar + 1}
+                                    extra={`box-shadow 0 0 8vw rgba(0, 0, 0, 0.2);`}
+                                />
+                            </Flex>
                             <Calendar mobileCalendar={mobileCalendar} >
                                 <Flex> {header} </Flex>
                                 {
@@ -256,6 +259,7 @@ height: 92vh;
     width: 100vw;
     height: 100vh;
     flex-direction: column;
+    padding-top: 15vh;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 85vh;

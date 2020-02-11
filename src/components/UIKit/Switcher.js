@@ -22,7 +22,7 @@ let Switcher = (props) => {
                             onClick={() => { onChange(index) }}
                             {...props}
                             width={width / array.length}
-                            reversed={props.reversed}
+                            extra={``}
                         >
                             <Text
                                 bold={selected === index}
@@ -70,6 +70,7 @@ border: 0.1vw solid ${props => props.selected < 0 ? props.theme.WARM_ORANGE : `t
     padding: 1vw;
     border: 0.4vw solid ${props => props.selected < 0 ? props.theme.WARM_ORANGE : `transparent`};
 }
+
 `
 
 const Pointer = styled(Flex)`
