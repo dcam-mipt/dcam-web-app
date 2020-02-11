@@ -61,7 +61,6 @@ let Laundry = (props) => {
                 props.laundry
                     ? <Flex>
                         <Wrapper>
-                            <Flex only_mobile extra={`height: 30vw;`} /> 
                             <PopUp extra={`top: ${book_visible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={book_visible && selectedBook} set_book_visible={set_book_visible} >
                                 <BookPopUp close={close_book} {...props} selectedBook={selectedBook} set_book_visible={set_book_visible} />
                             </PopUp>
@@ -277,7 +276,7 @@ position: relative;
     width: 100vw;
     max-height: 92vh;
     overflow: scroll;
-    padding: 1vh 0 16vh 0;
+    padding: 16vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 88vh;
@@ -294,7 +293,7 @@ height: 92vh;
     width: 100vw;
     max-height: ${13 * 14}vw;
     overflow: scroll;
-    padding: 1vh 0 16vh 0;
+    padding: 16vh 0 16vh 0;
 }
 @supports (-webkit-overflow-scrolling: touch) {
     height: 88vh;
