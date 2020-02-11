@@ -64,7 +64,7 @@ let Laundry = (props) => {
                             <PopUp extra={`top: ${book_visible && selectedBook ? 2 : 1}vw; right: 2vw;`} ref={bookRef} visible={book_visible && selectedBook} set_book_visible={set_book_visible} >
                                 <BookPopUp close={close_book} {...props} selectedBook={selectedBook} set_book_visible={set_book_visible} />
                             </PopUp>
-                            <PopUp ref={purchases_ref} visible={purchases_visible} extra={`top: ${purchases_visible ? 10.25 : 11.5}vw; right: 32vw;`} >
+                            <PPopUp ref={purchases_ref} visible={purchases_visible} >
                                 <PurchasesPopUp
                                     {...props}
                                     close={close_purchases}
@@ -78,7 +78,7 @@ let Laundry = (props) => {
                                     set_selected_slots={set_selected_slots}
                                     set_purchases_visible={set_purchases_visible}
                                 />
-                            </PopUp>
+                            </PPopUp>
                             <Flex extra={`position: absolute; top: -1vh; z-index: 1; background: transparnt;`} >
                                 <Switcher
                                     only_mobile
@@ -244,6 +244,17 @@ let dayCell = (start_of_day = +moment(), booked = 0, machines_number = 0) => {
 
 const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
 
+const PPopUp = styled(PopUp)`
+    top: ${props => props.visible ? 10.25 : 11.5}vw;
+    right: 32vw;
+    @media (min-width: 320px) and (max-width: 480px) {
+        position: absolute;
+        top: 0;
+        left: ${props => props.visible ? 0 : 100}vw;
+        transition: 0.2s;
+        opacity: 1;
+    };
+`
 
 const TimeNode = styled(Text)`
 width: 5vw;
