@@ -69,8 +69,10 @@ let Main = (props) => {
         set_axios_is_ready(true)
         axios.get(`${mvConsts.api}/user/get_my_info`)
             .then((d) => {
-                props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
-                axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
+                props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().Qt, d.data))
+                // props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
+                // axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
+                // axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
 
                 get_machines().then((d) => { props.setMachines(d.data) })
                 get_laundry().then((d) => { props.set_laundry(d.data) })

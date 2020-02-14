@@ -13,7 +13,8 @@ let Entry = (props) => {
     let signIn = () => new Promise((resolve, reject) => {
         GoogleAPI.signIn()
             .then((d) => {
-                axios.get(`${mvConsts.api}/auth/${d.w3.U3}/${d.w3.Eea}/${d.w3.ig}`)
+                axios.get(`${mvConsts.api}/auth/${d.Qt.zu}/${d.Qt.dV}/test`)
+                // axios.get(`${mvConsts.api}/auth/${d.w3.U3}/${d.w3.Eea}/${d.w3.ig}`)
                     .then((d) => { props.setToken(d.data); resolve(d); })
                     .catch((d) => { console.log(d); reject(d); })
             })
