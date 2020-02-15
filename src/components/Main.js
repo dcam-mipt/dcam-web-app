@@ -33,7 +33,7 @@ let screens = [
     {
         image: require('../assets/images/event_spaces.svg'),
         name: mvConsts.screens.event_spaces,
-        admin: true,
+        admin: false,
         component: EventSpaces,
         path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
     },
