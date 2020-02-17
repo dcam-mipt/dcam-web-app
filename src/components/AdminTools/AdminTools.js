@@ -38,8 +38,7 @@ let AdminTools = (props) => {
         <GlobalWrapper>
             <UsersWrapper user_is_selected={selected_user !== null} >
                 <Flex only_mobile extra={`height: 3vh;`} />
-                <Input only_mobile reversed placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
-                <Input only_desktop placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
+                <Input placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
                 <Block subtrahend={3.5} >
                     {
                         users_list.length ? users_list.filter(i => i === `` || i.username.split(`@`)[0].split(`.`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {

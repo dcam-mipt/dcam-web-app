@@ -111,7 +111,7 @@ let Main = (props) => {
                     <ProfilePopUp signOut={signOut} />
                 </PopUp>
                 <Wrapper>
-                    <Menu>
+                    <Menu className={`menu`} >
                         <Flex only_desktop >
                             <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
                             <DormitoryButton error={props.selected_dormitory === 0} onClick={() => { setDormitoryVisible(true) }} >
@@ -231,7 +231,7 @@ border-radius: 1.5vw;
 margin: 0.5vw;
 background: ${props => props.theme.background.primary};
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
-z-index: 4;
+z-index: 5;
 justify-content: space-between;
 @media (min-width: 320px) and (max-width: 480px) {
     width: 96vw;
@@ -242,8 +242,6 @@ justify-content: space-between;
     margin: 0;
     flex-direction: row
     justify-content: space-around;
-    backdrop-filter: blur(6px);
-    background: ${props => convertHex(props.theme.background.primary, 0.4)};
     box-shadow: 0 0 8vw rgba(0, 0, 0, 0.1);
     > * {
         width: 100%;
