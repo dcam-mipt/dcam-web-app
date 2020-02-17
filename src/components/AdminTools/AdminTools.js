@@ -136,6 +136,10 @@ display: block;
 overflow-y: scroll;
 @media (min-width: 320px) and (max-width: 480px) {
     max-height: calc(91vh - ${props => props.subtrahend * 5}vw);
+    display: block;
+}
+@supports (-webkit-overflow-scrolling: touch) {
+    display: block;
 }`
 
 const TransactionsWrapper = styled(Flex)`
