@@ -49,7 +49,7 @@ let LoadingPage = (props) => {
 const LoadingPageWrapper = styled(Flex)`
 width: 100vw;
 height: 100vh;
-background: ${props => props.theme.background.primary};
+background: ${props => props.theme.background.secondary};
 @media (min-width: 320px) and (max-width: 480px) {
     
 }`

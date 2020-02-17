@@ -10,6 +10,7 @@ export default (props) => <Input visible={props.visible === undefined ? true : p
 // </InputMask>
 
 const Input = styled.input`
+    display: ${props => props.only_mobile ? `none` : `inline`}
     -webkit-appearance: none;
     outline: none;
     border: none;
@@ -20,7 +21,7 @@ const Input = styled.input`
     height: ${props => +props.visible}vw;
     padding: ${props => +props.visible}vw;
     border-radius: 0.5vw;
-    background: ${props => props.background ? props.background : props.theme.background.secondary};
+    background: ${props => props.background ? props.background : props.reversed ? props.theme.background.primary : props.theme.background.secondary};
     margin: ${props => +props.visible * 0.25}vw;
     color: ${props => props.text_color ? props.text_color : props.theme.text.primary};
     font-size: 1vw;
@@ -30,6 +31,7 @@ const Input = styled.input`
         color: ${props => props.text_color ? props.text_color : props.theme.text.support};
     }
     @media (min-width: 320px) and (max-width: 480px) {
+        display: ${props => props.only_mobile ? `inline` : `none`}
         width: ${props => props.float ? null :  props.short ? 27 : 68}vw;
         height: ${props => +props.visible * 5}vw;
         padding: ${props => +props.visible * 4}vw;

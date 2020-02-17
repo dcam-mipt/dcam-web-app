@@ -242,6 +242,8 @@ justify-content: space-between;
     margin: 0;
     flex-direction: row
     justify-content: space-around;
+    backdrop-filter: blur(6px);
+    background: ${props => convertHex(props.theme.background.primary, 0.4)};
     box-shadow: 0 0 8vw rgba(0, 0, 0, 0.1);
     > * {
         width: 100%;

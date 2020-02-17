@@ -7,7 +7,7 @@ export let dayTheme = {
     vk: `#3A60A1`,
     WARM_ORANGE: `#FF7052`,
     background: {
-        primary: `#fff`,
+        primary: `#ffffff`,
         secondary: `#EEEEEE`,
         support: `#d5d5d5`,
     },

@@ -38,7 +38,8 @@ let AdminTools = (props) => {
         <GlobalWrapper>
             <UsersWrapper user_is_selected={selected_user !== null} >
                 <Flex only_mobile extra={`height: 3vh;`} />
-                <Input placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
+                <Input only_mobile reversed placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
+                <Input only_desktop placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
                 <Block subtrahend={3.5} >
                     {
                         users_list.length ? users_list.filter(i => i === `` || i.username.split(`@`)[0].split(`.`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
@@ -135,7 +136,8 @@ max-height: calc(91vh - ${props => props.subtrahend}vw);
 display: block;
 overflow-y: scroll;
 @media (min-width: 320px) and (max-width: 480px) {
-    max-height: calc(91vh - ${props => props.subtrahend * 5}vw);
+    max-height: calc(100vh - ${props => props.subtrahend * 5}vw);
+    padding-bottom: 10vh;
     display: block;
 }
 @supports (-webkit-overflow-scrolling: touch) {
@@ -162,6 +164,7 @@ margin-left: 1vw;
 border-radius: 1vw;
 justify-content: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
+    background: ${props => props.theme.background.secondary};
     display: ${props => props.user_is_selected ? `none` : `flex`}
     width: 100vw;
     height: 100vh;
@@ -176,7 +179,7 @@ align-items: flex-start;
 width: 12vw;
 @media (min-width: 320px) and (max-width: 480px) {
     padding-left: 5vw;
-    width: 60vw;
+    width: 56vw;
 }`
 
 const GlobalWrapper = styled(Flex)`
