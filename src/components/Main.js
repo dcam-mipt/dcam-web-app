@@ -38,6 +38,20 @@ let screens = [
         path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
     },
     {
+        image: require('../assets/images/event_spaces.svg'),
+        name: mvConsts.screens.dev,
+        admin: true,
+        component: () => <Flex>
+            <Text
+                onClick={async () => {
+                    let d = await axios.get(`${mvConsts.api}/dev`)
+                    console.log(d);
+                }}
+            >send</Text>
+        </Flex>,
+        path: `/${mvConsts.screens.dev.toLocaleLowerCase()}`,
+    },
+    {
         image: require('../assets/images/admin.svg'),
         name: mvConsts.screens.admin,
         admin: true,

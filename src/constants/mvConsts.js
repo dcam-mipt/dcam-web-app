@@ -51,7 +51,7 @@ export default {
         laundry: `LAUNDRY`,
         admin: `TOOLS`,
         event_spaces: `SPACES`,
-        votes: `VOTES`,
+        dev: `DEV`,
     },
     theme_shift: {
         system: `Системная`,
