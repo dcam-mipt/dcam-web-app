@@ -60,13 +60,13 @@ let BookEventPopUp = (props) => {
                 {
                     (is_admin && event && !event.accepted) && <PopUp extra={`top: -1.5vw; left: ${visible ? 20 : 18}vw;`} ref={tools_ref} visible={visible} >
                         <Flex row extra={`margin: -1vw; width: 4.5vw; justify-content: space-between;`} >
-                            <LikeButton visible={visible} text_color={props => props.theme.accept} onClick={async () => {
+                            <LikeButton color={props => props.theme.accept} visible={visible} text_color={props => props.theme.accept} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
                                 props.onDelete && props.onDelete()
                             }} >
                                 <Like/>
                             </LikeButton>
-                            <LikeButton visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
+                            <LikeButton color={props => props.theme.WARM_ORANGE} visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >
@@ -90,13 +90,13 @@ let BookEventPopUp = (props) => {
                 {
                     (is_admin && event && !event.accepted) && <Bar row >
                         <Flex only_mobile row extra={`width: 18vw; justify-content: space-between;`} >
-                            <LikeButton visible={visible} text_color={props => props.theme.accept} onClick={async () => {
+                            <LikeButton color={props => props.theme.accept} visible={visible} text_color={props => props.theme.accept} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/true`)
                                 props.onDelete && props.onDelete()
                             }} >
                                 <Like/>
                             </LikeButton>
-                            <LikeButton visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
+                            <LikeButton color={props => props.theme.WARM_ORANGE} visible={visible} text_color={props => props.theme.WARM_ORANGE} onClick={async () => {
                                 await axios.get(`${mvConsts.api}/events/accept/${event && event.objectId}/false`)
                                 props.onDelete && props.onDelete()
                             }} >
