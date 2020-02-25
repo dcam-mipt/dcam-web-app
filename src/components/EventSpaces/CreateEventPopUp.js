@@ -66,7 +66,7 @@ let CreateEventPopUp = (props) => {
                 <Button background={props => props.theme.accept} short={false} onClick={async () => {
                     let start = start_timestamp
                     let end = end_timestamp
-                    await axios.post(`${mvConsts.api}/events/${details ? `edit` : `create`}/`, {
+                    let d = await axios.post(`${mvConsts.api}/events/${details ? `edit` : `create`}/`, {
                         ...details,
                         start: start,
                         end: end,
@@ -74,6 +74,7 @@ let CreateEventPopUp = (props) => {
                         number_of_people: number_of_people,
                         aim: aim,
                     })
+                    console.log(d);
                     props.onCreate !== undefined && props.onCreate()
                     set_start_timestamp(+moment().startOf(`hour`).add(1, `hour`))
                     set_end_timestamp(+moment().startOf(`hour`).add(2, `hour`))

@@ -7,6 +7,7 @@ import moment from 'moment'
 import { Flex, Image, Bar, Text, Rotor } from '../UIKit/styled-templates'
 import Input from '../UIKit/Input'
 import Button from '../UIKit/Button'
+import Switcher from '../UIKit/Switcher'
 import mvConsts from '../../constants/mvConsts'
 
 let get_user_status = (timestamp) => {
@@ -23,12 +24,19 @@ let get_users = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.a
 
 let loading_rotor = <Rotor><Image src={require(`../../assets/images/menu.svg`)} width={2} /></Rotor>
 
+let chapters = [`Кошелек`, `Роли`]
+let roles = {
+    ADMIN: `Админ`,
+    TARGET_OWNER: `Ответственный`,
+}
+
 let AdminTools = (props) => {
     let [users_list, set_users_list] = useState([])
     let [search, set_search] = useState(``)
     let [selected_user, set_selected_user] = useState(null)
     let [new_balance, set_new_balance] = useState(``)
     let [loading, set_loading] = useState(false)
+    let [chapter, set_chapter] = useState(0)
     let money_delta = selected_user ? +new_balance - selected_user.money : 0
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
@@ -36,12 +44,21 @@ let AdminTools = (props) => {
     }, [])
     return (
         <GlobalWrapper>
+            {
+                selected_user && <Switcher
+                    only_mobile
+                    array={chapters}
+                    selected={chapter}
+                    onChange={(index) => { set_chapter(index) }}
+                    width={80}
+                />
+            }
             <UsersWrapper user_is_selected={selected_user !== null} >
                 <Flex only_mobile extra={`height: 3vh;`} />
                 <Input placeholder={`Поиск`} onChange={(e) => { set_search(e.target.value) }} />
                 <Block subtrahend={3.5} >
                     {
-                        users_list.length ? users_list.filter(i => i === `` || i.username.split(`@`)[0].split(`.`)[0].toLowerCase().indexOf(search.toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
+                        users_list.length ? users_list.filter(i => i === `` || (i.username.split(`@`)[0].split(`.`)[0].toLowerCase() + `/` + (i.name || ``).replace(/\s/g, '').toLowerCase()).indexOf(search.replace(/\s/g, '').toLowerCase()) > -1).sort((a, b) => b.last_seen - a.last_seen).map((user, user_index) => {
                             return (
                                 <User is_selected_user={selected_user && selected_user.objectId === user.objectId} pointer key={user_index} row onClick={() => { set_new_balance(``); set_selected_user(selected_user && selected_user.objectId === user.objectId ? null : user) }} >
                                     <Image src={user.avatar} width={3} round />
@@ -55,10 +72,19 @@ let AdminTools = (props) => {
                     }
                 </Block>
             </UsersWrapper>
-            <TransactionsWrapper user_is_selected={selected_user !== null} >
+            <TransactionsWrapper only_desktop={chapter !== 0 && selected_user !== null} >
                 <Flex only_mobile extra={`height: 3vh;`} />
                 {
                     selected_user ? <Flex>
+                        <Bar row onClick={() => { set_selected_user(null) }} >
+                            <Flex only_mobile >
+                                <Arrow only_mobile width={1.5} extra={`transform: rotate(180deg); margin-right: 1vw;`} />
+                            </Flex>
+                            <Text size={1.5} bold >{selected_user.username.split(`@`)[0]}</Text>
+                        </Bar>
+                        <Flex extra={`align-items: flex-start; padding: 5%; width: 90%; `} >
+                            <Text size={1} >{selected_user.name}</Text>
+                        </Flex>
                         <Card>
                             <Text text_color={`white`} >Стиралка</Text>
                             <Flex row >
@@ -94,12 +120,11 @@ let AdminTools = (props) => {
                         </Card>
                     </Flex> : null
                 }
-                <Button only_mobile background={props => props.theme.WARM_ORANGE} short={false} onClick={() => { set_selected_user(null) }} >Закрыть</Button>
             </TransactionsWrapper>
-            <Flex only_desktop extra={`width: 25vw; `} >
+            <Flex only_desktop={chapter !== 1} extra={`width: 25vw;`} >
 
             </Flex>
-            <Flex only_desktop extra={`width: 30vw;`} >
+            <Flex only_desktop={chapter !== 2} extra={`width: 30vw; height: 100%; background: red;`} >
 
             </Flex>
         </GlobalWrapper>
@@ -118,6 +143,8 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AdminTools)
+
+const Arrow = (props) => <Image {...props} src={require(localStorage.getItem(`theme`) === `light` ? `../../assets/images/arrow.svg` : `../../assets/images/arrow_white.svg`)} />
 
 const User = styled(Flex)`
 background: ${props => props.is_selected_user ? props.theme.background.secondary : `transparent`};
@@ -149,7 +176,6 @@ width: 26vw;
 margin-left: 1vw;
 justify-content: flex-start;
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.user_is_selected ? `flex` : `none`}
     width: 100vw;
     height: 100vh;
     margin-left: 0;
@@ -189,6 +215,7 @@ height: 92vh;
     width: 100vw;
     height: 100vh;
     flex-direction: column;
+    justify-content: flex-start;
 }`
 
 let card_width = 86 * 0.27

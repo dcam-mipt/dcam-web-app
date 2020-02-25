@@ -205,39 +205,6 @@ export const Book = (props) => {
     )
 }
 
-export let Switcher = (props) => {
-    let Wrapper = styled(Flex)`
-    border-radius: 5vw;
-    margin: 4vw;
-    width: 90vw;
-    position: relative;
-    background: ${props => props.theme.background.primary};
-    `
-    const Pointer = styled(Flex)`
-    position: absolute;
-    width: ${(90 - 4 * 3) / 3 + 2}vw;
-    height: 10vw;
-    border-radius: 4vw;
-    left: ${props => ((90 - 4 * 3) / 3 + 4) * props.index + 2}vw;
-    background: ${props => props.theme.background.support};
-    transition: 0.5s;
-    `
-    return (
-        <Wrapper row only_mobile >
-            <Pointer index={props.selected} />
-            {
-                props.array.map((item, index) => {
-                    return (
-                        <Flex key={index} extra={`margin: 4vw; width: ${(90 - 4 * 3) / 3}vw; z-index: 1;`} onClick={() => { props.onChange(index) }} >
-                            <Text>{item}</Text>
-                        </Flex>
-                    )
-                })
-            }
-        </Wrapper>
-    )
-}
-
 export const Rotor = styled(Flex)`animation: ${props => props.rotate === undefined ? rotate : props.rotate ? rotate : null} 2s linear infinite; padding: -2vw;`
 
 export const ClosePopUp = (props) => <Text onClick={() => { if (props.props.close !== undefined) { props.props.close() } }} size={1.5} only_mobile extra={`width: 85vw; align-items: flex-start; margin-top: 10%; cursor: pointer;`} >Закрыть</Text>
