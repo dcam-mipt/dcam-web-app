@@ -90,7 +90,7 @@ let Main = (props) => {
 
                 get_machines().then((d) => { props.setMachines(d.data) })
                 get_laundry().then((d) => { props.set_laundry(d.data) })
-                get_my_roles().then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1) })
+                get_my_roles().then((d) => { props.setAdmin(d.data.indexOf(`ADMIN`) > -1 || d.data.indexOf(`TARGET_OWNER`) > -1) })
                 get_my_balance().then((d) => { props.setBalance(+d.data) })
                 get_dormitories().then(d => { props.setDormitories(d.data) })
             })
