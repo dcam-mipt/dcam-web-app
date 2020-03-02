@@ -251,7 +251,6 @@ const PurchasesPopUpWrapper = styled(PopUp)`
         position: absolute;
         top: 0;
         left: ${props => props.visible ? 0 : 100}vw;
-        transition: 0.2s;
         opacity: 1;
     };
 `
@@ -278,7 +277,6 @@ height: 92vh;
 const Calendar = styled(Flex)`
 display: flex
 flex-direction: column;
-transition: 0.2s;
 width: 64vw;
 height: 92vh;
 position: relative;
@@ -296,7 +294,6 @@ position: relative;
 const Schedule = styled(Flex)`
 display: flex
 flex-direction: column;
-transition: 0.2s;
 width: 30vw;
 height: 92vh;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -313,7 +310,6 @@ height: 92vh;
 const TwoHourRow = styled(Flex)`
 display: flex
 flex-direction: row
-transition: 0.2s
 width: 30vw;
 height: 3.2vw;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -324,7 +320,6 @@ height: 3.2vw;
 const Machine = styled(Flex)`
 display: flex
 flex-direction: column
-transition: 0.2s
 width: ${props => 20 / props.width}vw;
 height: 3vw;
 cursor: pointer;
@@ -344,7 +339,6 @@ border-radius: ${props => +(props.index === 0) * 0.5}vw ${props => +(props.index
 const WeekRow = styled(Flex)`
 display: flex
 flex-direction: row;
-transition: 0.2s
 @media (min-width: 320px) and (max-width: 480px) {
     flex-direction: column;
 }`
@@ -376,7 +370,6 @@ cursor: ${props => !props.is_before ? `default` : `pointer`};
 const GlobalWrapper = styled(Flex)`
 display: flex
 flex-direction: column
-transition: 0.2s
 width: 94vw;
 height: 94vh;
 @media (min-width: 320px) and (max-width: 480px) {
@@ -391,7 +384,6 @@ const CalendarHeader = styled(Flex)`
 display: flex
 justify-content: flex-end
 flex-direction: row
-transition: 0.2s
 width: 60vw;
 @media (min-width: 320px) and (max-width: 480px) {
     // background: white;

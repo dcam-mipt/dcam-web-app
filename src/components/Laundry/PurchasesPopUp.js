@@ -92,6 +92,7 @@ let main = (props) => {
                 }} >
                     {selected_slots.length > 0 ? `Купить (${cost}р)` : `Пусто`}
                 </Button>
+                <Flex only_mobile extra={`height: 30vh;`} />
             </Bar>
         </Wrapper>
     )

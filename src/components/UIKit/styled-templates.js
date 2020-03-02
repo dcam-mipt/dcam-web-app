@@ -20,6 +20,7 @@ user-select: none;
     width: ${props => props.width * 5}vw;
     height: ${props => props.width * 5}vw;
     border-radius: ${props => props.round && (props.width * 5)}vw
+    transition: 0s;
 }`
 
 export const Flex = styled.div`
@@ -37,6 +38,7 @@ user-select: none;
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `flex`}
     font-size: 4vw;
+    transition: 0s;
 }
 ${props => props.extra}
 `

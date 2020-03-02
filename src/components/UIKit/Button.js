@@ -26,7 +26,6 @@ justify-content: center;
 align-items: center;
 position: relative;
 flex-direction: column;
-transition: 0.2s
 width: ${props => props.short ? 6.25 : 15}vw;
 height: ${props => +props.visible}vw;
 padding: ${props => +props.visible}vw;
@@ -37,7 +36,6 @@ color: ${props => props.shaped ? props.background : `white`};
 font-size: 0.8vw;
 cursor: ${props => props.disabled ? null : `pointer`};
 opacity: ${props => +props.visible};
-transition: 0.2s;
 border: ${props => +props.shaped * 0.1}vw solid ${props => props.background}
 outline-offset: 0.25vw;
 @media (min-width: 320px) and (max-width: 480px) {
