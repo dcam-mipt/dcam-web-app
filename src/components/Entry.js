@@ -46,7 +46,8 @@ let Entry = (props) => {
                 </Flex>
             </Left>
             <Right>
-                <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu.svg`)} width={3} /></Flex>
+                {/* <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu.svg`)} width={3} /></Flex> */}
+                <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu_8.svg`)} width={3} /></Flex>
                 <Flex extra={`align-items: flex-start;`} >
                     <Text size={2} bold>Войти</Text>
                     <Text>при помощи почты @phystech.edu</Text>
