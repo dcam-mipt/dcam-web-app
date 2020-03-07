@@ -40,7 +40,8 @@ let Entry = (props) => {
                         photos.length > 0 && <Image extra={`height: 110%;`} src={photos[current_photo]} />
                     }
                     <Overlay>
-                        <Image src={require(`../assets/images/psamcs_logo.svg`)} width={30} />
+                        {/* <Image src={require(`../assets/images/psamcs_logo.svg`)} width={30} /> */}
+                        <Image src={require(`../assets/images/psamcs_logo_8.svg`)} width={30} />
                     </Overlay>
                 </Flex>
             </Left>
@@ -110,6 +111,7 @@ const Right = styled(Flex)`
 width: 30vw;
 height: 100vh;
 background: ${props => props.theme.background.primary};
+// background-image: url(https://sun1-98.userapi.com/brs70yI0yzz5cEtzsihVj0P9TCFxjJZMRR--cA/A89Ovcyuepc.jpg);
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;
     height: 100vh;

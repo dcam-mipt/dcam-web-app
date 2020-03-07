@@ -113,7 +113,8 @@ let Main = (props) => {
                 <Wrapper>
                     <Menu className={`menu`} >
                         <Flex only_desktop >
-                            <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
+                            {/* <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} /> */}
+                            <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored_8.svg`)} />
                             <DormitoryButton error={props.selected_dormitory === 0} onClick={() => { setDormitoryVisible(true) }} >
                                 <Flex>
                                     <Text text_color={`white`} bold size={1} >{props.selected_dormitory === 0 ? `!` : props.selected_dormitory}</Text>
