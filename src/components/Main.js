@@ -273,6 +273,7 @@ background: ${props => props.theme.background.primary};
     display: ${props => props.only_desktop ? `none` : `block`}
     width: 5vh;
     height: 5vh;
+    border-radius: 1vh;
     &:hover { width: 5vh; height: 5vh; padding: 0.25vw; }
 }`
 
