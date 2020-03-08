@@ -113,8 +113,8 @@ let Main = (props) => {
                 <Wrapper>
                     <Menu className={`menu`} >
                         <Flex only_desktop >
-                            {/* <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} /> */}
-                            <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored_8.svg`)} />
+                            <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored.svg`)} />
+                            {/* <MenuItemImage only_desktop src={require(`../assets/images/psamcs_logo_colored_8.svg`)} /> */}
                             <DormitoryButton error={props.selected_dormitory === 0} onClick={() => { setDormitoryVisible(true) }} >
                                 <Flex>
                                     <Text text_color={`white`} bold size={1} >{props.selected_dormitory === 0 ? `!` : props.selected_dormitory}</Text>
@@ -123,7 +123,7 @@ let Main = (props) => {
                         </Flex>
                         <Flex>
                             {screens.filter(i => i.admin ? props.is_admin : true).map((item, index) => <Link key={index} to={item.path}><MenuItemImage onClick={() => { props.setMainScreen(item.name) }} src={item.image} /></Link>)}
-                            <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu_8.svg`)} />
+                            <MenuItemImage only_mobile onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                         </Flex>
                         <MenuItemImage only_desktop onClick={() => { setProfileVisible(!profileVisible) }} src={require(`../assets/images/menu.svg`)} />
                     </Menu>
@@ -234,6 +234,12 @@ background: ${props => props.theme.background.primary};
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 z-index: 5;
 justify-content: space-between;
+background-image: url(${props => props.theme.background.primary === `#ffffff` ? `https://sun1-17.userapi.com/EUE6Pnjo0MMjA_o_wr9a_z43wIS4GRxqxP54Jw/OSknvwpSlrs.jpg` : `https://sun1-15.userapi.com/YywRXAwbfkqaq8f3SWhp_sE0YPu_SiN29PdweA/1Xl5NlwiQ9M.jpg`});
+background-position: left 80%;
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+border: 0.5vw solid ${props => props.theme.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     width: 96vw;
     height: 8vh;
@@ -254,17 +260,19 @@ justify-content: space-between;
 const MenuItemImage = styled.img`;
 width: 2.5vw;
 height: 2.5vw;
-margin: 0.25vw;
-padding: 1.5vw;
+padding: 0.25vw;
+margin: 1.5vw;
 cursor: pointer;
 display: ${props => props.only_mobile ? `none` : `block`}
-&:hover { width: 3vw; height: 3vw; margin: 0; }
+&:hover { width: 3vw; height: 3vw; padding: 0; }
+border-radius: 1vw;
 transition: 0.2s;
+background: ${props => props.theme.background.primary};
 @media (min-width: 320px) and (max-width: 480px) {
     display: ${props => props.only_desktop ? `none` : `block`}
     width: 5vh;
     height: 5vh;
-    &:hover { width: 5vh; height: 5vh; margin: 0.25vw; }
+    &:hover { width: 5vh; height: 5vh; padding: 0.25vw; }
 }`
 
 const Workspace = styled(Flex)`
