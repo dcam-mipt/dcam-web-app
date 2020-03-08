@@ -250,6 +250,7 @@ border: 0.5vw solid ${props => props.theme.background.primary};
     flex-direction: row
     justify-content: space-around;
     box-shadow: 0 0 8vw rgba(0, 0, 0, 0.1);
+    border: 2vw solid ${props => props.theme.background.primary};
     > * {
         width: 100%;
         flex-direction: row;
