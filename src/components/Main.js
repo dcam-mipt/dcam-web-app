@@ -20,6 +20,7 @@ import { Flex, Image, Text, PopUp, convertHex } from './UIKit/styled-templates'
 import ProfilePopUp from './ProfilePopUp';
 import DormitoryPopUp from './DormitoryPopUp';
 import CardPopUp from './CardPopUp';
+import moment from 'moment-timezone'
 import { HashRouter, BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 
 let screens = [
@@ -234,7 +235,7 @@ background: ${props => props.theme.background.primary};
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 z-index: 5;
 justify-content: space-between;
-background-image: url(${props => props.theme.background.primary === `#ffffff` ? `https://sun1-17.userapi.com/EUE6Pnjo0MMjA_o_wr9a_z43wIS4GRxqxP54Jw/OSknvwpSlrs.jpg` : `https://sun1-15.userapi.com/YywRXAwbfkqaq8f3SWhp_sE0YPu_SiN29PdweA/1Xl5NlwiQ9M.jpg`});
+background-image: url(${props => moment().startOf(`dat`).tz(`Europe/Moscow`).format(`DD.MM`) === `08.03` ? props.theme.background.primary === `#ffffff` ? `https://sun1-17.userapi.com/EUE6Pnjo0MMjA_o_wr9a_z43wIS4GRxqxP54Jw/OSknvwpSlrs.jpg` : `https://sun1-15.userapi.com/YywRXAwbfkqaq8f3SWhp_sE0YPu_SiN29PdweA/1Xl5NlwiQ9M.jpg` : null});
 background-position: left 80%;
 box-sizing: border-box;
 -moz-box-sizing: border-box;

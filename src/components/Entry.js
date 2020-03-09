@@ -7,7 +7,10 @@ import axios from 'axios'
 import styled from 'styled-components'
 import mvConsts from '../constants/mvConsts'
 import Button from './UIKit/Button'
+import moment from 'moment'
 import { Flex, Text, Image } from './UIKit/styled-templates'
+
+let psamcs_logo = moment().startOf(`dat`).tz(`Europe/Moscow`).format(`DD.MM`) === `08.03` ? require(`../assets/images/psamcs_logo_8.svg`) : require(`../assets/images/psamcs_logo.svg`)
 
 let Entry = (props) => {
     let signIn = () => new Promise((resolve, reject) => {
@@ -39,14 +42,12 @@ let Entry = (props) => {
                         photos.length > 0 && <Image extra={`height: 110%;`} src={photos[current_photo]} />
                     }
                     <Overlay>
-                        {/* <Image src={require(`../assets/images/psamcs_logo.svg`)} width={30} /> */}
-                        <Image src={require(`../assets/images/psamcs_logo_8.svg`)} width={30} />
+                        <Image src={psamcs_logo} width={30} />
                     </Overlay>
                 </Flex>
             </Left>
             <Right>
                 <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu.svg`)} width={3} /></Flex>
-                {/* <Flex extra={`margin-bottom: 10%;`} ><Image src={require(`../assets/images/menu_8.svg`)} width={3} /></Flex> */}
                 <Flex extra={`align-items: flex-start;`} >
                     <Text size={2} bold>Войти</Text>
                     <Text>при помощи почты @phystech.edu</Text>
