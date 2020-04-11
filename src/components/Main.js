@@ -84,7 +84,8 @@ let Main = (props) => {
         set_axios_is_ready(true)
         axios.get(`${mvConsts.api}/user/get_my_info`)
             .then((d) => {
-                props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().Qt, d.data))
+                props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().Pt, d.data))
+                // props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().Qt, d.data))
                 // props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
                 // axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
                 // axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
@@ -95,7 +96,9 @@ let Main = (props) => {
                 get_my_balance().then((d) => { props.setBalance(+d.data) })
                 get_dormitories().then(d => { props.setDormitories(d.data) })
             })
-            .catch((d) => { signOut() })
+            .catch((d) => {
+                signOut()
+            })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     }, [])
     useEffect(() => {
