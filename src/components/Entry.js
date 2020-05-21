@@ -16,11 +16,23 @@ let Entry = (props) => {
     let signIn = () => new Promise((resolve, reject) => {
         GoogleAPI.signIn()
             .then((d) => {
-                axios.get(`${mvConsts.api}/auth/${d.Pt.yu}/${d.Pt.YU}/${d.Pt.Ad}`)
-                // axios.get(`${mvConsts.api}/auth/${d.Qt.zu}/${d.Qt.dV}/${d.Qt.Ad}`)
-                // axios.get(`${mvConsts.api}/auth/${d.w3.U3}/${d.w3.Eea}/${d.w3.ig}`)
-                    .then((d) => { props.setToken(d.data); resolve(d); })
-                    .catch((d) => { console.log(d); reject(d); })
+                try {
+                    let data = Object.values(d).map(i => Object.values(i)).filter(i => i.filter(j => (JSON.stringify(j)).indexOf(`@`) > -1).length > 0)[0]
+                    let e = data.filter(i => i.indexOf(`@`) > 0)[0]
+                    let p = data.filter(i => !isNaN(i))[0]
+                    let n = data.sort((i, j) => (j.split(" ").length) - (i.split(" ").length))[0]
+                    axios.get(`${mvConsts.api}/auth/${e}/${p}/${n}`)
+                        .then((d) => { props.setToken(d.data); resolve(d); })
+                        .catch((d) => { console.log(d); reject(d); })
+                } catch (error) {
+                    console.log(`invalid google response data format`);
+                }
+                // axios.get(`${mvConsts.api}/auth/${data[5]}/${data[0]}/${data[1]}`)
+                //     // axios.get(`${mvConsts.api}/auth/${d.Pt.yu}/${d.Pt.YU}/${d.Pt.Ad}`)
+                //     // axios.get(`${mvConsts.api}/auth/${d.Qt.zu}/${d.Qt.dV}/${d.Qt.Ad}`)
+                //     // axios.get(`${mvConsts.api}/auth/${d.w3.U3}/${d.w3.Eea}/${d.w3.ig}`)
+                //     .then((d) => { props.setToken(d.data); resolve(d); })
+                //     .catch((d) => { console.log(d); reject(d); })
             })
             .catch((d) => { console.log(d) })
     })

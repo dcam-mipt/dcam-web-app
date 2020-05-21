@@ -84,7 +84,8 @@ let Main = (props) => {
         set_axios_is_ready(true)
         axios.get(`${mvConsts.api}/user/get_my_info`)
             .then((d) => {
-                props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().Pt, d.data))
+                // let data = Object.values(GoogleAPI.getCurrentUser()).map(i => Object.values(i)).filter(i => i.filter(j => (JSON.stringify(j)).indexOf(`@`) > -1).length > 0)[0]
+                props.setUserInfo(d.data)
                 // props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().Qt, d.data))
                 // props.setUserInfo(Object.assign(GoogleAPI.getCurrentUser().w3, d.data))
                 // axios.post(`${mvConsts.api}/user/set_my_avatar`, { url: GoogleAPI.getCurrentUser().w3.Paa })
