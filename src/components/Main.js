@@ -23,6 +23,23 @@ import CardPopUp from './CardPopUp';
 import moment from 'moment-timezone'
 import { HashRouter, BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 
+let celebrationImages = [
+    {
+        from: `31.12`,
+        to: `08.01`,
+        light: `url("${require('../assets/images/cristmas_art.jpg')}")`,
+        dark: `url("${require('../assets/images/cristmas_art.jpg')}")`,
+    },
+    {
+        from: `08.03`,
+        to: `09.03`,
+        light: `url("${require('../assets/images/8_back_white.png')}")`,
+        dark: `url("${require('../assets/images/8_back_dark.png')}")`,
+    },
+]
+
+let background = celebrationImages.map(i => ({ ...i, from: +moment(i.from, `DD.MM`), to: +moment(i.to, `DD.MM`) })).map(i => ({ ...i, to: i.to < i.from ? +moment(i.to).add(1, `year`) : i.to })).filter(i => i.from < +moment() && +moment() < i.to)[0]
+
 let screens = [
     {
         image: require('../assets/images/laundry_selected.svg'),
@@ -38,20 +55,20 @@ let screens = [
         component: EventSpaces,
         path: `/${mvConsts.screens.event_spaces.toLocaleLowerCase()}`,
     },
-    {
-        image: require('../assets/images/event_spaces.svg'),
-        name: mvConsts.screens.dev,
-        admin: true,
-        component: () => <Flex>
-            <Text
-                onClick={async () => {
-                    let d = await axios.get(`${mvConsts.api}/dev`)
-                    console.log(d);
-                }}
-            >send</Text>
-        </Flex>,
-        path: `/${mvConsts.screens.dev.toLocaleLowerCase()}`,
-    },
+    // {
+    //     image: require('../assets/images/admin_menu_icon.svg'),
+    //     name: mvConsts.screens.dev,
+    //     admin: true,
+    //     component: () => <Flex>
+    //         <Text
+    //             onClick={async () => {
+    //                 let d = await axios.get(`${mvConsts.api}/dev`)
+    //                 console.log(d);
+    //             }}
+    //         >send</Text>
+    //     </Flex>,
+    //     path: `/${mvConsts.screens.dev.toLocaleLowerCase()}`,
+    // },
     {
         image: require('../assets/images/admin.svg'),
         name: mvConsts.screens.admin,
@@ -68,6 +85,7 @@ let get_my_balance = () => new Promise((resolve, reject) => { axios.get(`${mvCon
 let get_dormitories = () => new Promise((resolve, reject) => { axios.get(`${mvConsts.api}/dormitory/get`).then((d) => { resolve(d) }).catch(e => console.log(e)) })
 
 let Main = (props) => {
+
     let [axios_is_ready, set_axios_is_ready] = useState(false)
     let [profileRef, profileVisible, setProfileVisible] = useComponentVisible(false);
     let [dormitoryRef, dormitoryVisible, setDormitoryVisible] = useComponentVisible(false);
@@ -78,6 +96,7 @@ let Main = (props) => {
             .then((d) => { resolve(d); })
             .catch((d) => { console.log(d); reject(d) })
     })
+
     useEffect(() => { document.title = `psamcs.${screens.filter(i => i.name === props.main_screen)[0].name.toLocaleLowerCase()}`; })
     useEffect(() => {
         axios.defaults.headers.common.Authorization = props.token
@@ -102,10 +121,12 @@ let Main = (props) => {
             })
         return () => { axios.defaults.headers.common.Authorization = undefined }
     }, [])
+
     useEffect(() => {
         let i = setInterval(() => { get_my_balance().then((d) => { props.setBalance(+d.data) }) }, 1000)
         return () => { clearInterval(i) }
     }, [])
+
     if (axios_is_ready) {
         return (
             <HashRouter>
@@ -235,11 +256,11 @@ width: 5vw;
 height: calc(100vh - 1vw);
 border-radius: 1.5vw;
 margin: 0.5vw;
-background: ${props => props.theme.background.primary};
+/* background: ${props => props.theme.background.primary}; */
 box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
 z-index: 5;
 justify-content: space-between;
-background-image: url(${props => moment().startOf(`dat`).tz(`Europe/Moscow`).format(`DD.MM`) === `08.03` ? props.theme.background.primary === `#ffffff` ? `https://sun1-17.userapi.com/EUE6Pnjo0MMjA_o_wr9a_z43wIS4GRxqxP54Jw/OSknvwpSlrs.jpg` : `https://sun1-15.userapi.com/YywRXAwbfkqaq8f3SWhp_sE0YPu_SiN29PdweA/1Xl5NlwiQ9M.jpg` : null});
+background: ${props => background ? props.theme.background.primary === `#ffffff` ? background.light : background.dark : props.theme.background.primary};
 background-position: left 80%;
 box-sizing: border-box;
 -moz-box-sizing: border-box;
@@ -252,7 +273,7 @@ border: 0.5vw solid ${props => props.theme.background.primary};
     bottom: 0.5vh;
     position: fixed;
     margin: 0;
-    flex-direction: row
+    flex-direction: row;
     justify-content: space-around;
     box-shadow: 0 0 8vw rgba(0, 0, 0, 0.1);
     border: 2vw solid ${props => props.theme.background.primary};
@@ -263,19 +284,19 @@ border: 0.5vw solid ${props => props.theme.background.primary};
     }
 }`
 
-const MenuItemImage = styled.img`;
+const MenuItemImage = styled.img`
 width: 2.5vw;
 height: 2.5vw;
 padding: 0.25vw;
 margin: 1.5vw;
 cursor: pointer;
-display: ${props => props.only_mobile ? `none` : `block`}
+display: ${props => props.only_mobile ? `none` : `block`};
 &:hover { width: 3vw; height: 3vw; padding: 0; }
 border-radius: 1vw;
 transition: 0.2s;
-background: ${props => props.theme.background.primary};
+background: ${props => convertHex(props.theme.background.primary, 0.75)};
 @media (min-width: 320px) and (max-width: 480px) {
-    display: ${props => props.only_desktop ? `none` : `block`}
+    display: ${props => props.only_desktop ? `none` : `block`};
     width: 5vh;
     height: 5vh;
     border-radius: 1vh;
@@ -285,7 +306,7 @@ background: ${props => props.theme.background.primary};
 const Workspace = styled(Flex)`
 width: 94vw;
 height: 100vh;
-overflow; hidden;
+overflow: hidden;
 filter: blur(${props => +props.blur * 8}px);
 @media (min-width: 320px) and (max-width: 480px) {
     width: 100vw;

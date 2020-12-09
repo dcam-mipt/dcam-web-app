@@ -124,7 +124,7 @@ let AdminTools = (props) => {
             <Flex only_desktop={chapter !== 1} extra={`width: 25vw;`} >
 
             </Flex>
-            <Flex only_desktop={chapter !== 2} extra={`width: 30vw; height: 100%; background: red;`} >
+            <Flex only_desktop={chapter !== 2} extra={`width: 30vw; height: 100%;`} >
 
             </Flex>
         </GlobalWrapper>
