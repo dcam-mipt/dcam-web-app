@@ -39,13 +39,17 @@ let Entry = (props) => {
     let [photos, set_photos] = useState([])
     let [current_photo, set_current_photo] = useState(0)
     useEffect(() => {
-        window.VK.api("photos.get", { "owner_id": "-46253638", "album_id": "267290657", "count": "1000", "v": "5.103" }, (data) => {
-            set_photos(data.response.items.filter(i => i.sizes[0].width > i.sizes[0].height).map(i => i.sizes.pop().url))
-            set_current_photo(Math.round(Math.random() * data.response.items.length))
-            setInterval(() => {
+        try {
+            window.VK.api("photos.get", { "owner_id": "-46253638", "album_id": "267290657", "count": "1000", "v": "5.103" }, (data) => {
+                set_photos(data.response.items.filter(i => i.sizes[0].width > i.sizes[0].height).map(i => i.sizes.pop().url))
                 set_current_photo(Math.round(Math.random() * data.response.items.length))
-            }, 5000)
-        });
+                setInterval(() => {
+                    set_current_photo(Math.round(Math.random() * data.response.items.length))
+                }, 5000)
+            });
+        } catch (error) {
+
+        }
     }, [])
     return (
         <Wrapper>
@@ -104,7 +108,7 @@ margin: 2vw 0  2vw 0;
 }`
 
 const Wrapper = styled(Flex)`
-flex-direction: row
+flex-direction: row;
 width: 100vw;
 height: 100vh;
 @media (min-width: 320px) and (max-width: 480px) {
